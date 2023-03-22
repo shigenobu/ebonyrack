@@ -1,0 +1,97 @@
+package com.walksocket.er.component.main;
+
+import com.walksocket.er.Size.WindowMain;
+import com.walksocket.er.component.Main;
+import com.walksocket.er.component.main.root.Side;
+import com.walksocket.er.component.main.root.Workspace;
+import com.walksocket.er.config.CfgProject;
+import com.walksocket.er.sqlite.Bucket;
+import java.awt.BorderLayout;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+
+/**
+ * Root.
+ */
+public class Root extends JPanel {
+
+  /**
+   * main.
+   */
+  private final Main main;
+
+  /**
+   * size.
+   */
+  private final Side side;
+
+  /**
+   * workspace.
+   */
+  private final Workspace workspace;
+
+  /**
+   * Constructor.
+   *
+   * @param main       main
+   * @param cfgProject cfgProject
+   */
+  public Root(Main main, CfgProject cfgProject) {
+    this.main = main;
+
+    // readonly
+    if (Bucket.getInstance().isReadOnly()) {
+      JOptionPane.showMessageDialog(this, "Open readonly mode.");
+    }
+
+    // layout
+    setLayout(new BorderLayout());
+
+    // split pane
+    var sp = new JSplitPane();
+    sp.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+    sp.setDividerLocation(WindowMain.WIDTH / 5);
+    sp.setDividerSize(5);
+    add(sp, BorderLayout.CENTER);
+
+    // side
+    side = new Side(this, cfgProject);
+    sp.setLeftComponent(new JScrollPane(side, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+        JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS));
+
+    // workspace
+    workspace = new Workspace(this, cfgProject);
+    var scrollPane = new JScrollPane(workspace, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+        JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+    scrollPane.getHorizontalScrollBar().setUnitIncrement(30);
+    scrollPane.getVerticalScrollBar().setUnitIncrement(30);
+    sp.setRightComponent(scrollPane);
+
+    // sync side between workspace
+    side.setWorkspace(workspace);
+    workspace.setSide(side);
+
+    // read data
+    workspace.readData();
+  }
+
+  /**
+   * get main.
+   *
+   * @return main.
+   */
+  public Main getMain() {
+    return main;
+  }
+
+  /**
+   * get workspace.
+   *
+   * @return workspace
+   */
+  public Workspace getWorkspace() {
+    return workspace;
+  }
+}
