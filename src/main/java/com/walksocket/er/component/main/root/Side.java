@@ -1,9 +1,9 @@
 package com.walksocket.er.component.main.root;
 
 import com.walksocket.er.component.main.Root;
-import com.walksocket.er.component.main.root.wokspace.Note;
-import com.walksocket.er.component.main.root.wokspace.Sequence;
-import com.walksocket.er.component.main.root.wokspace.Table;
+import com.walksocket.er.component.main.root.workspace.Note;
+import com.walksocket.er.component.main.root.workspace.Sequence;
+import com.walksocket.er.component.main.root.workspace.Table;
 import com.walksocket.er.config.CfgProject;
 import com.walksocket.er.sqlite.Bucket;
 import java.awt.Color;

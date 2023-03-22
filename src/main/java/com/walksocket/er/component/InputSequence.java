@@ -4,7 +4,7 @@ import com.walksocket.er.Const;
 import com.walksocket.er.Size.DialogSmall;
 import com.walksocket.er.Size.Screen;
 import com.walksocket.er.component.input.sequence.Root;
-import com.walksocket.er.component.main.root.wokspace.Sequence;
+import com.walksocket.er.component.main.root.workspace.Sequence;
 import com.walksocket.er.custom.ErDialog;
 import java.awt.Dimension;
 import java.awt.Point;

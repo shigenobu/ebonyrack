@@ -1,4 +1,4 @@
-package com.walksocket.er.component.main.root.wokspace;
+package com.walksocket.er.component.main.root.workspace;
 
 import com.walksocket.er.App;
 import com.walksocket.er.Const;
