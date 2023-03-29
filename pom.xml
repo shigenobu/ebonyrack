@@ -12,6 +12,12 @@
   <name>ebonyrack</name>
   <url>https://github.com/shigenobu/ebonyrack</url>
   <description>Entity relationship creation tool for MariaDB.</description>
+  <licenses>
+    <license>
+      <name>Apache 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
 
   <!-- properties -->
   <properties>
