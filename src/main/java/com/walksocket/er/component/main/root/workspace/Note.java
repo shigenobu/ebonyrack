@@ -43,6 +43,31 @@ import javax.swing.text.JTextComponent;
 public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrigin {
 
   /**
+   * min width.
+   */
+  private static final int MIN_WIDTH = 100;
+
+  /**
+   * max width.
+   */
+  private static final int MAX_WIDTH = 300;
+
+  /**
+   * min height.
+   */
+  private static final int MIN_HEIGHT = 100;
+
+  /**
+   * max height.
+   */
+  private static final int MAX_HEIGHT = 300;
+
+  /**
+   * border size.
+   */
+  private static final int BORDER_SIZE = 2;
+
+  /**
    * workspace.
    */
   private final Workspace workspace;
@@ -106,8 +131,8 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
 
     // side
     panelSide = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    panelSide.setLocation(new Point(2, 2));
-    panelSide.setSize(new Dimension(10, ctxNote.dbNoteOption.height - 4));
+    panelSide.setLocation(new Point(BORDER_SIZE, BORDER_SIZE));
+    panelSide.setSize(new Dimension(10, ctxNote.dbNoteOption.height - BORDER_SIZE * 2));
     panelSide.setBackground(new Color(96, 96, 96));
     panelSide.addMouseListener(new MouseAdapter() {
       @Override
@@ -116,8 +141,8 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
         note.requestFocusInWindow();
 
         // connector
-        var x = note.getX() + e.getX() + 2;
-        var y = note.getY() + e.getY() + 2;
+        var x = note.getX() + e.getX() + BORDER_SIZE;
+        var y = note.getY() + e.getY() + BORDER_SIZE;
         var target = getWorkspace().getComponentAt(x, y);
         if (target == null) {
           return;
@@ -166,8 +191,8 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
 
     // subject
     panelSubject = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    panelSubject.setLocation(new Point(panelSide.getWidth() + 2, 2));
-    panelSubject.setSize(new Dimension(getWidth() - 4 - panelSide.getWidth(), 36));
+    panelSubject.setLocation(new Point(panelSide.getWidth() + BORDER_SIZE, BORDER_SIZE));
+    panelSubject.setSize(new Dimension(getWidth() - BORDER_SIZE * 2 - panelSide.getWidth(), 36));
     panelSubject.setBackground(new Color(ctxNote.dbNoteOption.color));
     panelSubject.addMouseListener(new MouseAdapter() {
 
@@ -240,6 +265,8 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
           if (y > 9999) {
             y = 9999;
           }
+          x = Utils.floorOneDegree(x);
+          y = Utils.floorOneDegree(y);
 
           try {
             // save
@@ -311,9 +338,10 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
 
     // body
     panelBody = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    panelBody.setLocation(new Point(panelSide.getWidth() + 2, panelSubject.getHeight() + 2));
-    panelBody.setSize(new Dimension(getWidth() - 4 - panelSide.getWidth(),
-        getHeight() - 4 - panelSubject.getHeight() - 10));
+    panelBody.setLocation(
+        new Point(panelSide.getWidth() + BORDER_SIZE, panelSubject.getHeight() + BORDER_SIZE));
+    panelBody.setSize(new Dimension(getWidth() - BORDER_SIZE * 2 - panelSide.getWidth(),
+        getHeight() - BORDER_SIZE * 2 - panelSubject.getHeight() - 10));
     panelBody.setBackground(Color.WHITE);
     panelBody.addMouseListener(new MouseAdapter() {
       @Override
@@ -378,8 +406,8 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
         var g2 = (Graphics2D) g;
 
         var x1 = getWidth();
-        var y1 = getHeight() - 4;
-        var x2 = getWidth() - 4;
+        var y1 = getHeight() - BORDER_SIZE * 2;
+        var x2 = getWidth() - BORDER_SIZE * 2;
         var y2 = getHeight();
 
         g2.setColor(new Color(96, 96, 96));
@@ -387,8 +415,8 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
         g2.drawLine(x1, y1, x2, y2);
       }
     };
-    panelFooter.setLocation(new Point(panelSide.getWidth() + 2, getHeight() - 12));
-    panelFooter.setSize(new Dimension(getWidth() - 4 - panelSide.getWidth(), 10));
+    panelFooter.setLocation(new Point(panelSide.getWidth() + BORDER_SIZE, getHeight() - 12));
+    panelFooter.setSize(new Dimension(getWidth() - BORDER_SIZE * 2 - panelSide.getWidth(), 10));
     panelFooter.setBackground(Color.WHITE);
     panelFooter.addMouseListener(new MouseAdapter() {
 
@@ -423,25 +451,26 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
         if (resizing) {
           var w = e.getX() + panelSide.getWidth();
           var h = e.getY() + panelSubject.getHeight() + panelBody.getHeight();
-          if (w < 100) {
-            w = 100;
+          if (w < MIN_WIDTH) {
+            w = MIN_WIDTH;
           }
-          if (w > 300) {
-            w = 300;
+          if (w > MAX_WIDTH) {
+            w = MAX_WIDTH;
           }
-          if (h < 100) {
-            h = 100;
+          if (h < MIN_HEIGHT) {
+            h = MIN_HEIGHT;
           }
-          if (h > 300) {
-            h = 300;
+          if (h > MAX_HEIGHT) {
+            h = MAX_HEIGHT;
           }
-          panelSide.setSize(new Dimension(panelSide.getWidth(), h - 4));
+          panelSide.setSize(new Dimension(panelSide.getWidth(), h - BORDER_SIZE * 2));
           panelSubject.setSize(
-              new Dimension(w - 4 - panelSide.getWidth(), panelSubject.getHeight()));
-          panelBody.setSize(new Dimension(w - 4 - panelSide.getWidth(),
-              h - 4 - panelSubject.getHeight() - panelFooter.getHeight()));
-          panelFooter.setLocation(new Point(panelSide.getWidth() + 2, h - 12));
-          panelFooter.setSize(new Dimension(w - 4 - panelSide.getWidth(), panelFooter.getHeight()));
+              new Dimension(w - BORDER_SIZE * 2 - panelSide.getWidth(), panelSubject.getHeight()));
+          panelBody.setSize(new Dimension(w - BORDER_SIZE * 2 - panelSide.getWidth(),
+              h - BORDER_SIZE * 2 - panelSubject.getHeight() - panelFooter.getHeight()));
+          panelFooter.setLocation(new Point(panelSide.getWidth() + BORDER_SIZE, h - 12));
+          panelFooter.setSize(
+              new Dimension(w - BORDER_SIZE * 2 - panelSide.getWidth(), panelFooter.getHeight()));
           note.setSize(new Dimension(w, h));
 
           // subject

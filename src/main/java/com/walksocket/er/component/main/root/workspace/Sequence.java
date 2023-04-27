@@ -3,6 +3,7 @@ package com.walksocket.er.component.main.root.workspace;
 import com.walksocket.er.Const;
 import com.walksocket.er.Date;
 import com.walksocket.er.Log;
+import com.walksocket.er.Utils;
 import com.walksocket.er.component.InputSequence;
 import com.walksocket.er.component.ShowDdl;
 import com.walksocket.er.component.main.root.Workspace;
@@ -30,6 +31,26 @@ import javax.swing.SwingUtilities;
  * Sequence.
  */
 public class Sequence extends ErConnectorEndpoint {
+
+  /**
+   * min width.
+   */
+  private static final int MIN_WIDTH = 200;
+
+  /**
+   * max width.
+   */
+  private static final int MAX_WIDTH = 400;
+
+  /**
+   * fix height.
+   */
+  private static final int FIX_HEIGHT = 36;
+
+  /**
+   * border size.
+   */
+  private static final int BORDER_SIZE = 2;
 
   /**
    * workspace.
@@ -67,13 +88,13 @@ public class Sequence extends ErConnectorEndpoint {
 
     // init
     setLocation(new Point(ctxSequence.dbSequenceOption.posX, ctxSequence.dbSequenceOption.posY));
-    setSize(new Dimension(100, 36));
+    setSize(new Dimension(MIN_WIDTH, FIX_HEIGHT));
     var sequence = this;
 
     // sequence
     panelName = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    panelName.setLocation(new Point(2, 2));
-    panelName.setSize(new Dimension(getWidth() - 4, getHeight() - 4));
+    panelName.setLocation(new Point(BORDER_SIZE, BORDER_SIZE));
+    panelName.setSize(new Dimension(getWidth() - BORDER_SIZE * 2, getHeight() - BORDER_SIZE * 2));
     panelName.setBackground(new Color(ctxSequence.dbSequenceOption.color));
     panelName.addMouseListener(new MouseAdapter() {
 
@@ -160,6 +181,8 @@ public class Sequence extends ErConnectorEndpoint {
           if (y > 9999) {
             y = 9999;
           }
+          x = Utils.floorOneDegree(x);
+          y = Utils.floorOneDegree(y);
 
           try {
             // save
@@ -219,16 +242,17 @@ public class Sequence extends ErConnectorEndpoint {
     labelSequenceName.setText("(S) " + ctxSequence.dbSequence.sequenceName);
     var w = labelSequenceName.getFontMetrics(labelSequenceName.getFont())
         .stringWidth(labelSequenceName.getText());
-    if (w < 100) {
-      w = 100;
+    if (w < MIN_WIDTH) {
+      w = MIN_WIDTH;
     }
-    if (w > 300) {
-      w = 300;
+    if (w > MAX_WIDTH) {
+      w = MAX_WIDTH;
     }
     setSize(new Dimension(w, getHeight()));
-    panelName.setSize(new Dimension(w - 4, panelName.getHeight()));
+    panelName.setSize(new Dimension(w - BORDER_SIZE * 2, panelName.getHeight()));
     panelName.setToolTipText(ctxSequence.dbSequence.getTipText());
-    labelSequenceName.setPreferredSize(new Dimension(w - 4 - 10, panelName.getHeight() - 10));
+    labelSequenceName.setPreferredSize(
+        new Dimension(w - BORDER_SIZE * 2 - 10, panelName.getHeight() - 10));
 
     // redraw connector
     redrawAllConnectors();

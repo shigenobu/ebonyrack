@@ -118,5 +118,12 @@ public class App {
 
     // execute
     SwingUtilities.invokeLater(() -> new Startup());
+
+    // shutdown
+    Thread hook = new Thread(() -> {
+      Log.trace("shutdown");
+      Log.close();
+    });
+    Runtime.getRuntime().addShutdownHook(hook);
   }
 }

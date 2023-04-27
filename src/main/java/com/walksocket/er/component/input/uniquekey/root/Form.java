@@ -180,7 +180,7 @@ public class Form extends JPanel {
             .filter(c -> c.columnType.equals(columnType))
             .findFirst()
             .get();
-        if (!DataType.isText(dbDictColumnType.columnType) || !DataType.isBinary(
+        if (!DataType.isText(dbDictColumnType.columnType) && !DataType.isBinary(
             dbDictColumnType.columnType)) {
           length = "";
         }

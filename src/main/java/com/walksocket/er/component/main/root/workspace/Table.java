@@ -49,6 +49,21 @@ import javax.swing.SwingUtilities;
 public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRelation {
 
   /**
+   * min width.
+   */
+  private static final int MIN_WIDTH = 200;
+
+  /**
+   * max width.
+   */
+  private static final int MAX_WIDTH = 500;
+
+  /**
+   * border size.
+   */
+  private static final int BORDER_SIZE = 2;
+
+  /**
    * image key primary.
    */
   private static BufferedImage imageKeyPrimary;
@@ -214,13 +229,13 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
 
     // init
     setLocation(new Point(ctxTable.dbTableOption.posX, ctxTable.dbTableOption.posY));
-    setSize(new Dimension(200, 100));
+    setSize(new Dimension(MIN_WIDTH, 100));
     var table = this;
 
     // table
     panelTable = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    panelTable.setLocation(new Point(2, 2));
-    panelTable.setSize(new Dimension(getWidth() - 4, 36));
+    panelTable.setLocation(new Point(BORDER_SIZE, BORDER_SIZE));
+    panelTable.setSize(new Dimension(getWidth() - BORDER_SIZE * 2, 36));
     panelTable.setBackground(new Color(ctxTable.dbTableOption.color));
     panelTable.addMouseListener(new MouseAdapter() {
 
@@ -307,6 +322,8 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
           if (y > 9999) {
             y = 9999;
           }
+          x = Utils.floorOneDegree(x);
+          y = Utils.floorOneDegree(y);
 
           try {
             // save
@@ -339,8 +356,9 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
 
     // column
     panelColumn = new JPanel();
-    panelColumn.setLocation(new Point(2, panelTable.getHeight() + 2));
-    panelColumn.setSize(new Dimension(getWidth() - 4, getHeight() - panelColumn.getHeight() - 4));
+    panelColumn.setLocation(new Point(BORDER_SIZE, panelTable.getHeight() + BORDER_SIZE));
+    panelColumn.setSize(new Dimension(getWidth() - BORDER_SIZE * 2,
+        getHeight() - panelColumn.getHeight() - BORDER_SIZE * 2));
     panelColumn.setBackground(Color.WHITE);
     panelColumn.addMouseListener(new MouseAdapter() {
       @Override
@@ -422,16 +440,17 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
         }
       }
     }
-    if (w < 200) {
-      w = 200;
+    if (w < MIN_WIDTH) {
+      w = MIN_WIDTH;
     }
-    if (w > 500) {
-      w = 500;
+    if (w > MAX_WIDTH) {
+      w = MAX_WIDTH;
     }
 
-    panelTable.setSize(new Dimension(w - 4, panelTable.getHeight()));
+    panelTable.setSize(new Dimension(w - BORDER_SIZE * 2, panelTable.getHeight()));
     panelTable.setToolTipText(ctxTable.dbTable.getTipText());
-    labelTableName.setPreferredSize(new Dimension(w - 4 - 10, panelTable.getHeight() - 10));
+    labelTableName.setPreferredSize(
+        new Dimension(w - BORDER_SIZE * 2 - 10, panelTable.getHeight() - 10));
 
     var ph = 22;
     panelColumnInner.removeAll();
@@ -571,10 +590,11 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
 
         idx++;
       }
-      panelColumn.setSize(new Dimension(w - 4, targetDbDictColumList.size() * ph));
+      panelColumn.setSize(new Dimension(w - BORDER_SIZE * 2, targetDbDictColumList.size() * ph));
       setSize(new Dimension(w, panelTable.getHeight() + panelColumn.getHeight() + 10));
     } else {
-      panelColumn.setSize(new Dimension(w - 4, 100 - panelTable.getHeight() - 4));
+      panelColumn.setSize(
+          new Dimension(w - BORDER_SIZE * 2, 100 - panelTable.getHeight() - BORDER_SIZE * 2));
       setSize(new Dimension(w, 100 + 10));
     }
 

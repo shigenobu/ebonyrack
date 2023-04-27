@@ -35,6 +35,7 @@ public class Log {
     if (Utils.isNullOrEmpty(logPath)) {
       return;
     }
+
     if (writer == null) {
       if (logPath.equalsIgnoreCase(LOG_STDOUT)) {
         // stdout
@@ -51,12 +52,13 @@ public class Log {
 
   /**
    * close.
-   *
-   * @throws IOException close error
    */
-  public static void close() throws IOException {
+  public static void close() {
     if (writer != null) {
-      writer.close();
+      try {
+        writer.close();
+      } catch (IOException e) {
+      }
     }
     writer = null;
   }

@@ -147,8 +147,12 @@ public class Workspace extends ErConnectorPositioned {
       }
 
       private void doPop(MouseEvent e) {
-        var menu = new PopupMenu(workspace, e.getX(), e.getY());
-        menu.show(e.getComponent(), e.getX(), e.getY());
+        var x = Utils.floorOneDegree(e.getX());
+        var y = Utils.floorOneDegree(e.getY());
+        Log.trace(String.format("x:y -> %s:%s", x, y));
+
+        var menu = new PopupMenu(workspace, x, y);
+        menu.show(e.getComponent(), x, y);
       }
     });
   }

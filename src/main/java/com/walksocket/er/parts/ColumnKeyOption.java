@@ -23,7 +23,7 @@ public class ColumnKeyOption {
     for (int i = 0; i < ccList.length; i++) {
       var cc = ccList[i];
 
-      var pattern = Pattern.compile("^`(.+?)` (.+)$");
+      var pattern = Pattern.compile("^`(.+?)`(.+)$");
       var match = pattern.matcher(cc);
       if (!match.find()) {
         continue;
@@ -32,17 +32,22 @@ public class ColumnKeyOption {
       columnKeyOption.columnName = match.group(1);
       Log.trace(columnKeyOption.columnName);
 
-      var p = Pattern.compile("^(.+?)\\((.+?)\\)$");
-      var m = p.matcher(columnKeyOption.columnName);
-      if (m.find()) {
-        columnKeyOption.columnName = m.group(1);
-        Log.trace(m);
-        if (Utils.isNumber(m.group(2))) {
-          columnKeyOption.length = m.group(2);
+      var lengthAndCollation = match.group(2).trim().split(" ");
+      if (lengthAndCollation.length > 1) {
+        var p = Pattern.compile("^\\((.+?)\\)$");
+        var m = p.matcher(lengthAndCollation[0]);
+        if (m.find()) {
+          Log.trace(m);
+          if (Utils.isNumber(m.group(1))) {
+            columnKeyOption.length = m.group(1);
+          }
         }
+        columnKeyOption.collation = lengthAndCollation[1];
+      } else {
+        columnKeyOption.collation = lengthAndCollation[0];
       }
+
       columnKeyOption.seqInIndex = String.valueOf(i + 1);
-      columnKeyOption.collation = match.group(2);
 
       columnKeyOptionList.add(columnKeyOption);
     }
@@ -76,7 +81,7 @@ public class ColumnKeyOption {
    */
   public String getColumnAndCollation() {
     if (Utils.isNumber(length) && Integer.parseInt(length) > 0) {
-      return String.format("`%s(%s)` %s", columnName, length, collation);
+      return String.format("`%s`(%s) %s", columnName, length, collation);
     }
     return String.format("`%s` %s", columnName, collation);
   }

@@ -34,7 +34,7 @@ public class Word {
   /**
    * name pattern.
    */
-  private static final Pattern namePattern = Pattern.compile("^[0-9a-zA-Z\\$_]+$");
+  private static final Pattern namePattern = Pattern.compile("^[0-9a-zA-Z$_]+$");
 
   /**
    * is valid.
@@ -47,9 +47,7 @@ public class Word {
       return false;
     }
 
-    return !(reservedWords.stream()
-        .filter(w -> w.equalsIgnoreCase(someName))
-        .findFirst()
-        .isPresent());
+    return reservedWords.stream()
+        .noneMatch(w -> w.equalsIgnoreCase(someName));
   }
 }

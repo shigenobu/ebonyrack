@@ -3,8 +3,7 @@ package com.walksocket.er;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
-import java.util.Map;
+import java.util.Collection;
 import javax.swing.JComboBox;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -57,22 +56,12 @@ public class Utils {
   }
 
   /**
-   * is null or empty for list.
+   * is null or empty for collection.
    *
    * @param src list
    * @return if null or empty, true
    */
-  public static boolean isNullOrEmpty(List src) {
-    return src == null || src.size() == 0;
-  }
-
-  /**
-   * is null or empty for map.
-   *
-   * @param src map
-   * @return if null or empty, true
-   */
-  public static boolean isNullOrEmpty(Map src) {
+  public static <T> boolean isNullOrEmpty(Collection<T> src) {
     return src == null || src.size() == 0;
   }
 
@@ -94,6 +83,16 @@ public class Utils {
       Log.error(e);
     }
     return builder.toString();
+  }
+
+  /**
+   * floor one degree.
+   *
+   * @param src src
+   * @return ten degree
+   */
+  public static int floorOneDegree(int src) {
+    return (int) ((Math.floor(src / 10)) * 10);
   }
 
   /**
@@ -156,7 +155,7 @@ public class Utils {
    * @param comboBox comboBox
    * @return value
    */
-  public static String getString(JComboBox comboBox) {
+  public static <T> String getString(JComboBox<T> comboBox) {
     if (comboBox == null) {
       return "";
     }
