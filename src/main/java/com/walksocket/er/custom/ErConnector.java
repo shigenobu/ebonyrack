@@ -362,6 +362,14 @@ public class ErConnector extends JPanel {
       }
       g2.setColor(lineColor);
       g2.drawLine((int) start.getX(), (int) start.getY(), (int) end.getX(), (int) end.getY());
+
+      if (relation) {
+        var cx = (int) ((start.getX() + end.getX()) / 2);
+        var cy = (int) ((start.getY() + end.getY()) / 2);
+        var r = lineStyle.getShowStyle(relationReverse);
+        g2.drawString(r, cx, cy);
+      }
+
       g2.dispose();
     }
   }
