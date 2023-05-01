@@ -34,58 +34,33 @@ public class ErConnectorStyle {
   private static final String STYLE_ONE_N = "N -> 1";
 
   /**
-   * style reverse simple.
-   */
-  private static final String STYLE_REVERSE_SIMPLE = "";
-
-  /**
-   * style reverse zero one.
-   */
-  private static final String STYLE_REVERSE_ZERO_ONE = "1 -> 0..1";
-
-  /**
-   * style reverse one.
-   */
-  private static final String STYLE_REVERSE_ONE = "1 -> 1";
-
-  /**
-   * style reverse zero n.
-   */
-  private static final String STYLE_REVERSE_ZERO_N = "1 -> 0..N";
-
-  /**
-   * style reverse one n.
-   */
-  private static final String STYLE_REVERSE_ONE_N = "1 -> N";
-
-  /**
    * LineStyle.
    */
   public enum LineStyle {
     /**
      * SIMPLE.
      */
-    SIMPLE(STYLE_SIMPLE, STYLE_REVERSE_SIMPLE),
+    SIMPLE(STYLE_SIMPLE),
 
     /**
      * ZERO_ONE.
      */
-    ZERO_ONE(STYLE_ZERO_ONE, STYLE_REVERSE_ZERO_ONE),
+    ZERO_ONE(STYLE_ZERO_ONE),
 
     /**
      * ONE.
      */
-    ONE(STYLE_ONE, STYLE_REVERSE_ONE),
+    ONE(STYLE_ONE),
 
     /**
      * ZERO_N.
      */
-    ZERO_N(STYLE_ZERO_N, STYLE_REVERSE_ZERO_N),
+    ZERO_N(STYLE_ZERO_N),
 
     /**
      * ONE_N
      */
-    ONE_N(STYLE_ONE_N, STYLE_REVERSE_ONE_N),
+    ONE_N(STYLE_ONE_N),
     ;
 
     /**
@@ -94,19 +69,12 @@ public class ErConnectorStyle {
     private final String style;
 
     /**
-     * reverse style.
-     */
-    private final String reverseStyle;
-
-    /**
      * Constructor.
      *
-     * @param style        style
-     * @param reverseStyle reverseStyle
+     * @param style style
      */
-    LineStyle(String style, String reverseStyle) {
+    LineStyle(String style) {
       this.style = style;
-      this.reverseStyle = reverseStyle;
     }
 
     /**
@@ -116,18 +84,6 @@ public class ErConnectorStyle {
      */
     public String getStyle() {
       return style;
-    }
-
-    /**
-     * get show style.
-     *
-     * @param reverse reverse
-     */
-    public String getShowStyle(boolean reverse) {
-      if (!reverse) {
-        return style;
-      }
-      return reverseStyle;
     }
   }
 

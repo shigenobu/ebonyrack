@@ -4,6 +4,7 @@ import com.walksocket.er.Log;
 import com.walksocket.er.custom.ErConnectorStyle.LineStyle;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -28,11 +29,6 @@ public class ErConnector extends JPanel {
    * relation.
    */
   private boolean relation;
-
-  /**
-   * relation reverse.
-   */
-  private boolean relationReverse;
 
   /**
    * relation data maps.
@@ -209,21 +205,26 @@ public class ErConnector extends JPanel {
     // ---
     var s = getConnectionPoint(src, dst);
     var e = getConnectionPoint(dst, src);
-    Log.trace(String.format("%s -> %s", s, e));
+    Log.trace(String.format("s -> e : %s -> %s", s, e));
 
     // ---
-    relationReverse = s.getX() > e.getX();
-    var x = s.getX() < e.getX() ? s.getX() : e.getX();
-    var y = s.getY() < e.getY() ? s.getY() : e.getY();
-    var width = Math.abs(s.getX() - e.getX());
-    var height = Math.abs(s.getY() - e.getY());
-    start = new Point((int) (s.getX() - x), (int) (s.getY() - y));
-    end = new Point((int) (e.getX() - x), (int) (e.getY() - y));
+    var minX = src.getX() < dst.getX() ? src.getX() : dst.getX();
+    var maxX =
+        src.getX() + src.getWidth() > dst.getX() + dst.getWidth() ? src.getX() + src.getWidth()
+            : dst.getX() + dst.getWidth();
+    var minY = src.getY() < dst.getY() ? src.getY() : dst.getY();
+    var maxY =
+        src.getY() + src.getHeight() > dst.getY() + dst.getHeight() ? src.getY() + src.getHeight()
+            : dst.getY() + dst.getHeight();
+
+    start = new Point((int) (s.getX() - minX), (int) (s.getY() - minY));
+    end = new Point((int) (e.getX() - minX), (int) (e.getY() - minY));
     Log.trace(String.format("start:%s", start));
     Log.trace(String.format("end:%s", end));
 
     setBackground(new Color(0, 0, 0, 0));
-    setBounds((int) x, (int) y, (int) width, (int) height);
+//    setBackground(new Color(255, 0, 0, 20));
+    setBounds(minX, minY, maxX - minX, maxY - minY);
 
     // ---
     for (var line : lines) {
@@ -266,9 +267,6 @@ public class ErConnector extends JPanel {
 
     // ---
     for (var line : lines) {
-      if (relation) {
-        line.setToolTipText(lineStyle.getShowStyle(relationReverse));
-      }
       add(line);
       line.addMouseListener(adapter);
     }
@@ -364,10 +362,39 @@ public class ErConnector extends JPanel {
       g2.drawLine((int) start.getX(), (int) start.getY(), (int) end.getX(), (int) end.getY());
 
       if (relation) {
-        var cx = (int) ((start.getX() + end.getX()) / 2);
-        var cy = (int) ((start.getY() + end.getY()) / 2);
-        var r = lineStyle.getShowStyle(relationReverse);
-        g2.drawString(r, cx, cy);
+        var ls = lineStyle.getStyle().split("->");
+        if (ls.length > 1) {
+          var s = ls[0].trim();
+          var e = ls[1].trim();
+
+          var fontSize = 13;
+          var font = g2.getFont().deriveFont(Font.BOLD, (float) fontSize);
+          g2.setFont(font);
+          var offset = 3;
+
+          var sx = 0;
+          var sy = 0;
+          var ex = 0;
+          var ey = 0;
+          if (start.getX() < end.getX()) {
+            sx = (int) start.getX() + offset;
+            ex = (int) end.getX() - fontSize * (e.length() == 1 ? 1 : 2) - offset;
+          } else {
+            sx = (int) start.getX() - fontSize * (s.length() == 1 ? 1 : 2) - offset;
+            ex = (int) end.getX() + offset;
+          }
+
+          if (start.getY() < end.getY()) {
+            sy = (int) start.getY() + fontSize;
+            ey = (int) end.getY() - offset;
+          } else {
+            sy = (int) start.getY() - offset;
+            ey = (int) end.getY() + fontSize;
+          }
+
+          g2.drawString(s, sx, sy);
+          g2.drawString(e, ex, ey);
+        }
       }
 
       g2.dispose();
