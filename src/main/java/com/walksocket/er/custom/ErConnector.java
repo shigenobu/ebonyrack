@@ -349,9 +349,9 @@ public class ErConnector extends JPanel {
     if (start != null && end != null) {
       var g2 = (Graphics2D) g;
       if (relation) {
-        g2.setStroke(new BasicStroke(2.0f));
+        g2.setStroke(new BasicStroke(1.0f));
       } else {
-        g2.setStroke(new BasicStroke(2.0f,
+        g2.setStroke(new BasicStroke(1.0f,
             BasicStroke.JOIN_ROUND,
             BasicStroke.CAP_BUTT,
             1.0f,
