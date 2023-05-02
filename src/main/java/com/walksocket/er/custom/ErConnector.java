@@ -286,31 +286,31 @@ public class ErConnector extends JPanel {
     } else {
       for (int i = 0; i < 4; i++) {
         var xx = start.getX() + i * 10;
-        var yy = start.getY();
+        var yy = start.getY() - 10;
         var p = new JPanel();
-        p.setBounds((int) xx, (int) yy, 10, 10);
+        p.setBounds((int) xx, (int) yy, 20, 20);
         lines.add(p);
       }
 
       var sy = (int) start.getY();
       var ey = (int) end.getY() - 40;
       while (sy != ey) {
-        var xx = (int) start.getX() + 30;
+        var xx = (int) start.getX() + 30 - 10;
         var yy = sy;
         var p = new JPanel();
-        p.setBounds(xx, yy, 10, 10);
+        p.setBounds(xx, yy, 20, 20);
         lines.add(p);
 
         sy--;
       }
 
       var sx = (int) start.getX() + 30;
-      var ex = (int) end.getX() - 10;
+      var ex = (int) end.getX();
       while (sx != ex) {
-        var xx = sx;
+        var xx = sx - 10;
         var yy = sy;
         var p = new JPanel();
-        p.setBounds(xx, yy, 10, 10);
+        p.setBounds(xx, yy, 20, 20);
         lines.add(p);
 
         sx--;
@@ -320,7 +320,7 @@ public class ErConnector extends JPanel {
         var xx = end.getX() - 10;
         var yy = end.getY() - i * 10;
         var p = new JPanel();
-        p.setBounds((int) xx, (int) yy, 10, 10);
+        p.setBounds((int) xx, (int) yy, 20, 20);
         lines.add(p);
       }
     }
