@@ -96,7 +96,7 @@ public class UniqueKey extends JPanel {
     add(panel1);
 
     var columnNames = columnNameWidthMaps.keySet().toArray();
-    tableModel = new DefaultTableModel(columnNames, 1) {
+    tableModel = new DefaultTableModel(columnNames, 3) {
       @Override
       public boolean isCellEditable(int row, int column) {
         // Columns and collations is not editable

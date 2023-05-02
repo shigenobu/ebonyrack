@@ -31,6 +31,11 @@ public class ErConnector extends JPanel {
   private boolean relation;
 
   /**
+   * self relation.
+   */
+  private final boolean selfRelation;
+
+  /**
    * relation data maps.
    */
   private final Map<ErConnectorEndpointRelation, List<String>> relationDataMaps = new HashMap<>();
@@ -129,6 +134,9 @@ public class ErConnector extends JPanel {
       this.relation = true;
     }
 
+    // self relation
+    selfRelation = src == dst;
+
     // focus
     var connector = this;
     setFocusable(true);
@@ -205,6 +213,10 @@ public class ErConnector extends JPanel {
     // ---
     var s = getConnectionPoint(src, dst);
     var e = getConnectionPoint(dst, src);
+    if (selfRelation) {
+      s = new Point(src.getX() + src.getWidth(), src.getY() + src.getHeight() / 2);
+      e = new Point(src.getX() + src.getWidth() / 2, src.getY());
+    }
     Log.trace(String.format("s -> e : %s -> %s", s, e));
 
     // ---
@@ -216,6 +228,12 @@ public class ErConnector extends JPanel {
     var maxY =
         src.getY() + src.getHeight() > dst.getY() + dst.getHeight() ? src.getY() + src.getHeight()
             : dst.getY() + dst.getHeight();
+    if (selfRelation) {
+      minX -= 100;
+      minY -= 100;
+      maxX += 100;
+      maxY += 100;
+    }
 
     start = new Point((int) (s.getX() - minX), (int) (s.getY() - minY));
     end = new Point((int) (e.getX() - minX), (int) (e.getY() - minY));
@@ -234,35 +252,77 @@ public class ErConnector extends JPanel {
     lines.clear();
 
     // ---
-    // y = ax + b
-    var a = (end.getY() - start.getY()) / (end.getX() - start.getX());
-    var b = start.getY() - a * start.getX();
-    Log.trace(String.format("a:%s, b:%s", a, b));
+    if (!selfRelation) {
+      // y = ax + b
+      var a = (end.getY() - start.getY()) / (end.getX() - start.getX());
+      var b = start.getY() - a * start.getX();
+      Log.trace(String.format("a:%s, b:%s", a, b));
 
-    var dx = start.getX() > end.getX() ? -1 : 1;
-    var sx = (int) start.getX();
-    var ex = (int) end.getX();
-    while (sx != ex) {
-      var xx = sx;
-      var yy = a * xx + b;
-      var p = new JPanel();
-      p.setBounds(xx, (int) yy, 10, 10);
-      lines.add(p);
+      var dx = start.getX() > end.getX() ? -1 : 1;
+      var sx = (int) start.getX();
+      var ex = (int) end.getX();
+      while (sx != ex) {
+        var xx = sx;
+        var yy = a * xx + b;
+        var p = new JPanel();
+        p.setBounds(xx, (int) yy, 10, 10);
+        lines.add(p);
 
-      sx += dx;
-    }
+        sx += dx;
+      }
 
-    var dy = start.getY() > end.getY() ? -1 : 1;
-    var sy = (int) start.getY();
-    var ey = (int) end.getY();
-    while (sy != ey) {
-      var yy = sy;
-      var xx = (yy - b) / a;
-      var p = new JPanel();
-      p.setBounds((int) xx, yy, 10, 10);
-      lines.add(p);
+      var dy = start.getY() > end.getY() ? -1 : 1;
+      var sy = (int) start.getY();
+      var ey = (int) end.getY();
+      while (sy != ey) {
+        var yy = sy;
+        var xx = (yy - b) / a;
+        var p = new JPanel();
+        p.setBounds((int) xx, yy, 10, 10);
+        lines.add(p);
 
-      sy += dy;
+        sy += dy;
+      }
+    } else {
+      for (int i = 0; i < 4; i++) {
+        var xx = start.getX() + i * 10;
+        var yy = start.getY();
+        var p = new JPanel();
+        p.setBounds((int) xx, (int) yy, 10, 10);
+        lines.add(p);
+      }
+
+      var sy = (int) start.getY();
+      var ey = (int) end.getY() - 40;
+      while (sy != ey) {
+        var xx = (int) start.getX() + 30;
+        var yy = sy;
+        var p = new JPanel();
+        p.setBounds(xx, yy, 10, 10);
+        lines.add(p);
+
+        sy--;
+      }
+
+      var sx = (int) start.getX() + 30;
+      var ex = (int) end.getX() - 10;
+      while (sx != ex) {
+        var xx = sx;
+        var yy = sy;
+        var p = new JPanel();
+        p.setBounds(xx, yy, 10, 10);
+        lines.add(p);
+
+        sx--;
+      }
+
+      for (int i = 3; i >= 0; i--) {
+        var xx = end.getX() - 10;
+        var yy = end.getY() - i * 10;
+        var p = new JPanel();
+        p.setBounds((int) xx, (int) yy, 10, 10);
+        lines.add(p);
+      }
     }
 
     // ---
@@ -359,7 +419,17 @@ public class ErConnector extends JPanel {
             0.0f));
       }
       g2.setColor(lineColor);
-      g2.drawLine((int) start.getX(), (int) start.getY(), (int) end.getX(), (int) end.getY());
+      if (!selfRelation) {
+        g2.drawLine((int) start.getX(), (int) start.getY(), (int) end.getX(), (int) end.getY());
+      } else {
+        g2.drawLine((int) start.getX(), (int) start.getY(), (int) start.getX() + 30,
+            (int) start.getY());
+        g2.drawLine((int) start.getX() + 30, (int) start.getY(), (int) start.getX() + 30,
+            (int) end.getY() - 30);
+        g2.drawLine((int) start.getX() + 30, (int) end.getY() - 30, (int) end.getX(),
+            (int) end.getY() - 30);
+        g2.drawLine((int) end.getX(), (int) end.getY() - 30, (int) end.getX(), (int) end.getY());
+      }
 
       if (relation) {
         var ls = lineStyle.getStyle().split("->");
@@ -376,20 +446,29 @@ public class ErConnector extends JPanel {
           var sy = 0;
           var ex = 0;
           var ey = 0;
-          if (start.getX() < end.getX()) {
-            sx = (int) start.getX() + offset;
-            ex = (int) end.getX() - fontSize * (e.length() == 1 ? 1 : 2) - offset;
-          } else {
-            sx = (int) start.getX() - fontSize * (s.length() == 1 ? 1 : 2) - offset;
-            ex = (int) end.getX() + offset;
-          }
 
-          if (start.getY() < end.getY()) {
-            sy = (int) start.getY() + fontSize;
-            ey = (int) end.getY() - offset;
+          if (!selfRelation) {
+            if (start.getX() < end.getX()) {
+              sx = (int) start.getX() + offset;
+              ex = (int) end.getX() - fontSize * (e.length() == 1 ? 1 : 2) - offset;
+            } else {
+              sx = (int) start.getX() - fontSize * (s.length() == 1 ? 1 : 2) - offset;
+              ex = (int) end.getX() + offset;
+            }
+
+            if (start.getY() < end.getY()) {
+              sy = (int) start.getY() + fontSize;
+              ey = (int) end.getY() - offset;
+            } else {
+              sy = (int) start.getY() - offset;
+              ey = (int) end.getY() + fontSize;
+            }
           } else {
-            sy = (int) start.getY() - offset;
-            ey = (int) end.getY() + fontSize;
+            sx = (int) start.getX() + offset;
+            sy = (int) start.getY() + fontSize;
+
+            ex = (int) end.getX() + offset;
+            ey = (int) end.getY() - offset;
           }
 
           g2.drawString(s, sx, sy);

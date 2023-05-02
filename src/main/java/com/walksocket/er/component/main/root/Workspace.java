@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
@@ -276,13 +277,20 @@ public class Workspace extends ErConnectorPositioned {
           var c = new ErConnector(this, table, opt.get(),
               ErConnectorStyle.getLineStyle(relationship));
 
-          c.setRelationData(table,
-              ctxInnerForeignKey.dbTableForeignKeyColumnList.stream().map(e -> e.dictColumnId)
-                  .collect(
-                      Collectors.toList()));
-          c.setRelationData(opt.get(), ctxInnerForeignKey.dbTableForeignKeyColumnList.stream()
-              .map(e -> e.referenceDictColumnId).collect(
-                  Collectors.toList()));
+          var data1 = ctxInnerForeignKey.dbTableForeignKeyColumnList.stream()
+              .map(e -> e.dictColumnId)
+              .collect(Collectors.toList());
+          c.setRelationData(table, data1);
+
+          var data2 = ctxInnerForeignKey.dbTableForeignKeyColumnList.stream()
+              .map(e -> e.referenceDictColumnId)
+              .collect(Collectors.toList());
+          c.setRelationData(opt.get(), data2);
+
+          // self relation
+          if (table == opt.get()) {
+            mergeRelationData(c, table, data1, data2);
+          }
         }
       }
     }
@@ -318,13 +326,20 @@ public class Workspace extends ErConnectorPositioned {
         var c = new ErConnector(this, table, opt.get(),
             ErConnectorStyle.getLineStyle(relationship));
 
-        c.setRelationData(table,
-            ctxInnerForeignKey.dbTableForeignKeyColumnList.stream().map(e -> e.dictColumnId)
-                .collect(
-                    Collectors.toList()));
-        c.setRelationData(opt.get(), ctxInnerForeignKey.dbTableForeignKeyColumnList.stream()
-            .map(e -> e.referenceDictColumnId).collect(
-                Collectors.toList()));
+        var data1 = ctxInnerForeignKey.dbTableForeignKeyColumnList.stream()
+            .map(e -> e.dictColumnId)
+            .collect(Collectors.toList());
+        c.setRelationData(table, data1);
+
+        var data2 = ctxInnerForeignKey.dbTableForeignKeyColumnList.stream()
+            .map(e -> e.referenceDictColumnId)
+            .collect(Collectors.toList());
+        c.setRelationData(opt.get(), data2);
+
+        // self relation
+        if (table == opt.get()) {
+          mergeRelationData(c, table, data1, data2);
+        }
       }
     }
 
@@ -338,15 +353,37 @@ public class Workspace extends ErConnectorPositioned {
           var relationship = f.dbTableForeignKey.relationship;
           var c = new ErConnector(this, t, table, ErConnectorStyle.getLineStyle(relationship));
 
-          c.setRelationData(t,
-              f.dbTableForeignKeyColumnList.stream().map(e -> e.dictColumnId).collect(
-                  Collectors.toList()));
-          c.setRelationData(table,
-              f.dbTableForeignKeyColumnList.stream().map(e -> e.referenceDictColumnId).collect(
-                  Collectors.toList()));
+          var data1 = f.dbTableForeignKeyColumnList.stream()
+              .map(e -> e.dictColumnId)
+              .collect(Collectors.toList());
+          c.setRelationData(t, data1);
+
+          var data2 = f.dbTableForeignKeyColumnList.stream()
+              .map(e -> e.referenceDictColumnId)
+              .collect(Collectors.toList());
+          c.setRelationData(table, data2);
+
+          // self relation
+          if (t == table) {
+            mergeRelationData(c, table, data1, data2);
+          }
         }
       }
     }
+  }
+
+  /**
+   * merge relation data.
+   *
+   * @param c     connector
+   * @param table table
+   * @param data1 relation data
+   * @param data2 relation data
+   */
+  private void mergeRelationData(ErConnector c, Table table, List<String> data1,
+      List<String> data2) {
+    data1.addAll(data2);
+    c.setRelationData(table, data1);
   }
 
   /**
