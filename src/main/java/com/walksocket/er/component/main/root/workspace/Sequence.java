@@ -1,9 +1,7 @@
 package com.walksocket.er.component.main.root.workspace;
 
 import com.walksocket.er.Const;
-import com.walksocket.er.Date;
 import com.walksocket.er.Log;
-import com.walksocket.er.Utils;
 import com.walksocket.er.component.InputSequence;
 import com.walksocket.er.component.ShowDdl;
 import com.walksocket.er.component.main.root.Workspace;
@@ -98,21 +96,6 @@ public class Sequence extends ErConnectorEndpoint {
     panelName.setBackground(new Color(ctxSequence.dbSequenceOption.color));
     panelName.addMouseListener(new MouseAdapter() {
 
-      /**
-       * pressed.
-       */
-      private long pressed;
-
-      /**
-       * pressed x.
-       */
-      private int pressedX;
-
-      /**
-       * pressed y.
-       */
-      private int pressedY;
-
       @Override
       public void mouseClicked(MouseEvent e) {
         if (e.isPopupTrigger() || SwingUtilities.isRightMouseButton(e)) {
@@ -129,9 +112,6 @@ public class Sequence extends ErConnectorEndpoint {
 
       @Override
       public void mousePressed(MouseEvent e) {
-        // pressed
-        pressed = Date.timestampMillis();
-
         // focus
         sequence.requestFocusInWindow();
 
@@ -144,8 +124,9 @@ public class Sequence extends ErConnectorEndpoint {
         // change cursor
         var cursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
         panelName.setCursor(cursor);
-        pressedX = e.getX();
-        pressedY = e.getY();
+
+        // moving
+        movingStart(e.getPoint());
       }
 
       @Override
@@ -159,50 +140,12 @@ public class Sequence extends ErConnectorEndpoint {
           return;
         }
 
+        // moving
+        movingEnd();
+
         // reverse cursor
         var cursor = Cursor.getDefaultCursor();
         panelName.setCursor(cursor);
-
-        // move
-        if (Date.timestampMillis() - pressed > 250) {
-          var startX = sequence.getX();
-          var startY = sequence.getY();
-          var x = startX + e.getX() - pressedX;
-          var y = startY + e.getY() - pressedY;
-          if (x < 0) {
-            x = 0;
-          }
-          if (y < 0) {
-            y = 0;
-          }
-          if (x > 9999) {
-            x = 9999;
-          }
-          if (y > 9999) {
-            y = 9999;
-          }
-          x = Utils.floorOneDegree(x);
-          y = Utils.floorOneDegree(y);
-
-          try {
-            // save
-            ctxSequence.dbSequenceOption.posX = x;
-            ctxSequence.dbSequenceOption.posY = y;
-            Bucket.getInstance().getBucketSequence().saveOption(ctxSequence);
-
-            // position
-            sequence.setLocation(x, y);
-
-            // redraw connector
-            redrawAllConnectors();
-
-            // focus
-            sequence.requestFocusInWindow();
-          } catch (Exception ex) {
-            Log.error(e);
-            JOptionPane.showMessageDialog(workspace, ex.getMessage());
-          }
-        }
       }
 
       private void doPop(MouseEvent e) {
@@ -280,6 +223,28 @@ public class Sequence extends ErConnectorEndpoint {
         Log.error(e);
         JOptionPane.showMessageDialog(workspace, e.getMessage());
       }
+    }
+  }
+
+  @Override
+  protected void movingComplete(int x, int y) {
+    try {
+      // save
+      ctxSequence.dbSequenceOption.posX = x;
+      ctxSequence.dbSequenceOption.posY = y;
+      Bucket.getInstance().getBucketSequence().saveOption(ctxSequence);
+
+      // position
+      setLocation(x, y);
+
+      // redraw connector
+      redrawAllConnectors();
+
+      // focus
+      requestFocusInWindow();
+    } catch (Exception e) {
+      Log.error(e);
+      JOptionPane.showMessageDialog(workspace, e.getMessage());
     }
   }
 

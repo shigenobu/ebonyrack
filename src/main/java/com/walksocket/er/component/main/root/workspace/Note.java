@@ -1,7 +1,6 @@
 package com.walksocket.er.component.main.root.workspace;
 
 import com.walksocket.er.Const;
-import com.walksocket.er.Date;
 import com.walksocket.er.Log;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.main.root.Workspace;
@@ -196,26 +195,8 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
     panelSubject.setBackground(new Color(ctxNote.dbNoteOption.color));
     panelSubject.addMouseListener(new MouseAdapter() {
 
-      /**
-       * pressed.
-       */
-      private long pressed;
-
-      /**
-       * pressed x.
-       */
-      private int pressedX;
-
-      /**
-       * pressed y.
-       */
-      private int pressedY;
-
       @Override
       public void mousePressed(MouseEvent e) {
-        // pressed
-        pressed = Date.timestampMillis();
-
         // focus
         note.requestFocusInWindow();
 
@@ -228,8 +209,10 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
         // change cursor
         var cursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
         panelSubject.setCursor(cursor);
-        pressedX = e.getX();
-        pressedY = e.getY();
+
+        // moving
+        // TODO minus side width
+        movingStart(e.getPoint());
       }
 
       @Override
@@ -243,51 +226,12 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
           return;
         }
 
+        // moving
+        movingEnd();
+
         // reverse cursor
         var cursor = Cursor.getDefaultCursor();
         panelSubject.setCursor(cursor);
-
-        // move
-        if (Date.timestampMillis() - pressed > 250) {
-          var startX = note.getX();
-          var startY = note.getY();
-          var x = startX + e.getX() - pressedX;
-          var y = startY + e.getY() - pressedY;
-          if (x < 0) {
-            x = 0;
-          }
-          if (y < 0) {
-            y = 0;
-          }
-          if (x > 9999) {
-            x = 9999;
-          }
-          if (y > 9999) {
-            y = 9999;
-          }
-          x = Utils.floorOneDegree(x);
-          y = Utils.floorOneDegree(y);
-
-          try {
-            // save
-            ctxNote.dbNoteOption.posX = x;
-            ctxNote.dbNoteOption.posY = y;
-            Bucket.getInstance().getBucketNote().saveOption(ctxNote);
-
-            // position
-            note.setLocation(x, y);
-
-            // redraw connector
-            redrawAllConnectors();
-
-            // focus
-            note.requestFocusInWindow();
-
-          } catch (Exception ex) {
-            Log.error(e);
-            JOptionPane.showMessageDialog(workspace, ex.getMessage());
-          }
-        }
       }
 
       private void doPop(MouseEvent e) {
@@ -589,6 +533,29 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
         Log.error(e);
         JOptionPane.showMessageDialog(workspace, e.getMessage());
       }
+    }
+  }
+
+  @Override
+  protected void movingComplete(int x, int y) {
+    try {
+      // save
+      ctxNote.dbNoteOption.posX = x;
+      ctxNote.dbNoteOption.posY = y;
+      Bucket.getInstance().getBucketNote().saveOption(ctxNote);
+
+      // position
+      setLocation(x, y);
+
+      // redraw connector
+      redrawAllConnectors();
+
+      // focus
+      requestFocusInWindow();
+
+    } catch (Exception e) {
+      Log.error(e);
+      JOptionPane.showMessageDialog(workspace, e.getMessage());
     }
   }
 

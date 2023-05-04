@@ -96,6 +96,16 @@ public class Utils {
   }
 
   /**
+   * floor one degree.
+   *
+   * @param src src
+   * @return ten degree
+   */
+  public static int floorOneDegree(double src) {
+    return (int) ((Math.floor(src / 10)) * 10);
+  }
+
+  /**
    * is number.
    *
    * @param src string
