@@ -34,3 +34,7 @@ Entity relationship creation tool for MariaDB.
 
 * Font: [Mplus1-Regular](https://mplusfonts.github.io/)
 * Look and Feel: [FlatLaf](https://www.formdev.com/flatlaf/)
+
+### Contributors
+
+* [ArmadaSuit](https://github.com/ArmadaSuit)
