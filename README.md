@@ -4,7 +4,9 @@
 
 Entity relationship creation tool for MariaDB.  
 
-![image](image.png)
+![image](image01.png)
+
+![image](image02.png)
 
 ### System required
 
