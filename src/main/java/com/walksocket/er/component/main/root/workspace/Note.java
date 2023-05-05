@@ -211,8 +211,8 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
         panelSubject.setCursor(cursor);
 
         // moving
-        // TODO minus side width
-        movingStart(e.getPoint());
+        // plus side width
+        movingStart(new Point(e.getX() + panelSide.getWidth(), e.getY()));
       }
 
       @Override

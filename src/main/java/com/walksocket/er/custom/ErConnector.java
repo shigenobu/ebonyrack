@@ -421,7 +421,7 @@ public class ErConnector extends JPanel {
             BasicStroke.JOIN_ROUND,
             BasicStroke.CAP_BUTT,
             1.0f,
-            new float[]{2.0f, 5.0f, 2.0f, 5.0f},
+            new float[]{10.0f, 5.0f, 10.0f, 5.0f},
             0.0f));
       }
       g2.setColor(lineColor);
