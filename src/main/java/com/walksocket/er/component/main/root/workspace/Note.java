@@ -162,7 +162,7 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
             new ErConnector(getWorkspace(), note, table, LineStyle.SIMPLE);
 
           } catch (Exception ex) {
-            Log.error(e);
+            Log.error(ex);
             JOptionPane.showMessageDialog(workspace, ex.getMessage());
           }
         } else if (target instanceof Sequence) {
@@ -180,7 +180,7 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
             new ErConnector(getWorkspace(), note, sequence, LineStyle.SIMPLE);
 
           } catch (Exception ex) {
-            Log.error(e);
+            Log.error(ex);
             JOptionPane.showMessageDialog(workspace, ex.getMessage());
           }
         }
@@ -383,6 +383,10 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
             rangeEndY, x, y));
         if (x >= rangeStartX && x <= rangeEndX && y >= rangeStartY && y <= rangeEndY) {
           resizing = true;
+
+          // change cursor
+          var cursor = Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR);
+          note.setCursor(cursor);
         }
       }
 
@@ -393,6 +397,11 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
 
         // resize
         if (resizing) {
+          // reverse cursor
+          var cursor = Cursor.getDefaultCursor();
+          note.setCursor(cursor);
+
+          // pos
           var w = e.getX() + panelSide.getWidth();
           var h = e.getY() + panelSubject.getHeight() + panelBody.getHeight();
           if (w < MIN_WIDTH) {
@@ -444,7 +453,7 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
             // redraw connector
             redrawAllConnectors();
           } catch (Exception ex) {
-            Log.error(e);
+            Log.error(ex);
             JOptionPane.showMessageDialog(workspace, ex.getMessage());
           }
         }

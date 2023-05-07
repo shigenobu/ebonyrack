@@ -286,7 +286,7 @@ public class Form extends JPanel {
             .toArray()));
     panel10.add(comboBoxAutoIncrement);
 
-    // invisible
+    // option
     var panel11 = new JPanel();
     add(panel11);
     panel11.add(labelOption);
