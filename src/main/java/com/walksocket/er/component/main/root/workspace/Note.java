@@ -21,7 +21,9 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
@@ -34,6 +36,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.text.JTextComponent;
 
 /**
@@ -105,6 +108,16 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
    * text area body.
    */
   private final JTextArea textAreaBody = new JTextArea();
+
+  /**
+   * resizing.
+   */
+  private boolean resizing;
+
+  /**
+   * resizing timer.
+   */
+  private final Timer resizingTimer;
 
   /**
    * Constructor.
@@ -364,15 +377,9 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
     panelFooter.setBackground(Color.WHITE);
     panelFooter.addMouseListener(new MouseAdapter() {
 
-      /**
-       * resizing.
-       */
-      private boolean resizing;
-
       @Override
       public void mousePressed(MouseEvent e) {
         // resize
-        resizing = false;
         var rangeStartX = panelFooter.getWidth() - 10;
         var rangeEndX = panelFooter.getWidth();
         var rangeStartY = panelFooter.getHeight() - 10;
@@ -382,11 +389,13 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
         Log.trace(String.format("range %s-%s, %s-%s %s:%s", rangeStartX, rangeEndX, rangeStartY,
             rangeEndY, x, y));
         if (x >= rangeStartX && x <= rangeEndX && y >= rangeStartY && y <= rangeEndY) {
-          resizing = true;
-
           // change cursor
           var cursor = Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR);
           note.setCursor(cursor);
+
+          // resizing start
+          resizing = true;
+          resizingTimer.start();
         }
       }
 
@@ -397,69 +406,91 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
 
         // resize
         if (resizing) {
+          // resizing end
+          resizingTimer.stop();
+          resizing = false;
+
           // reverse cursor
           var cursor = Cursor.getDefaultCursor();
           note.setCursor(cursor);
-
-          // pos
-          var w = e.getX() + panelSide.getWidth();
-          var h = e.getY() + panelSubject.getHeight() + panelBody.getHeight();
-          if (w < MIN_WIDTH) {
-            w = MIN_WIDTH;
-          }
-          if (w > MAX_WIDTH) {
-            w = MAX_WIDTH;
-          }
-          if (h < MIN_HEIGHT) {
-            h = MIN_HEIGHT;
-          }
-          if (h > MAX_HEIGHT) {
-            h = MAX_HEIGHT;
-          }
-          panelSide.setSize(new Dimension(panelSide.getWidth(), h - BORDER_SIZE * 2));
-          panelSubject.setSize(
-              new Dimension(w - BORDER_SIZE * 2 - panelSide.getWidth(), panelSubject.getHeight()));
-          panelBody.setSize(new Dimension(w - BORDER_SIZE * 2 - panelSide.getWidth(),
-              h - BORDER_SIZE * 2 - panelSubject.getHeight() - panelFooter.getHeight()));
-          panelFooter.setLocation(new Point(panelSide.getWidth() + BORDER_SIZE, h - 12));
-          panelFooter.setSize(
-              new Dimension(w - BORDER_SIZE * 2 - panelSide.getWidth(), panelFooter.getHeight()));
-          note.setSize(new Dimension(w, h));
-
-          // subject
-          textFieldSubject.setSize(
-              new Dimension(panelSubject.getWidth() - 20, textFieldSubject.getHeight()));
-          textFieldSubject.setColumns(
-              panelSubject.getWidth() / (textFieldSubject.getFont().getSize() + 1));
-
-          // body
-          textAreaBody.setSize(
-              new Dimension(panelBody.getWidth() - 20, panelBody.getHeight() - 20));
-          textAreaBody.setColumns(textAreaBody.getWidth() / (textAreaBody.getFont().getSize() + 1));
-          if (textAreaBody.getColumns() > 20) {
-            textAreaBody.setColumns(20);
-          }
-          textAreaBody.setRows(textAreaBody.getHeight() / (textAreaBody.getFont().getSize() + 4));
-          if (textAreaBody.getRows() > 15) {
-            textAreaBody.setRows(15);
-          }
-
-          try {
-            // save
-            ctxNote.dbNoteOption.width = note.getWidth();
-            ctxNote.dbNoteOption.height = note.getHeight();
-            Bucket.getInstance().getBucketNote().saveOption(ctxNote);
-
-            // redraw connector
-            redrawAllConnectors();
-          } catch (Exception ex) {
-            Log.error(ex);
-            JOptionPane.showMessageDialog(workspace, ex.getMessage());
-          }
         }
       }
     });
     add(panelFooter);
+
+    // resizing
+    ActionListener movingListener = actionEvent -> {
+      if (!resizing) {
+        return;
+      }
+
+      // https://ateraimemo.com/Swing/MouseInfo.html
+      var pi = MouseInfo.getPointerInfo();
+      Point pt = pi.getLocation();
+      SwingUtilities.convertPointFromScreen(pt, workspace);
+
+      var w = Utils.floorOneDegree(pt.getX() - note.getX() + 12);
+      var h = Utils.floorOneDegree(pt.getY() - note.getY() + 12);
+//      Log.trace(String.format("w:h %s:%s", w, h));
+      if (w < MIN_WIDTH) {
+        w = MIN_WIDTH;
+      }
+      if (w > MAX_WIDTH) {
+        w = MAX_WIDTH;
+      }
+      if (h < MIN_HEIGHT) {
+        h = MIN_HEIGHT;
+      }
+      if (h > MAX_HEIGHT) {
+        h = MAX_HEIGHT;
+      }
+      if (Math.abs(note.getWidth() - w) < 10 && Math.abs(note.getHeight() - h) < 10) {
+        return;
+      }
+
+      panelSide.setSize(new Dimension(panelSide.getWidth(), h - BORDER_SIZE * 2));
+      panelSubject.setSize(
+          new Dimension(w - BORDER_SIZE * 2 - panelSide.getWidth(), panelSubject.getHeight()));
+      panelBody.setSize(new Dimension(w - BORDER_SIZE * 2 - panelSide.getWidth(),
+          h - BORDER_SIZE * 2 - panelSubject.getHeight() - panelFooter.getHeight()));
+      panelFooter.setLocation(new Point(panelSide.getWidth() + BORDER_SIZE, h - 12));
+      panelFooter.setSize(
+          new Dimension(w - BORDER_SIZE * 2 - panelSide.getWidth(), panelFooter.getHeight()));
+      note.setSize(new Dimension(w, h));
+
+      // subject
+      textFieldSubject.setSize(
+          new Dimension(panelSubject.getWidth() - 20, textFieldSubject.getHeight()));
+      textFieldSubject.setColumns(
+          panelSubject.getWidth() / (textFieldSubject.getFont().getSize() + 1));
+
+      // body
+      textAreaBody.setSize(
+          new Dimension(panelBody.getWidth() - 20, panelBody.getHeight() - 20));
+      textAreaBody.setColumns(textAreaBody.getWidth() / (textAreaBody.getFont().getSize() + 1));
+      if (textAreaBody.getColumns() > 20) {
+        textAreaBody.setColumns(20);
+      }
+      textAreaBody.setRows(textAreaBody.getHeight() / (textAreaBody.getFont().getSize() + 4));
+      if (textAreaBody.getRows() > 15) {
+        textAreaBody.setRows(15);
+      }
+
+      try {
+        // save
+        ctxNote.dbNoteOption.width = note.getWidth();
+        ctxNote.dbNoteOption.height = note.getHeight();
+        Bucket.getInstance().getBucketNote().saveOption(ctxNote);
+
+        // redraw connector
+        redrawAllConnectors();
+      } catch (Exception ex) {
+        Log.error(ex);
+        JOptionPane.showMessageDialog(workspace, ex.getMessage());
+      }
+    };
+    resizingTimer = new Timer(50, movingListener);
+    resizingTimer.setRepeats(true);
 
     // redraw
     redraw();

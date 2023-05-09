@@ -56,6 +56,8 @@ public class Root extends JPanel {
     sp.setDividerSize(5);
     add(sp, BorderLayout.CENTER);
 
+    // TODO save & load scroll pos
+
     // side
     side = new Side(this, cfgProject);
     sp.setLeftComponent(new JScrollPane(side, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
