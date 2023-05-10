@@ -121,6 +121,9 @@ public class Side extends JPanel {
       public void mouseClicked(MouseEvent e) {
         var tree = (JTree) e.getSource();
         var treePath = tree.getSelectionPath();
+        if (treePath == null) {
+          return;
+        }
 
         var tmpNode = treePath.getLastPathComponent();
         if (tmpNode != null && tmpNode instanceof DefaultMutableTreeNode) {

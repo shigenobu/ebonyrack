@@ -56,20 +56,19 @@ public class Root extends JPanel {
     sp.setDividerSize(5);
     add(sp, BorderLayout.CENTER);
 
-    // TODO save & load scroll pos
-
     // side
     side = new Side(this, cfgProject);
-    sp.setLeftComponent(new JScrollPane(side, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-        JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS));
+    var scrollPaneSide = new JScrollPane(side, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+        JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+    sp.setLeftComponent(scrollPaneSide);
 
     // workspace
     workspace = new Workspace(this, cfgProject);
-    var scrollPane = new JScrollPane(workspace, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+    var scrollPaneWorkspace = new JScrollPane(workspace, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
         JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-    scrollPane.getHorizontalScrollBar().setUnitIncrement(30);
-    scrollPane.getVerticalScrollBar().setUnitIncrement(30);
-    sp.setRightComponent(scrollPane);
+    scrollPaneWorkspace.getHorizontalScrollBar().setUnitIncrement(30);
+    scrollPaneWorkspace.getVerticalScrollBar().setUnitIncrement(30);
+    sp.setRightComponent(scrollPaneWorkspace);
 
     // sync side between workspace
     side.setWorkspace(workspace);
