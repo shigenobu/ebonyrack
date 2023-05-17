@@ -55,4 +55,22 @@ public class ColumnForeignKeyOption {
   public String getColumn() {
     return String.format("`%s`", columnName);
   }
+
+  /**
+   * get seq in index for sort.
+   *
+   * @return seq in index
+   */
+  public int getSeqInIndexForSort() {
+    return Integer.parseInt(seqInIndex);
+  }
+
+  /**
+   * get column name for sort.
+   *
+   * @return column name
+   */
+  public String getColumnNameForSort() {
+    return columnName;
+  }
 }

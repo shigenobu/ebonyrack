@@ -5,6 +5,7 @@ import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
 import com.walksocket.er.sqlite.Bucket;
+import com.walksocket.er.sqlite.entity.DbDictColumn;
 import com.walksocket.er.sqlite.tmp.TmpDictGroup;
 import com.walksocket.er.sqlite.tmp.TmpDictGroupColumn;
 import java.awt.Dimension;
@@ -123,7 +124,8 @@ public class Form extends JPanel {
     var dbDictColumnTypeList = Bucket.getInstance().getBucketDict().dbDictColumnTypeList;
     var dbDictColumnList = Bucket.getInstance().getBucketDict().dbDictColumnList;
     for (var dbDictColumn : dbDictColumnList.stream()
-        .sorted(Comparator.comparing(t -> t.columnName)) // TODO columnName, columnComment
+        .sorted(Comparator.comparing(DbDictColumn::getColumnNameForSort)
+            .thenComparing(DbDictColumn::getColumnCommentForSort))
         .collect(Collectors.toList())) {
       var opt = dbDictColumnTypeList.stream()
           .filter(d -> d.dictColumnTypeId.equals(dbDictColumn.dictColumnTypeId))

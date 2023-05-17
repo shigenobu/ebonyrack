@@ -75,4 +75,22 @@ public class DbDictColumnType extends Entity {
         Utils.quote(dictColumnTypeId)
     );
   }
+
+  /**
+   * get seq for sort.
+   *
+   * @return seq
+   */
+  public int getSeqForSort() {
+    return seq;
+  }
+
+  /**
+   * get column type for sort.
+   *
+   * @return column type
+   */
+  public String getColumnTypeForSort() {
+    return columnType;
+  }
 }

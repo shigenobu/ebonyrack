@@ -612,8 +612,8 @@ public class Form extends JPanel {
     // -----
     // self
     var sortedColumnForeignKeyOptionList = columnForeignKeyOptionList.stream()
-        .sorted(
-            Comparator.comparing(t -> Integer.parseInt(t.seqInIndex)))// TODO seqInIndex, columnName
+        .sorted(Comparator.comparing(ColumnForeignKeyOption::getSeqInIndexForSort)
+            .thenComparing(ColumnForeignKeyOption::getColumnNameForSort))
         .collect(Collectors.toList());
     for (int i = 0; i < sortedColumnForeignKeyOptionList.size(); i++) {
       var c = sortedColumnForeignKeyOptionList.get(i);
@@ -625,8 +625,8 @@ public class Form extends JPanel {
     tmpForeignKey.referenceTableName = referenceTableName;
 
     var sortedReferenceColumnForeignKeyOptionList = referenceColumnForeignKeyOptionList.stream()
-        .sorted(
-            Comparator.comparing(t -> Integer.parseInt(t.seqInIndex)))// TODO seqInIndex, columnName
+        .sorted(Comparator.comparing(ColumnForeignKeyOption::getSeqInIndexForSort)
+            .thenComparing(ColumnForeignKeyOption::getColumnNameForSort))
         .collect(Collectors.toList());
     for (int i = 0; i < sortedReferenceColumnForeignKeyOptionList.size(); i++) {
       var c = sortedReferenceColumnForeignKeyOptionList.get(i);

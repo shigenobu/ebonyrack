@@ -9,6 +9,7 @@ import com.walksocket.er.definition.Collate;
 import com.walksocket.er.definition.NotNull;
 import com.walksocket.er.definition.OnUpdate;
 import com.walksocket.er.sqlite.Bucket;
+import com.walksocket.er.sqlite.entity.DbDictColumn;
 import com.walksocket.er.sqlite.tmp.TmpDictColumn;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -441,7 +442,8 @@ public class Form extends JPanel {
 
     var i = 0;
     for (var dbDictColumn : dbDictColumnList.stream()
-        .sorted(Comparator.comparing(t -> t.columnName)) // TODO columnName, columnComment
+        .sorted(Comparator.comparing(DbDictColumn::getColumnNameForSort)
+            .thenComparing(DbDictColumn::getColumnCommentForSort))
         .collect(Collectors.toList())) {
       tableModel.setRowCount(i + 1);
 

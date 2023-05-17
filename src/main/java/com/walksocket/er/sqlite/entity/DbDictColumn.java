@@ -193,4 +193,22 @@ public class DbDictColumn extends Entity {
   public String getTipText(DbDictColumnType dbDictColumnType) {
     return String.format("%s [%s]", getShowColumnName(), dbDictColumnType.columnType);
   }
+
+  /**
+   * get column name for sort.
+   *
+   * @return column name
+   */
+  public String getColumnNameForSort() {
+    return columnName;
+  }
+
+  /**
+   * get column comment for sort.
+   *
+   * @return column comment
+   */
+  public String getColumnCommentForSort() {
+    return columnComment;
+  }
 }

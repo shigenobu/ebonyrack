@@ -4,6 +4,7 @@ import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
 import com.walksocket.er.sqlite.Bucket;
+import com.walksocket.er.sqlite.entity.DbDictColumnType;
 import com.walksocket.er.sqlite.tmp.TmpDictColumnType;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -281,7 +282,8 @@ public class Form extends JPanel {
 
     var i = 0;
     for (var dbDictColumnType : dbDictColumnTypeList.stream()
-        .sorted(Comparator.comparing(t -> t.seq)) // TODO seq, columnType
+        .sorted(Comparator.comparing(DbDictColumnType::getSeqForSort)
+            .thenComparing(DbDictColumnType::getColumnTypeForSort))
         .collect(Collectors.toList())) {
       tableModel.setRowCount(i + 1);
 

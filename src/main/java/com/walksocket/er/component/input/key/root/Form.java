@@ -206,8 +206,8 @@ public class Form extends JPanel {
     }
 
     var sortedColumnKeyOptionList = columnKeyOptionList.stream()
-        .sorted(Comparator.comparing(
-            t -> Integer.parseInt(t.seqInIndex))) // TODO seqInIndex, columnName
+        .sorted(Comparator.comparing(ColumnKeyOption::getSeqInIndexForSort)
+            .thenComparing(ColumnKeyOption::getColumnNameForSort))
         .collect(Collectors.toList());
     for (int i = 0; i < sortedColumnKeyOptionList.size(); i++) {
       var c = sortedColumnKeyOptionList.get(i);
