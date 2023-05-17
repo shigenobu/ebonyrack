@@ -1011,15 +1011,13 @@ public class BucketTable {
       return;
     }
 
-    boolean conflict = true;
     for (var dbTableForeignKeyColumn : dbTableForeignKeyColumnList) {
       var opt = dbTableColumnList.stream()
           .filter(c -> c.dictColumnId.equals(dbTableForeignKeyColumn.referenceDictColumnId))
           .findFirst();
       if (!opt.isPresent()) {
-        continue;
+        throw new Exception("Conflict reference foreign key.");
       }
-      conflict = false;
 
       var selfDbTableColumn = opt.get();
       var selfDbDictColumn = existedDbDictColumnList.stream()
@@ -1045,10 +1043,6 @@ public class BucketTable {
           throw new Exception("Referenced foreign key Column type is mismatch.");
         }
       }
-    }
-
-    if (conflict) {
-      throw new Exception("Conflict reference foreign key.");
     }
   }
 
