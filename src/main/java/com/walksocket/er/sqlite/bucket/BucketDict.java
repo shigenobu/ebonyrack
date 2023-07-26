@@ -2,6 +2,8 @@ package com.walksocket.er.sqlite.bucket;
 
 import com.walksocket.er.Log;
 import com.walksocket.er.Utils;
+import com.walksocket.er.definition.NotNull;
+import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.Connection;
 import com.walksocket.er.sqlite.Entity;
 import com.walksocket.er.sqlite.entity.DbDictColumn;
@@ -126,6 +128,8 @@ public class BucketDict {
     try {
       con.begin();
 
+      // TODO check foreign key
+
       // database
       var d = new DbDictColumnType();
       d.dictColumnTypeId = tmpDictColumnType.dictColumnTypeId;
@@ -208,6 +212,19 @@ public class BucketDict {
   public void saveDictColumn(TmpDictColumn tmpDictColumn) throws Exception {
     try {
       con.begin();
+
+      // check index used
+      // when primary, null disallow ...
+      if (tmpDictColumn.notNullValue.equals(NotNull.NULL_VALUE)) {
+        for (var ctxTable : Bucket.getInstance().getBucketTable().ctxTableList) {
+          var optionalDbDictPrimaryKeyColumn = ctxTable.ctxInnerPrimaryKey.dbTablePrimaryKeyColumnList.stream()
+              .filter(c -> c.dictColumnId.equals(tmpDictColumn.dictColumnId))
+              .findFirst();
+          if (optionalDbDictPrimaryKeyColumn.isPresent()) {
+            throw new Exception("Null is disallowed primary.");
+          }
+        }
+      }
 
       // database
       var d = new DbDictColumn();
@@ -310,6 +327,8 @@ public class BucketDict {
       throws Exception {
     try {
       con.begin();
+
+      // TODO check index used
 
       // database
       var d = new DbDictGroup();
