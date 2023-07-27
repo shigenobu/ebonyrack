@@ -240,7 +240,8 @@ public class BucketDict {
                 .findFirst();
             if (optionalReferenceDbDictColumn.isPresent()) {
               var referenceDbDictColumn = optionalReferenceDbDictColumn.get();
-              if (!referenceDbDictColumn.dictColumnTypeId.equals(dbDictColumnType.dictColumnTypeId)) {
+              if (!referenceDbDictColumn.dictColumnTypeId.equals(
+                  dbDictColumnType.dictColumnTypeId)) {
                 throw new Exception("Referenced foreign key Column type is mismatch.");
               }
             }
