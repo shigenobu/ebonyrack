@@ -328,7 +328,61 @@ public class BucketDict {
     try {
       con.begin();
 
-      // TODO check index used
+      // check index used
+      // when primary, unique, key is disallow to delete ...
+      var optionalExistedDbDictGroup = dbDictGroupList.stream()
+          .filter(d -> d.dictGroupId.equals(tmpDictGroup.dictGroupId))
+          .findFirst();
+      if (optionalExistedDbDictGroup.isPresent()) {
+        var existedDbDictGroup = optionalExistedDbDictGroup.get();
+        var existedDbDictGroupColumnList = dbDictGroupColumnList.stream()
+            .filter(d -> d.dictGroupId.equals(existedDbDictGroup.dictGroupId))
+            .collect(Collectors.toList());
+        var notExistedDictColumnIdList = new ArrayList<String>();
+        for (var existedDbDictGroupColumn : existedDbDictGroupColumnList) {
+          var exists = false;
+          for (var tmpDictGroupColumn : tmpDictGroupColumnList) {
+            if (existedDbDictGroupColumn.dictColumnId.equals(tmpDictGroupColumn.dictColumnId)) {
+              exists = true;
+              break;
+            }
+          }
+          if (!exists) {
+            notExistedDictColumnIdList.add(existedDbDictGroupColumn.dictColumnId);
+          }
+        }
+        for (var dictColumnId : notExistedDictColumnIdList) {
+          for (var ctxTable : Bucket.getInstance().getBucketTable().ctxTableList) {
+            // primary
+            var optionalDbDictPrimaryKeyColumn = ctxTable.ctxInnerPrimaryKey.dbTablePrimaryKeyColumnList.stream()
+                .filter(c -> c.dictColumnId.equals(dictColumnId))
+                .findFirst();
+            if (optionalDbDictPrimaryKeyColumn.isPresent()) {
+              throw new Exception("Deleted column is used at primary.");
+            }
+
+            // unique
+            for (var ctxInnerUniqueKey : ctxTable.ctxInnerUniqueKeyList) {
+              var optionalDbDictUniqueKeyColumn = ctxInnerUniqueKey.dbTableUniqueKeyColumnList.stream()
+                  .filter(c -> c.dictColumnId.equals(dictColumnId))
+                  .findFirst();
+              if (optionalDbDictUniqueKeyColumn.isPresent()) {
+                throw new Exception("Deleted column is used at unique.");
+              }
+            }
+
+            // key
+            for (var ctxInnerKey : ctxTable.ctxInnerKeyList) {
+              var optionalDbDictKeyColumn = ctxInnerKey.dbTableKeyColumnList.stream()
+                  .filter(c -> c.dictColumnId.equals(dictColumnId))
+                  .findFirst();
+              if (optionalDbDictKeyColumn.isPresent()) {
+                throw new Exception("Deleted column is used at key.");
+              }
+            }
+          }
+        }
+      }
 
       // database
       var d = new DbDictGroup();
