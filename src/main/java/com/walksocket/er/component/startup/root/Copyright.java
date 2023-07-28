@@ -1,5 +1,6 @@
 package com.walksocket.er.component.startup.root;
 
+import com.walksocket.er.App;
 import com.walksocket.er.Const;
 import com.walksocket.er.Log;
 import com.walksocket.er.component.startup.Root;
@@ -34,7 +35,7 @@ public class Copyright extends JPanel {
     add(panel1);
     var labelCopyRight = new JLabel(
         String.format("<html><font color='white'>version %s @%s project.</font></html>",
-            Const.VERSION, Const.TITLE));
+            App.class.getPackage().getImplementationVersion(), Const.TITLE));
     labelCopyRight.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {

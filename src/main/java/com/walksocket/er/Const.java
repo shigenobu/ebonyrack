@@ -6,11 +6,6 @@ package com.walksocket.er;
 public class Const {
 
   /**
-   * version.
-   */
-  public static final String VERSION = "0.1.2";
-
-  /**
    * title.
    */
   public static final String TITLE = "ebonyrack";

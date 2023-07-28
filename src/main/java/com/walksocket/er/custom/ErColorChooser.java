@@ -10,7 +10,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
@@ -18,7 +17,7 @@ import javax.swing.border.LineBorder;
 /**
  * ErColorChooser.
  */
-public class ErColorChooser extends JDialog {
+public class ErColorChooser extends ErDialog {
 
   /**
    * show dialog.
@@ -44,6 +43,7 @@ public class ErColorChooser extends JDialog {
    * @param initialColor initialColor
    */
   private ErColorChooser(Color initialColor) {
+    super();
     this.selectedColor = initialColor;
 
     // pos
