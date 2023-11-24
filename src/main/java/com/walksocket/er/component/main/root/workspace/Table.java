@@ -11,6 +11,7 @@ import com.walksocket.er.custom.ErColorChooser;
 import com.walksocket.er.custom.ErConnector;
 import com.walksocket.er.custom.ErConnectorEndpoint;
 import com.walksocket.er.custom.ErConnectorEndpointRelation;
+import com.walksocket.er.definition.AutoIncrement;
 import com.walksocket.er.definition.DataType;
 import com.walksocket.er.definition.NotNull;
 import com.walksocket.er.sqlite.Bucket;
@@ -70,6 +71,19 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
   static {
     try (var stream = App.class.getClassLoader().getResourceAsStream("image/key_primary.png")) {
       imageKeyPrimary = ImageIO.read(stream);
+    } catch (IOException e) {
+      Log.error(e);
+    }
+  }
+
+  /**
+   * image key primary auto increment.
+   */
+  private static BufferedImage imageKeyPrimaryAi;
+
+  static {
+    try (var stream = App.class.getClassLoader().getResourceAsStream("image/key_primary_ai.png")) {
+      imageKeyPrimaryAi = ImageIO.read(stream);
     } catch (IOException e) {
       Log.error(e);
     }
@@ -423,7 +437,11 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
                 .findFirst()
                 .isPresent()) {
               Graphics2D g2 = (Graphics2D) g.create();
-              g2.drawImage(imageKeyPrimary, 0, 4, 12, 12, null);
+              if (dbDictColumn.autoIncrementDefinition.equals(AutoIncrement.AUTO_INCREMENT_VALUE)) {
+                g2.drawImage(imageKeyPrimaryAi, 0, 4, 12, 12, null);
+              } else {
+                g2.drawImage(imageKeyPrimary, 0, 4, 12, 12, null);
+              }
               g2.dispose();
             }
             if (ctxTable.ctxInnerUniqueKeyList.stream()

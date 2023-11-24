@@ -1,6 +1,8 @@
 package com.walksocket.er.sqlite.entity;
 
 import com.walksocket.er.Utils;
+import com.walksocket.er.definition.AutoIncrement;
+import com.walksocket.er.definition.NotNull;
 import com.walksocket.er.sqlite.Entity;
 import com.walksocket.er.sqlite.Record;
 
@@ -191,7 +193,17 @@ public class DbDictColumn extends Entity {
    * @return tip text
    */
   public String getTipText(DbDictColumnType dbDictColumnType) {
-    return String.format("%s [%s]", getShowColumnName(), dbDictColumnType.columnType);
+    var builder = new StringBuilder();
+    builder.append("<html>");
+    if (autoIncrementDefinition.equals(AutoIncrement.AUTO_INCREMENT_VALUE)) {
+      builder.append("[AI] ");
+    }
+    builder.append(String.format("%s <b>%s</b> %s",
+        getShowColumnName(),
+        dbDictColumnType.columnType,
+        notNullValue));
+    builder.append("</html>");
+    return builder.toString();
   }
 
   /**

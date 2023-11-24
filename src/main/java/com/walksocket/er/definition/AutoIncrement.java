@@ -9,13 +9,18 @@ import java.util.List;
 public class AutoIncrement {
 
   /**
+   * auto increment value.
+   */
+  public static final String AUTO_INCREMENT_VALUE = "AUTO_INCREMENT";
+
+  /**
    * auto increment for column.
    */
   private static final List<String> autoIncrementForColumn = new ArrayList<>();
 
   static {
     autoIncrementForColumn.add("");
-    autoIncrementForColumn.add("AUTO_INCREMENT");
+    autoIncrementForColumn.add(AUTO_INCREMENT_VALUE);
   }
 
   /**
