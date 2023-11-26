@@ -116,6 +116,20 @@ public class Project extends JPanel {
           new Dimension(WindowStartup.WIDTH / 3 + 100, WindowStartup.HEIGHT / 20));
       p.add(labelProjectName);
 
+      // read in
+      var buttonReadIn = new JButton("Read in");
+      buttonReadIn.addActionListener(actionEvent -> {
+        // TODO read in
+      });
+      p.add(buttonReadIn);
+
+      // write out
+      var buttonWriteOut = new JButton("Write out");
+      buttonWriteOut.addActionListener(actionEvent -> {
+        // TODO write out
+      });
+      p.add(buttonWriteOut);
+
       // edit
       var buttonEdit = new JButton("Edit");
       buttonEdit.addActionListener(actionEvent -> {

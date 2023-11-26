@@ -21,6 +21,16 @@ public class CfgProject {
   public int lastOpened;
 
   /**
+   * last ddl save path.
+   */
+  public String lastDdlSavePath;
+
+  /**
+   * last image save path.
+   */
+  public String lastImageSavePath;
+
+  /**
    * pos.
    */
   public CfgProjectPos pos;

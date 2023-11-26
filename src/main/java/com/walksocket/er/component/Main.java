@@ -21,11 +21,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -33,6 +35,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * Main.
@@ -132,37 +135,64 @@ public class Main extends JFrame {
     menuFile.addSeparator();
     var menuItemExportDdl = new JMenuItem("Export ddl");
     menuItemExportDdl.addActionListener(actionEvent -> {
-      try {
-        var fileName = String.format("%s_%s_%s.sql", Const.TITLE, cfgProject.name,
-            Date.timestamp());
-        var f = new File(fileName);
-        com.walksocket.er.File.writeString(new FileOutputStream(f), getDdl());
-        JOptionPane.showMessageDialog(main,
-            String.format("<html>Saved ddl:<br /><u>%s</u></html>",
-                f.getAbsolutePath()));
-      } catch (IOException e) {
-        Log.error(e);
-        JOptionPane.showMessageDialog(main, e.getMessage());
-      }
+      var exportDdl = new ExportDdl(main);
+      exportDdl.setModal(true);
+      exportDdl.setVisible(true);
+//      try {
+//        var fileName = String.format("%s_%s_%s.sql", Const.TITLE, cfgProject.name,
+//            Date.timestamp());
+//        var f = new File(fileName);
+//        com.walksocket.er.File.writeString(new FileOutputStream(f), getDdl());
+//        JOptionPane.showMessageDialog(main,
+//            String.format("<html>Saved ddl:<br /><u>%s</u></html>",
+//                f.getAbsolutePath()));
+//      } catch (IOException e) {
+//        Log.error(e);
+//        JOptionPane.showMessageDialog(main, e.getMessage());
+//      }
     });
     menuFile.add(menuItemExportDdl);
     var menuItemExportImage = new JMenuItem("Export image");
     menuItemExportImage.addActionListener(actionEvent -> {
       Workspace workspace = root.getWorkspace();
       try {
-        var rect = workspace.getBounds();
+        // chooser
         var format = "png";
-        var fileName = String.format("%s_%s_%s.%s", Const.TITLE, cfgProject.name, Date.timestamp(),
-            format);
-        var captureImage =
-            new BufferedImage(rect.width, rect.height,
-                BufferedImage.TYPE_INT_ARGB);
-        workspace.paint(captureImage.getGraphics());
-        var f = new File(fileName);
-        ImageIO.write(captureImage, format, f);
-        JOptionPane.showMessageDialog(main,
-            String.format("<html>Saved image:<br /><u>%s</u></html>",
-                f.getAbsolutePath()));
+        var dotFormat = "." + format;
+        var dir = Paths.get("").toAbsolutePath().toString();
+        var file = String.format("%s%s", cfgProject.name, dotFormat);
+        var lastImageSavePath = cfgProject.lastImageSavePath;
+        if (!Utils.isNullOrEmpty(lastImageSavePath)) {
+          dir = new File(lastImageSavePath).getParent();
+          file = new File(lastImageSavePath).getName();
+        }
+        var chooser = new JFileChooser(dir);
+        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.setFileFilter(new FileNameExtensionFilter("*" + dotFormat,
+            format));
+        chooser.setSelectedFile(new File(file));
+        var result = chooser.showSaveDialog(main);
+        if (result == JFileChooser.APPROVE_OPTION) {
+          var fileName = chooser.getSelectedFile().getAbsolutePath();
+          if (!fileName.endsWith(dotFormat)) {
+            fileName += dotFormat;
+          }
+
+          // capture
+          var rect = workspace.getBounds();
+          var captureImage =
+              new BufferedImage(rect.width, rect.height,
+                  BufferedImage.TYPE_INT_ARGB);
+          workspace.paint(captureImage.getGraphics());
+          var f = new File(fileName);
+          ImageIO.write(captureImage, format, f);
+          JOptionPane.showMessageDialog(main,
+              String.format("<html>Saved image:<br /><u>%s</u></html>",
+                  f.getAbsolutePath()));
+
+          cfgProject.lastImageSavePath = f.getAbsolutePath();
+          Config.save();
+        }
       } catch (IOException e) {
         Log.error(e);
         JOptionPane.showMessageDialog(main, e.getMessage());
@@ -228,7 +258,6 @@ public class Main extends JFrame {
     // load
     load();
   }
-
 
   /**
    * load.
