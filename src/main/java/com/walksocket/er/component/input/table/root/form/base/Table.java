@@ -99,7 +99,7 @@ public class Table extends JPanel {
   /**
    * text field option.
    */
-  private final JTextField textFieldOption = new JTextField(30);
+  private final JTextField textFieldOption = new JTextField(60);
 
   /**
    * Constructor.
