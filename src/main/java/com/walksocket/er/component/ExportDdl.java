@@ -4,6 +4,7 @@ import com.walksocket.er.Const;
 import com.walksocket.er.Size.DialogSmall;
 import com.walksocket.er.Size.Screen;
 import com.walksocket.er.component.export.ddl.Root;
+import com.walksocket.er.config.CfgProject;
 import com.walksocket.er.custom.ErDialog;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -24,9 +25,10 @@ public class ExportDdl extends ErDialog {
   /**
    * Constructor.
    *
-   * @param main main
+   * @param main       main
+   * @param cfgProject cfgProject
    */
-  public ExportDdl(Main main) {
+  public ExportDdl(Main main, CfgProject cfgProject) {
     super();
     this.main = main;
 
@@ -44,14 +46,13 @@ public class ExportDdl extends ErDialog {
       @Override
       public void windowClosed(WindowEvent e) {
         dispose();
-        main.load();
       }
     });
 
     // load
     var container = getContentPane();
     container.removeAll();
-    container.add(new Root(this));
+    container.add(new Root(this, cfgProject));
     container.revalidate();
     container.repaint();
   }

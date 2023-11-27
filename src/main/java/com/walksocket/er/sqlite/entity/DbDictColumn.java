@@ -2,7 +2,6 @@ package com.walksocket.er.sqlite.entity;
 
 import com.walksocket.er.Utils;
 import com.walksocket.er.definition.AutoIncrement;
-import com.walksocket.er.definition.NotNull;
 import com.walksocket.er.sqlite.Entity;
 import com.walksocket.er.sqlite.Record;
 

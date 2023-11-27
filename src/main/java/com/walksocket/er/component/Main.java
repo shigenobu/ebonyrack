@@ -19,13 +19,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -135,21 +132,9 @@ public class Main extends JFrame {
     menuFile.addSeparator();
     var menuItemExportDdl = new JMenuItem("Export ddl");
     menuItemExportDdl.addActionListener(actionEvent -> {
-      var exportDdl = new ExportDdl(main);
+      var exportDdl = new ExportDdl(main, cfgProject);
       exportDdl.setModal(true);
       exportDdl.setVisible(true);
-//      try {
-//        var fileName = String.format("%s_%s_%s.sql", Const.TITLE, cfgProject.name,
-//            Date.timestamp());
-//        var f = new File(fileName);
-//        com.walksocket.er.File.writeString(new FileOutputStream(f), getDdl());
-//        JOptionPane.showMessageDialog(main,
-//            String.format("<html>Saved ddl:<br /><u>%s</u></html>",
-//                f.getAbsolutePath()));
-//      } catch (IOException e) {
-//        Log.error(e);
-//        JOptionPane.showMessageDialog(main, e.getMessage());
-//      }
     });
     menuFile.add(menuItemExportDdl);
     var menuItemExportImage = new JMenuItem("Export image");
@@ -271,58 +256,5 @@ public class Main extends JFrame {
     container.add(root);
     container.revalidate();
     container.repaint();
-  }
-
-  private String getDdl() {
-    var builder = new StringBuilder();
-
-    // sequence
-    builder.append("-- ----------------------------------------\n");
-    builder.append("-- sequence\n");
-    builder.append("-- ----------------------------------------\n");
-    for (var ctxSequence : Bucket.getInstance().getBucketSequence().ctxSequenceList
-        .stream()
-        .sorted(Comparator.comparing(s -> s.dbSequence.sequenceName))
-        .collect(Collectors.toList())) {
-      var ddl = Bucket.getInstance().getSequenceDdl(ctxSequence);
-      if (Utils.isNullOrEmpty(ddl)) {
-        continue;
-      }
-      builder.append(ddl);
-      builder.append("\n\n");
-    }
-
-    // table
-    builder.append("-- ----------------------------------------\n");
-    builder.append("-- table\n");
-    builder.append("-- ----------------------------------------\n");
-    for (var ctxTable : Bucket.getInstance().getBucketTable().ctxTableList
-        .stream()
-        .sorted(Comparator.comparing(t -> t.dbTable.tableName))
-        .collect(Collectors.toList())) {
-      var ddl = Bucket.getInstance().getTableDdl(ctxTable);
-      if (Utils.isNullOrEmpty(ddl)) {
-        continue;
-      }
-      builder.append(ddl);
-      builder.append("\n");
-    }
-
-    // foreign key
-    builder.append("-- ----------------------------------------\n");
-    builder.append("-- foreign key\n");
-    builder.append("-- ----------------------------------------\n");
-    for (var ctxTable : Bucket.getInstance().getBucketTable().ctxTableList
-        .stream()
-        .sorted(Comparator.comparing(t -> t.dbTable.tableName))
-        .collect(Collectors.toList())) {
-      var ddl = Bucket.getInstance().getForeignKeyDdl(ctxTable);
-      if (Utils.isNullOrEmpty(ddl)) {
-        continue;
-      }
-      builder.append(ddl);
-    }
-
-    return builder.toString();
   }
 }
