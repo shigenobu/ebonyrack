@@ -1,24 +1,17 @@
 package com.walksocket.er.custom;
 
 import com.walksocket.er.Log;
-import com.walksocket.er.Utils;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
 import javax.swing.border.Border;
 
 /**
  * ErConnectorEndpoint.
  */
-public abstract class ErConnectorEndpoint extends JPanel {
+public abstract class ErConnectorEndpoint extends ErMover {
 
   /**
    * old z.
@@ -36,21 +29,12 @@ public abstract class ErConnectorEndpoint extends JPanel {
   private final LinkedList<ErConnector> connectors = new LinkedList<>();
 
   /**
-   * moving init point.
-   */
-  private Point movingInitPoint;
-
-  /**
-   * moving timer.
-   */
-  private final Timer movingTimer;
-
-  /**
    * Constructor.
    *
    * @param positioned positioned
    */
   public ErConnectorEndpoint(ErConnectorPositioned positioned) {
+    super(positioned);
     this.positioned = positioned;
 
     // border
@@ -82,44 +66,6 @@ public abstract class ErConnectorEndpoint extends JPanel {
         requestFocusInWindow();
       }
     });
-
-    // moving
-    ActionListener movingListener = actionEvent -> {
-      if (movingInitPoint == null) {
-        return;
-      }
-
-      // https://ateraimemo.com/Swing/MouseInfo.html
-      var pi = MouseInfo.getPointerInfo();
-      Point pt = pi.getLocation();
-      SwingUtilities.convertPointFromScreen(pt, positioned);
-
-      var x = pt.getX() - movingInitPoint.getX();
-      var y = pt.getY() - movingInitPoint.getY();
-      if (x < 0) {
-        x = 0;
-      }
-      if (y < 0) {
-        y = 0;
-      }
-      if (x > 9999) {
-        x = 9999;
-      }
-      if (y > 9999) {
-        y = 9999;
-      }
-      var nx = Utils.floorOneDegree(x);
-      var ny = Utils.floorOneDegree(y);
-
-      if (Math.abs(endpoint.getX() - nx) < 10 && Math.abs(endpoint.getY() - ny) < 10) {
-        return;
-      }
-
-      // complete
-      movingComplete(nx, ny);
-    };
-    movingTimer = new Timer(50, movingListener);
-    movingTimer.setRepeats(true);
   }
 
   /**
@@ -215,30 +161,4 @@ public abstract class ErConnectorEndpoint extends JPanel {
     }
     setBorder(ErConnectorColor.DEFAULT_BORDER);
   }
-
-  /**
-   * moving start.
-   *
-   * @param movingInitPoint movingInitPoint
-   */
-  protected void movingStart(Point movingInitPoint) {
-    this.movingInitPoint = movingInitPoint;
-
-    movingTimer.start();
-  }
-
-  /**
-   * moving end.
-   */
-  protected void movingEnd() {
-    movingTimer.stop();
-  }
-
-  /**
-   * moving complete.
-   *
-   * @param x x
-   * @param y y
-   */
-  protected abstract void movingComplete(int x, int y);
 }

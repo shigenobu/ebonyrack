@@ -2,6 +2,7 @@ package com.walksocket.er.component.main;
 
 import com.walksocket.er.Size.WindowMain;
 import com.walksocket.er.component.Main;
+import com.walksocket.er.component.main.root.Outline;
 import com.walksocket.er.component.main.root.Side;
 import com.walksocket.er.component.main.root.Workspace;
 import com.walksocket.er.config.CfgProject;
@@ -56,11 +57,22 @@ public class Root extends JPanel {
     sp.setDividerSize(5);
     add(sp, BorderLayout.CENTER);
 
+    // side, outline
+    var sideSp = new JSplitPane();
+    sideSp.setOrientation(JSplitPane.VERTICAL_SPLIT);
+    sideSp.setDividerLocation(WindowMain.HEIGHT / 4 * 3);
+    sideSp.setDividerSize(5);
+
     // side
     side = new Side(this, cfgProject);
     var scrollPaneSide = new JScrollPane(side, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
         JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-    sp.setLeftComponent(scrollPaneSide);
+    sideSp.setLeftComponent(scrollPaneSide);
+
+    // outline
+    var outline = new Outline(this);
+    sideSp.setRightComponent(outline);
+    sp.setLeftComponent(sideSp);
 
     // workspace
     workspace = new Workspace(this, cfgProject);
@@ -73,6 +85,9 @@ public class Root extends JPanel {
     // sync side between workspace
     side.setWorkspace(workspace);
     workspace.setSide(side);
+
+    // sync outline between workspace
+    outline.setWorkspace(workspace);
 
     // read data
     workspace.readData();
