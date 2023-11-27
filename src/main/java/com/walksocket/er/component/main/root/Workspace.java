@@ -51,6 +51,21 @@ import javax.swing.SwingUtilities;
 public class Workspace extends ErConnectorPositioned {
 
   /**
+   * texture background.
+   */
+  private static TexturePaint texturePaintBackground;
+
+  static {
+    try (var stream = App.class.getClassLoader().getResourceAsStream("image/bg_workspace.png")) {
+      var image = ImageIO.read(stream);
+      texturePaintBackground = new TexturePaint(image,
+          new Rectangle(image.getWidth(), image.getHeight()));
+    } catch (IOException e) {
+      Log.error(e);
+    }
+  }
+
+  /**
    * root.
    */
   private final Root root;
@@ -59,11 +74,6 @@ public class Workspace extends ErConnectorPositioned {
    * side.
    */
   private Side side;
-
-  /**
-   * texture background.
-   */
-  private TexturePaint texturePaintBackground;
 
   /**
    * positioned tables.
@@ -107,15 +117,6 @@ public class Workspace extends ErConnectorPositioned {
 
     // layout
     setLayout(null);
-
-    // background
-    try (var stream = App.class.getClassLoader().getResourceAsStream("image/bg_workspace.png")) {
-      var image = ImageIO.read(stream);
-      texturePaintBackground = new TexturePaint(image,
-          new Rectangle(image.getWidth(), image.getHeight()));
-    } catch (IOException e) {
-      Log.error(e);
-    }
 
     // mouse event
     var workspace = this;

@@ -121,14 +121,14 @@ public class Project extends JPanel {
       buttonReadIn.addActionListener(actionEvent -> {
         // TODO read in
       });
-      p.add(buttonReadIn);
+//      p.add(buttonReadIn);
 
       // write out
       var buttonWriteOut = new JButton("Write out");
       buttonWriteOut.addActionListener(actionEvent -> {
         // TODO write out
       });
-      p.add(buttonWriteOut);
+//      p.add(buttonWriteOut);
 
       // edit
       var buttonEdit = new JButton("Edit");
