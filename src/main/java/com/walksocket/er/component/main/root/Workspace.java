@@ -4,6 +4,7 @@ import com.walksocket.er.App;
 import com.walksocket.er.Const;
 import com.walksocket.er.Date;
 import com.walksocket.er.Log;
+import com.walksocket.er.Pos;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.main.Root;
 import com.walksocket.er.component.main.root.workspace.Note;
@@ -149,8 +150,8 @@ public class Workspace extends ErConnectorPositioned {
       }
 
       private void doPop(MouseEvent e) {
-        var x = Utils.floorOneDegree(e.getX());
-        var y = Utils.floorOneDegree(e.getY());
+        var x = Utils.floorDegree(e.getX(), Pos.DEFAULT_UNIT);
+        var y = Utils.floorDegree(e.getY(), Pos.DEFAULT_UNIT);
         Log.trace(String.format("x:y -> %s:%s", x, y));
 
         var menu = new PopupMenu(workspace, x, y);

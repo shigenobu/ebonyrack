@@ -1,10 +1,9 @@
 package com.walksocket.er.component.main.root.workspace;
 
+import com.walksocket.er.Const;
 import com.walksocket.er.component.main.root.Outline;
 import com.walksocket.er.component.main.root.Workspace;
 import com.walksocket.er.custom.ErMover;
-import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
@@ -34,19 +33,18 @@ public class ViewFrame extends ErMover {
   public ViewFrame(Outline outline) {
     super(outline);
 
+    // change unit
+    rangeUnit = 1;
+
     // init
     setOpaque(false);
-    setBorder(BorderFactory.createLineBorder(Color.CYAN, 1));
+    setBorder(BorderFactory.createLineBorder(Const.COLOR_EBONY, 1));
     addMouseListener(new MouseAdapter() {
       @Override
       public void mousePressed(MouseEvent e) {
         if (e.isPopupTrigger() || SwingUtilities.isRightMouseButton(e)) {
           return;
         }
-
-        // change cursor
-        var cursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
-        setCursor(cursor);
 
         // moving
         movingStart(e.getPoint());
@@ -60,10 +58,6 @@ public class ViewFrame extends ErMover {
 
         // moving
         movingEnd();
-
-        // reverse cursor
-        var cursor = Cursor.getDefaultCursor();
-        setCursor(cursor);
       }
     });
   }

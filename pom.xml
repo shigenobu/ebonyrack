@@ -6,7 +6,7 @@
 
   <groupId>com.walksocket</groupId>
   <artifactId>ebonyrack</artifactId>
-  <version>0.1.6</version>
+  <version>0.2.0</version>
   <packaging>jar</packaging>
 
   <name>ebonyrack</name>

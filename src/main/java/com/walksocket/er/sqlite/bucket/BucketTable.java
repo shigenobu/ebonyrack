@@ -1,6 +1,7 @@
 package com.walksocket.er.sqlite.bucket;
 
 import com.walksocket.er.Log;
+import com.walksocket.er.Pos;
 import com.walksocket.er.Utils;
 import com.walksocket.er.definition.NotNull;
 import com.walksocket.er.sqlite.Bucket;
@@ -81,17 +82,17 @@ public class BucketTable {
         Log.trace(dbTableOption);
 
         // modify pos
-        if (dbTableOption.posX < 0) {
-          dbTableOption.posX = 0;
+        if (dbTableOption.posX < Pos.MIN) {
+          dbTableOption.posX = Pos.MIN;
         }
-        if (dbTableOption.posY < 0) {
-          dbTableOption.posY = 0;
+        if (dbTableOption.posY < Pos.MIN) {
+          dbTableOption.posY = Pos.MIN;
         }
-        if (dbTableOption.posX > 9999) {
-          dbTableOption.posX = 9999;
+        if (dbTableOption.posX > Pos.MAX) {
+          dbTableOption.posX = Pos.MAX;
         }
-        if (dbTableOption.posY > 9999) {
-          dbTableOption.posY = 9999;
+        if (dbTableOption.posY > Pos.MAX) {
+          dbTableOption.posY = Pos.MAX;
         }
 
         // create context

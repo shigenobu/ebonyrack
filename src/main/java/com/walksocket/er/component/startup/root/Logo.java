@@ -3,7 +3,6 @@ package com.walksocket.er.component.startup.root;
 import com.walksocket.er.Const;
 import com.walksocket.er.Size.WindowStartup;
 import com.walksocket.er.component.startup.Root;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -22,7 +21,7 @@ public class Logo extends JPanel {
    */
   public Logo(Root root) {
     // color
-    var bgColor = new Color(73, 70, 44);
+    var bgColor = Const.COLOR_EBONY;
     setBackground(bgColor);
 
     // panel - title

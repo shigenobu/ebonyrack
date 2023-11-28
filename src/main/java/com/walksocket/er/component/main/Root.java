@@ -6,9 +6,7 @@ import com.walksocket.er.component.main.root.Outline;
 import com.walksocket.er.component.main.root.Side;
 import com.walksocket.er.component.main.root.Workspace;
 import com.walksocket.er.config.CfgProject;
-import com.walksocket.er.sqlite.Bucket;
 import java.awt.BorderLayout;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -41,11 +39,6 @@ public class Root extends JPanel {
    */
   public Root(Main main, CfgProject cfgProject) {
     this.main = main;
-
-    // readonly
-    if (Bucket.getInstance().isReadOnly()) {
-      JOptionPane.showMessageDialog(this, "Open readonly mode.");
-    }
 
     // layout
     setLayout(new BorderLayout());

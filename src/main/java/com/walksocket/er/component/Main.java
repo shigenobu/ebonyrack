@@ -71,6 +71,11 @@ public class Main extends JFrame {
     // connection
     var con = new Connection(cfgProject.dbPath);
     con.setReadonly(readonly);
+    var readonlyStr = "";
+    if (readonly) {
+      JOptionPane.showMessageDialog(this, "Open readonly mode.");
+      readonlyStr = " (readonly)";
+    }
 
     // init bucket
     Bucket.init(con);
@@ -90,7 +95,7 @@ public class Main extends JFrame {
       w = cfgProject.pos.width;
       h = cfgProject.pos.height;
     }
-    setTitle(String.format("%s - main", Const.TITLE));
+    setTitle(String.format("%s - main%s", Const.TITLE, readonlyStr));
     setLocation(new Point(x, y));
     setSize(new Dimension(w, h));
     setMinimumSize(new Dimension(WindowMain.WIDTH, WindowMain.HEIGHT));

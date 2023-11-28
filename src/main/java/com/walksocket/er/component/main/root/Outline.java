@@ -2,8 +2,11 @@ package com.walksocket.er.component.main.root;
 
 import com.walksocket.er.component.main.Root;
 import com.walksocket.er.component.main.root.workspace.ViewFrame;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -39,6 +42,28 @@ public class Outline extends JPanel {
     // view frame
     viewFrame = new ViewFrame(this);
     add(viewFrame);
+
+    addMouseListener(new MouseAdapter() {
+      @Override
+      public void mousePressed(MouseEvent e) {
+        if (e.getX() >= viewFrame.getX()
+            && e.getY() >= viewFrame.getY()
+            && e.getX() <= viewFrame.getX() + viewFrame.getWidth()
+            && e.getY() <= viewFrame.getY() + viewFrame.getHeight()) {
+          viewFrame.dispatchEvent(e);
+        }
+      }
+
+      @Override
+      public void mouseReleased(MouseEvent e) {
+        if (e.getX() >= viewFrame.getX()
+            && e.getY() >= viewFrame.getY()
+            && e.getX() <= viewFrame.getX() + viewFrame.getWidth()
+            && e.getY() <= viewFrame.getY() + viewFrame.getHeight()) {
+          viewFrame.dispatchEvent(e);
+        }
+      }
+    });
   }
 
   @Override
@@ -52,7 +77,7 @@ public class Outline extends JPanel {
         new BufferedImage(rect.width, rect.height,
             BufferedImage.TYPE_INT_ARGB);
     var cg = captureImage.getGraphics();
-    workspace.print(cg);
+    workspace.printComponents(cg);
     cg.dispose();
 
     var w = getWidth();
@@ -68,7 +93,7 @@ public class Outline extends JPanel {
     viewFrame.updateScaleRatio(scaleRatio);
 
     var g2 = (Graphics2D) g.create();
-    g2.drawImage(captureImage, 0, 0, w, h, null);
+    g2.drawImage(captureImage, 0, 0, w, h, new Color(73, 70, 44, 8), null);
     g2.dispose();
 
     var p = workspace.getParent();

@@ -429,8 +429,8 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
       Point pt = pi.getLocation();
       SwingUtilities.convertPointFromScreen(pt, workspace);
 
-      var w = Utils.floorOneDegree(pt.getX() - note.getX() + 12);
-      var h = Utils.floorOneDegree(pt.getY() - note.getY() + 12);
+      var w = Utils.floorDegree(pt.getX() - note.getX() + 12, rangeUnit);
+      var h = Utils.floorDegree(pt.getY() - note.getY() + 12, rangeUnit);
 //      Log.trace(String.format("w:h %s:%s", w, h));
       if (w < MIN_WIDTH) {
         w = MIN_WIDTH;
@@ -444,7 +444,7 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
       if (h > MAX_HEIGHT) {
         h = MAX_HEIGHT;
       }
-      if (Math.abs(note.getWidth() - w) < 10 && Math.abs(note.getHeight() - h) < 10) {
+      if (Math.abs(note.getWidth() - w) < rangeUnit && Math.abs(note.getHeight() - h) < rangeUnit) {
         return;
       }
 

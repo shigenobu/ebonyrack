@@ -5,7 +5,6 @@ import com.walksocket.er.component.main.root.workspace.Note;
 import com.walksocket.er.component.main.root.workspace.Sequence;
 import com.walksocket.er.component.main.root.workspace.Table;
 import com.walksocket.er.config.CfgProject;
-import com.walksocket.er.sqlite.Bucket;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
@@ -106,11 +105,7 @@ public class Side extends JPanel {
     treeNodeNote = new DefaultMutableTreeNode("Notes (0/999)");
 
     // tree
-    var readonly = "";
-    if (Bucket.getInstance().isReadOnly()) {
-      readonly = "[RO]";
-    }
-    treeNode = new DefaultMutableTreeNode(readonly + cfgProject.name);
+    treeNode = new DefaultMutableTreeNode(cfgProject.name);
     treeModel = new DefaultTreeModel(treeNode);
     treeNode.add(treeNodeTable);
     treeNode.add(treeNodeSequence);

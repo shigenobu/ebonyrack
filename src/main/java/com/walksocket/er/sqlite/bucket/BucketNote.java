@@ -1,6 +1,7 @@
 package com.walksocket.er.sqlite.bucket;
 
 import com.walksocket.er.Log;
+import com.walksocket.er.Pos;
 import com.walksocket.er.sqlite.Connection;
 import com.walksocket.er.sqlite.Entity;
 import com.walksocket.er.sqlite.context.CtxNote;
@@ -58,17 +59,17 @@ public class BucketNote {
         Log.trace(dbNoteOption);
 
         // modify pos
-        if (dbNoteOption.posX < 0) {
-          dbNoteOption.posX = 0;
+        if (dbNoteOption.posX < Pos.MIN) {
+          dbNoteOption.posX = Pos.MIN;
         }
-        if (dbNoteOption.posY < 0) {
-          dbNoteOption.posY = 0;
+        if (dbNoteOption.posY < Pos.MIN) {
+          dbNoteOption.posY = Pos.MIN;
         }
-        if (dbNoteOption.posX > 9999) {
-          dbNoteOption.posX = 9999;
+        if (dbNoteOption.posX > Pos.MAX) {
+          dbNoteOption.posX = Pos.MAX;
         }
-        if (dbNoteOption.posY > 9999) {
-          dbNoteOption.posY = 9999;
+        if (dbNoteOption.posY > Pos.MAX) {
+          dbNoteOption.posY = Pos.MAX;
         }
 
         // create context

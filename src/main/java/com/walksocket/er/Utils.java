@@ -86,23 +86,25 @@ public class Utils {
   }
 
   /**
-   * floor one degree.
+   * floor degree.
    *
-   * @param src src
-   * @return ten degree
+   * @param src  src
+   * @param unit unit
+   * @return degree at unit
    */
-  public static int floorOneDegree(int src) {
-    return (int) ((Math.floor(src / 10)) * 10);
+  public static int floorDegree(int src, int unit) {
+    return (int) ((Math.floor(src / unit)) * unit);
   }
 
   /**
-   * floor one degree.
+   * floor degree.
    *
-   * @param src src
-   * @return ten degree
+   * @param src  src
+   * @param unit unit
+   * @return degree at unit
    */
-  public static int floorOneDegree(double src) {
-    return (int) ((Math.floor(src / 10)) * 10);
+  public static int floorDegree(double src, int unit) {
+    return (int) ((Math.floor(src / unit)) * unit);
   }
 
   /**

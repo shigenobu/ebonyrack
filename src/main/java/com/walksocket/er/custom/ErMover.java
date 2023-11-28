@@ -1,5 +1,6 @@
 package com.walksocket.er.custom;
 
+import com.walksocket.er.Pos;
 import com.walksocket.er.Utils;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -24,6 +25,11 @@ public abstract class ErMover extends JPanel {
   private final Timer movingTimer;
 
   /**
+   * range unit.
+   */
+  protected int rangeUnit = Pos.DEFAULT_UNIT;
+
+  /**
    * Constructor.
    *
    * @param parent parent
@@ -43,22 +49,23 @@ public abstract class ErMover extends JPanel {
 
       var x = pt.getX() - movingInitPoint.getX();
       var y = pt.getY() - movingInitPoint.getY();
-      if (x < 0) {
-        x = 0;
+      if (x < Pos.MIN) {
+        x = Pos.MIN;
       }
-      if (y < 0) {
-        y = 0;
+      if (y < Pos.MIN) {
+        y = Pos.MIN;
       }
-      if (x > 9999) {
-        x = 9999;
+      if (x > Pos.MAX) {
+        x = Pos.MAX;
       }
-      if (y > 9999) {
-        y = 9999;
+      if (y > Pos.MAX) {
+        y = Pos.MAX;
       }
-      var nx = Utils.floorOneDegree(x);
-      var ny = Utils.floorOneDegree(y);
+      var nx = Utils.floorDegree(x, rangeUnit);
+      var ny = Utils.floorDegree(y, rangeUnit);
 
-      if (Math.abs(endpoint.getX() - nx) < 10 && Math.abs(endpoint.getY() - ny) < 10) {
+      if (Math.abs(endpoint.getX() - nx) < rangeUnit
+          && Math.abs(endpoint.getY() - ny) < rangeUnit) {
         return;
       }
 
