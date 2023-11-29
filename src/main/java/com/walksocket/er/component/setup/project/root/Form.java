@@ -1,5 +1,6 @@
 package com.walksocket.er.component.setup.project.root;
 
+import com.walksocket.er.Env;
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogSmall;
 import com.walksocket.er.Utils;
@@ -93,8 +94,12 @@ public class Form extends JPanel {
     textFieldDbPath.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        var dir = Paths.get("").toAbsolutePath().toString();
-        var file = "database" + Connection.DB_PATH_PREFIX;
+        var dir = Env.getHome();
+        var dbName = Utils.getString(textFieldName);
+        if (Utils.isNullOrEmpty(dbName)) {
+          dbName = "database";
+        }
+        var file = dbName + Connection.DB_PATH_PREFIX;
         Log.trace(cfgProject.dbPath);
         if (!Utils.isNullOrEmpty(cfgProject.dbPath) && (new File(cfgProject.dbPath)).exists()) {
           file = Paths.get(cfgProject.dbPath).toAbsolutePath().toString();

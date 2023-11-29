@@ -42,6 +42,11 @@ public class Root extends JPanel {
   private final JButton buttonSaveAndClose = new JButton("Save and close");
 
   /**
+   * is new.
+   */
+  private boolean isNew;
+
+  /**
    * Constructor.
    *
    * @param setupProject setupProject
@@ -49,6 +54,11 @@ public class Root extends JPanel {
    */
   public Root(SetupProject setupProject, CfgProject cfgProject) {
     this.cfgProject = cfgProject;
+
+    // check is new
+    if (Utils.isNullOrEmpty(cfgProject.name)) {
+      isNew = true;
+    }
 
     // layout
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -91,6 +101,15 @@ public class Root extends JPanel {
       JOptionPane.showMessageDialog(this, "Required 'Db path'.");
       return false;
     }
+    if (isNew
+        && Config.getInstance().cfgProjectList.stream()
+        .filter(cfg -> cfg.name.equals(cfgProject.name))
+        .findAny()
+        .isPresent()) {
+      JOptionPane.showMessageDialog(this, "Already used 'Name'.");
+      return false;
+    }
+
     if (!cfgProject.dbPath.endsWith(Connection.DB_PATH_PREFIX)) {
       cfgProject.dbPath += Connection.DB_PATH_PREFIX;
     }

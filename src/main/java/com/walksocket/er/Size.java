@@ -45,7 +45,7 @@ public class Size {
     /**
      * width.
      */
-    public static final int WIDTH = 800;
+    public static final int WIDTH = 900;
 
     /**
      * height.

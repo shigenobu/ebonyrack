@@ -7,6 +7,7 @@ import com.walksocket.er.component.SetupProject;
 import com.walksocket.er.component.startup.Root;
 import com.walksocket.er.config.CfgProject;
 import com.walksocket.er.custom.ErUnderlineBorder;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.io.File;
@@ -113,22 +114,22 @@ public class Project extends JPanel {
       // label
       var labelProjectName = new JLabel(cfgProject.name);
       labelProjectName.setPreferredSize(
-          new Dimension(WindowStartup.WIDTH / 3 + 100, WindowStartup.HEIGHT / 20));
+          new Dimension(WindowStartup.WIDTH / 3 + 20, WindowStartup.HEIGHT / 20));
       p.add(labelProjectName);
 
-      // read in
-      var buttonReadIn = new JButton("Read in");
-      buttonReadIn.addActionListener(actionEvent -> {
-        // TODO read in
-      });
-//      p.add(buttonReadIn);
-
       // write out
-      var buttonWriteOut = new JButton("Write out");
+      var buttonWriteOut = new JButton("Write");
       buttonWriteOut.addActionListener(actionEvent -> {
         // TODO write out
       });
-//      p.add(buttonWriteOut);
+      p.add(buttonWriteOut);
+
+      // read in
+      var buttonReadIn = new JButton("Read");
+      buttonReadIn.addActionListener(actionEvent -> {
+        // TODO read in
+      });
+      p.add(buttonReadIn);
 
       // edit
       var buttonEdit = new JButton("Edit");
@@ -141,6 +142,7 @@ public class Project extends JPanel {
 
       // remove
       var buttonRemove = new JButton("Remove");
+      buttonRemove.setForeground(Color.RED);
       buttonRemove.addActionListener(actionEvent -> {
         if (JOptionPane.showConfirmDialog(this,
             String.format("Remove project '%s' ?", cfgProject.name)) != 0) {
