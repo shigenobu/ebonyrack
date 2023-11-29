@@ -24,4 +24,14 @@ public class CfgProjectPos {
    * height.
    */
   public int height;
+
+  /**
+   * main divider.
+   */
+  public int mainDivider;
+
+  /**
+   * side divider.
+   */
+  public int sideDivider;
 }

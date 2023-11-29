@@ -10,7 +10,6 @@ import com.walksocket.er.Utils;
 import com.walksocket.er.component.main.Root;
 import com.walksocket.er.component.main.root.Workspace;
 import com.walksocket.er.config.CfgProject;
-import com.walksocket.er.config.CfgProjectPos;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.Connection;
 import java.awt.Dimension;
@@ -107,7 +106,6 @@ public class Main extends JFrame {
       public void windowClosed(WindowEvent e) {
         Log.trace(e);
         var frame = (JFrame) e.getSource();
-        cfgProject.pos = new CfgProjectPos();
         cfgProject.pos.x = frame.getX();
         cfgProject.pos.y = frame.getY();
         cfgProject.pos.width = frame.getWidth();

@@ -1,5 +1,6 @@
 package com.walksocket.er.component.main;
 
+import com.walksocket.er.Config;
 import com.walksocket.er.Size.WindowMain;
 import com.walksocket.er.component.Main;
 import com.walksocket.er.component.main.root.Outline;
@@ -44,16 +45,32 @@ public class Root extends JPanel {
     setLayout(new BorderLayout());
 
     // split pane
+    var mainDivider = cfgProject.pos.mainDivider;
+    if (mainDivider == 0) {
+      mainDivider = WindowMain.WIDTH / 5;
+    }
     var sp = new JSplitPane();
     sp.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-    sp.setDividerLocation(WindowMain.WIDTH / 5);
+    sp.setDividerLocation(mainDivider);
     sp.setDividerSize(5);
+    sp.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, propertyChangeEvent -> {
+      cfgProject.pos.mainDivider = (int) propertyChangeEvent.getNewValue();
+      Config.save();
+    });
     add(sp, BorderLayout.CENTER);
 
     // side, outline
+    var sideDivider = cfgProject.pos.sideDivider;
+    if (sideDivider == 0) {
+      sideDivider = WindowMain.HEIGHT / 4 * 3;
+    }
     var sideSp = new JSplitPane();
     sideSp.setOrientation(JSplitPane.VERTICAL_SPLIT);
-    sideSp.setDividerLocation(WindowMain.HEIGHT / 4 * 3);
+    sideSp.setDividerLocation(sideDivider);
+    sideSp.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, propertyChangeEvent -> {
+      cfgProject.pos.sideDivider = (int) propertyChangeEvent.getNewValue();
+      Config.save();
+    });
     sideSp.setDividerSize(5);
 
     // side

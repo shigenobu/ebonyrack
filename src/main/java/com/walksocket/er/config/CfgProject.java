@@ -33,5 +33,5 @@ public class CfgProject {
   /**
    * pos.
    */
-  public CfgProjectPos pos;
+  public CfgProjectPos pos = new CfgProjectPos();
 }
