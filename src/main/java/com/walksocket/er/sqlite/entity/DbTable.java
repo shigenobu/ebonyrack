@@ -3,6 +3,7 @@ package com.walksocket.er.sqlite.entity;
 import com.walksocket.er.Utils;
 import com.walksocket.er.sqlite.Entity;
 import com.walksocket.er.sqlite.Record;
+import java.util.List;
 
 /**
  * DbTable.
@@ -110,6 +111,11 @@ public class DbTable extends Entity {
             + "WHERE tableId = '%s' ",
         Utils.quote(tableId)
     );
+  }
+
+  @Override
+  public List<String> orderColumns() {
+    return List.of("tableId");
   }
 
   /**

@@ -3,6 +3,7 @@ package com.walksocket.er.sqlite;
 import com.walksocket.er.Json;
 import com.walksocket.er.Log;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Entity.
@@ -57,6 +58,13 @@ public abstract class Entity implements Cloneable {
    * @return sql
    */
   public abstract String createDelete();
+
+  /**
+   * order columns.
+   *
+   * @return order columns
+   */
+  public abstract List<String> orderColumns();
 
   @Override
   public String toString() {

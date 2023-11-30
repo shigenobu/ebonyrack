@@ -4,6 +4,7 @@ import com.walksocket.er.Utils;
 import com.walksocket.er.sqlite.Entity;
 import com.walksocket.er.sqlite.Record;
 import java.awt.Color;
+import java.util.List;
 
 /**
  * DbNoteOption.
@@ -89,5 +90,10 @@ public class DbNoteOption extends Entity {
   @Override
   public String createDelete() {
     return null;
+  }
+
+  @Override
+  public List<String> orderColumns() {
+    return List.of("noteId");
   }
 }

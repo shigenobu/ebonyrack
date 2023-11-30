@@ -2,6 +2,7 @@ package com.walksocket.er.sqlite.bucket;
 
 import com.walksocket.er.Log;
 import com.walksocket.er.Utils;
+import com.walksocket.er.definition.AutoIncrement;
 import com.walksocket.er.definition.NotNull;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.Connection;
@@ -220,6 +221,25 @@ public class BucketDict {
               .findFirst();
           if (optionalDbDictPrimaryKeyColumn.isPresent()) {
             throw new Exception("Null is disallowed primary.");
+          }
+        }
+      }
+
+      // check auto increment
+      if (tmpDictColumn.autoIncrementDefinition.equals(AutoIncrement.AUTO_INCREMENT_VALUE)) {
+        for (var ctxTable : Bucket.getInstance().getBucketTable().ctxTableList) {
+          var optionalDbDictPrimaryKeyColumn = ctxTable.ctxInnerPrimaryKey.dbTablePrimaryKeyColumnList.stream()
+              .filter(c -> c.dictColumnId.equals(tmpDictColumn.dictColumnId))
+              .findFirst();
+          if (optionalDbDictPrimaryKeyColumn.isPresent()
+              && ctxTable.ctxInnerPrimaryKey.dbTablePrimaryKeyColumnList.size() != 1) {
+            throw new Exception("Auto increment is only allowed single primary.");
+          }
+          var optionalDbTableColumn = ctxTable.dbTableColumnList.stream()
+              .filter(c -> c.dictColumnId.equals(tmpDictColumn.dictColumnId))
+              .findFirst();
+          if (!optionalDbDictPrimaryKeyColumn.isPresent() && optionalDbTableColumn.isPresent()) {
+            throw new Exception("Auto increment is only allowed single primary.");
           }
         }
       }

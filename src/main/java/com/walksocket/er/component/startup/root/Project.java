@@ -1,25 +1,30 @@
 package com.walksocket.er.component.startup.root;
 
 import com.walksocket.er.Config;
+import com.walksocket.er.Log;
 import com.walksocket.er.Size.WindowStartup;
+import com.walksocket.er.Utils;
 import com.walksocket.er.component.Main;
 import com.walksocket.er.component.SetupProject;
 import com.walksocket.er.component.startup.Root;
 import com.walksocket.er.config.CfgProject;
 import com.walksocket.er.custom.ErUnderlineBorder;
-import java.awt.Color;
+import com.walksocket.er.sqlite.Dump;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.io.File;
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * Project.
@@ -117,19 +122,101 @@ public class Project extends JPanel {
           new Dimension(WindowStartup.WIDTH / 3 + 20, WindowStartup.HEIGHT / 20));
       p.add(labelProjectName);
 
-      // write out
-      var buttonWriteOut = new JButton("Write");
-      buttonWriteOut.addActionListener(actionEvent -> {
-        // TODO write out
-      });
-      p.add(buttonWriteOut);
+      // write
+      var buttonWrite = new JButton("Write");
+      buttonWrite.setToolTipText("Write all data out to json file.");
+      buttonWrite.addActionListener(actionEvent -> {
+        try {
+          // chooser
+          var format = Dump.EXTENSION;
+          var dotFormat = "." + format;
+          var dir = System.getProperty("user.home");
+          var file = String.format("%s%s", cfgProject.name, dotFormat);
+          var lastWriteOutPath = cfgProject.lastWriteOutPath;
+          if (!Utils.isNullOrEmpty(lastWriteOutPath)) {
+            dir = new File(lastWriteOutPath).getParent();
+            file = new File(lastWriteOutPath).getName();
+          }
+          var chooser = new JFileChooser(dir);
+          chooser.setAcceptAllFileFilterUsed(false);
+          chooser.setFileFilter(new FileNameExtensionFilter("*" + dotFormat,
+              format));
+          chooser.setSelectedFile(new File(file));
+          var result = chooser.showSaveDialog(this);
+          if (result == JFileChooser.APPROVE_OPTION) {
+            var fileName = chooser.getSelectedFile().getAbsolutePath();
+            if (!fileName.endsWith(dotFormat)) {
+              fileName += dotFormat;
+            }
 
-      // read in
-      var buttonReadIn = new JButton("Read");
-      buttonReadIn.addActionListener(actionEvent -> {
-        // TODO read in
+            var f = new File(fileName);
+            if (!Dump.writeOut(cfgProject, f.getAbsolutePath())) {
+              throw new IOException(
+                  String.format("Fail to write out to '%s'.", f.getAbsolutePath()));
+            }
+            JOptionPane.showMessageDialog(this,
+                String.format("<html>Saved json:<br /><u>%s</u></html>",
+                    f.getAbsolutePath()));
+
+            cfgProject.lastWriteOutPath = f.getAbsolutePath();
+            Config.save();
+          }
+        } catch (IOException e) {
+          Log.error(e);
+          JOptionPane.showMessageDialog(this, e.getMessage());
+        }
       });
-      p.add(buttonReadIn);
+      p.add(buttonWrite);
+
+      // read
+      var buttonRead = new JButton("Read");
+      buttonRead.setToolTipText(
+          "Read all data from json file, be careful to overwrite completely.");
+      buttonRead.addActionListener(actionEvent -> {
+        if (JOptionPane.showConfirmDialog(this, "Can you overwrite completely ?") != 0) {
+          return;
+        }
+
+        try {
+          // chooser
+          var format = Dump.EXTENSION;
+          var dotFormat = "." + format;
+          var dir = System.getProperty("user.home");
+          var file = String.format("%s%s", cfgProject.name, dotFormat);
+          var lastReadFromPath = cfgProject.lastReadFromPath;
+          if (!Utils.isNullOrEmpty(lastReadFromPath)) {
+            dir = new File(lastReadFromPath).getParent();
+            file = new File(lastReadFromPath).getName();
+          }
+          var chooser = new JFileChooser(dir);
+          chooser.setAcceptAllFileFilterUsed(false);
+          chooser.setFileFilter(new FileNameExtensionFilter("*" + dotFormat,
+              format));
+          chooser.setSelectedFile(new File(file));
+          var result = chooser.showSaveDialog(this);
+          if (result == JFileChooser.APPROVE_OPTION) {
+            var fileName = chooser.getSelectedFile().getAbsolutePath();
+            if (!fileName.endsWith(dotFormat)) {
+              fileName += dotFormat;
+            }
+
+            var f = new File(fileName);
+            if (!Dump.readFrom(cfgProject, f.getAbsolutePath())) {
+              throw new IOException(String.format("Fail to read from '%s'.", f.getAbsolutePath()));
+            }
+            JOptionPane.showMessageDialog(this,
+                String.format("<html>Read json:<br /><u>%s</u></html>",
+                    f.getAbsolutePath()));
+
+            cfgProject.lastReadFromPath = f.getAbsolutePath();
+            Config.save();
+          }
+        } catch (IOException e) {
+          Log.error(e);
+          JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+      });
+      p.add(buttonRead);
 
       // edit
       var buttonEdit = new JButton("Edit");
@@ -142,7 +229,6 @@ public class Project extends JPanel {
 
       // remove
       var buttonRemove = new JButton("Remove");
-      buttonRemove.setForeground(Color.RED);
       buttonRemove.addActionListener(actionEvent -> {
         if (JOptionPane.showConfirmDialog(this,
             String.format("Remove project '%s' ?", cfgProject.name)) != 0) {

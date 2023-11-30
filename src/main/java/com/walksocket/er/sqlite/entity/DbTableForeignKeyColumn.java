@@ -3,6 +3,8 @@ package com.walksocket.er.sqlite.entity;
 import com.walksocket.er.Utils;
 import com.walksocket.er.sqlite.EntityKeyColumn;
 import com.walksocket.er.sqlite.Record;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * DbTableForeignKeyColumn.
@@ -46,5 +48,10 @@ public class DbTableForeignKeyColumn extends EntityKeyColumn {
   @Override
   public String createDelete() {
     return null;
+  }
+
+  @Override
+  public List<String> orderColumns() {
+    return Arrays.asList("tableId", "seq", "dictColumnId");
   }
 }

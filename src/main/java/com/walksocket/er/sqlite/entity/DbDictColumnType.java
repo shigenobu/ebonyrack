@@ -3,6 +3,7 @@ package com.walksocket.er.sqlite.entity;
 import com.walksocket.er.Utils;
 import com.walksocket.er.sqlite.Entity;
 import com.walksocket.er.sqlite.Record;
+import java.util.List;
 
 /**
  * DbDictColumnType.
@@ -74,6 +75,11 @@ public class DbDictColumnType extends Entity {
             + "WHERE dictColumnTypeId = '%s' ",
         Utils.quote(dictColumnTypeId)
     );
+  }
+
+  @Override
+  public List<String> orderColumns() {
+    return List.of("dictColumnTypeId");
   }
 
   /**

@@ -19,7 +19,6 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.imageio.ImageIO;
@@ -147,7 +146,7 @@ public class Main extends JFrame {
         // chooser
         var format = "png";
         var dotFormat = "." + format;
-        var dir = Paths.get("").toAbsolutePath().toString();
+        var dir = System.getProperty("user.home");
         var file = String.format("%s%s", cfgProject.name, dotFormat);
         var lastImageSavePath = cfgProject.lastImageSavePath;
         if (!Utils.isNullOrEmpty(lastImageSavePath)) {

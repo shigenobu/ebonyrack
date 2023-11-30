@@ -4,6 +4,7 @@ import com.walksocket.er.Utils;
 import com.walksocket.er.definition.Cycle;
 import com.walksocket.er.sqlite.Entity;
 import com.walksocket.er.sqlite.Record;
+import java.util.List;
 
 /**
  * DbSequence.
@@ -111,6 +112,11 @@ public class DbSequence extends Entity {
             + "WHERE sequenceId = '%s' ",
         Utils.quote(sequenceId)
     );
+  }
+
+  @Override
+  public List<String> orderColumns() {
+    return List.of("sequenceId");
   }
 
   /**

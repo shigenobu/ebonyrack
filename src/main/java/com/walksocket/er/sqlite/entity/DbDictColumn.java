@@ -4,6 +4,7 @@ import com.walksocket.er.Utils;
 import com.walksocket.er.definition.AutoIncrement;
 import com.walksocket.er.sqlite.Entity;
 import com.walksocket.er.sqlite.Record;
+import java.util.List;
 
 /**
  * DbDictColumn.
@@ -153,6 +154,11 @@ public class DbDictColumn extends Entity {
             + "WHERE dictColumnId = '%s' ",
         Utils.quote(dictColumnId)
     );
+  }
+
+  @Override
+  public List<String> orderColumns() {
+    return List.of("dictColumnId");
   }
 
   /**

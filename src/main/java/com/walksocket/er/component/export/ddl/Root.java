@@ -14,7 +14,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 import javax.swing.BoxLayout;
@@ -72,7 +71,7 @@ public class Root extends JPanel {
         // chooser
         var format = "sql";
         var dotFormat = "." + format;
-        var dir = Paths.get("").toAbsolutePath().toString();
+        var dir = System.getProperty("user.home");
         var file = String.format("%s%s", cfgProject.name, dotFormat);
         var lastDdlSavePath = cfgProject.lastDdlSavePath;
         if (!Utils.isNullOrEmpty(lastDdlSavePath)) {

@@ -3,6 +3,8 @@ package com.walksocket.er.sqlite.entity;
 import com.walksocket.er.Utils;
 import com.walksocket.er.sqlite.Entity;
 import com.walksocket.er.sqlite.Record;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * DbNoteConnectorTable.
@@ -50,5 +52,10 @@ public class DbNoteConnectorTable extends Entity {
         Utils.quote(noteId),
         Utils.quote(tableId)
     );
+  }
+
+  @Override
+  public List<String> orderColumns() {
+    return Arrays.asList("noteId", "tableId");
   }
 }

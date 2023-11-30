@@ -3,6 +3,8 @@ package com.walksocket.er.sqlite.entity;
 import com.walksocket.er.Utils;
 import com.walksocket.er.sqlite.Entity;
 import com.walksocket.er.sqlite.Record;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * DbDictGroupColumn.
@@ -52,5 +54,10 @@ public class DbDictGroupColumn extends Entity {
   @Override
   public String createDelete() {
     return null;
+  }
+
+  @Override
+  public List<String> orderColumns() {
+    return Arrays.asList("dictGroupId", "seq");
   }
 }

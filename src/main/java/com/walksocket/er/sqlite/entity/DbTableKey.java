@@ -3,6 +3,8 @@ package com.walksocket.er.sqlite.entity;
 import com.walksocket.er.Utils;
 import com.walksocket.er.sqlite.EntityKey;
 import com.walksocket.er.sqlite.Record;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * DbTableKey.
@@ -41,5 +43,10 @@ public class DbTableKey extends EntityKey {
   @Override
   public String createDelete() {
     return null;
+  }
+
+  @Override
+  public List<String> orderColumns() {
+    return Arrays.asList("tableId", "seq");
   }
 }
