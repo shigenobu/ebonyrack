@@ -46,7 +46,7 @@ public class Dump {
   /**
    * extension.
    */
-  public static String EXTENSION = "ebjson";
+  public static String EXTENSION = "erjson";
 
   /**
    * classes.
@@ -123,6 +123,8 @@ public class Dump {
    */
   public static boolean readFrom(CfgProject cfgProject, String path) {
     try (var con = new Connection(cfgProject.dbPath)) {
+      Bucket.createDdl(con);
+
       con.begin();
 
       var tmpClasses = new ArrayList<>(classes);

@@ -179,6 +179,15 @@ public class Workspace extends ErConnectorPositioned {
     readConnectorNoteToTable();
     readConnectorNoteToSequence();
     readConnectorTableToTable();
+
+    if (positionedTables.size() == 0
+        && positionedSequences.size() == 0
+        && positionedNotes.size() == 0
+        && positionedConnectorsNoteToTable.size() == 0
+        && positionedConnectorsNoteToSequence.size() == 0
+        && positionedConnectorsNoteToTable.size() == 0) {
+      root.setVisible(true);
+    }
   }
 
   /**

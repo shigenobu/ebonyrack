@@ -31,11 +31,13 @@ public class Bucket {
   private static Bucket bucket;
 
   /**
-   * init.
+   * create ddl.
    *
-   * @param con con
+   * @param con connection
+   * @throws SQLException
+   * @throws IOException
    */
-  public static void init(Connection con) {
+  public static void createDdl(Connection con) throws SQLException, IOException {
     try (var stream = App.class.getClassLoader()
         .getResourceAsStream("database/create.sql")) {
       // ----------
@@ -57,6 +59,19 @@ public class Bucket {
           con.execute(q);
         }
       }
+    }
+  }
+
+
+  /**
+   * init.
+   *
+   * @param con con
+   */
+  public static void init(Connection con) {
+    try {
+      // ----------
+      createDdl(con);
 
       // ----------
       con.begin();

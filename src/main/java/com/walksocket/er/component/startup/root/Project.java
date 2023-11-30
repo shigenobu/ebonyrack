@@ -124,6 +124,9 @@ public class Project extends JPanel {
 
       // write
       var buttonWrite = new JButton("Write");
+      if (!(new File(cfgProject.dbPath)).exists()) {
+        buttonWrite.setEnabled(false);
+      }
       buttonWrite.setToolTipText("Write all data out to json file.");
       buttonWrite.addActionListener(actionEvent -> {
         try {
@@ -154,12 +157,13 @@ public class Project extends JPanel {
               throw new IOException(
                   String.format("Fail to write out to '%s'.", f.getAbsolutePath()));
             }
-            JOptionPane.showMessageDialog(this,
-                String.format("<html>Saved json:<br /><u>%s</u></html>",
-                    f.getAbsolutePath()));
 
             cfgProject.lastWriteOutPath = f.getAbsolutePath();
             Config.save();
+
+            JOptionPane.showMessageDialog(this,
+                String.format("<html>Saved json:<br /><u>%s</u></html>",
+                    f.getAbsolutePath()));
           }
         } catch (IOException e) {
           Log.error(e);
@@ -204,12 +208,17 @@ public class Project extends JPanel {
             if (!Dump.readFrom(cfgProject, f.getAbsolutePath())) {
               throw new IOException(String.format("Fail to read from '%s'.", f.getAbsolutePath()));
             }
+
+            cfgProject.lastReadFromPath = f.getAbsolutePath();
+            Config.save();
+
             JOptionPane.showMessageDialog(this,
                 String.format("<html>Read json:<br /><u>%s</u></html>",
                     f.getAbsolutePath()));
 
-            cfgProject.lastReadFromPath = f.getAbsolutePath();
-            Config.save();
+            // enable
+            buttonOpenReadonly.setEnabled(true);
+            buttonWrite.setEnabled(true);
           }
         } catch (IOException e) {
           Log.error(e);
