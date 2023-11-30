@@ -5,6 +5,7 @@ import com.walksocket.er.component.main.root.workspace.ViewFrame;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -93,7 +94,8 @@ public class Outline extends JPanel {
     viewFrame.updateScaleRatio(scaleRatio);
 
     var g2 = (Graphics2D) g.create();
-    g2.drawImage(captureImage, 0, 0, w, h, new Color(73, 70, 44, 8), null);
+    g2.drawImage(captureImage.getScaledInstance(w, h, Image.SCALE_DEFAULT), 0, 0, w, h,
+        new Color(73, 70, 44, 8), null);
     g2.dispose();
 
     var p = workspace.getParent();

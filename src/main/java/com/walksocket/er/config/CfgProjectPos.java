@@ -34,4 +34,14 @@ public class CfgProjectPos {
    * side divider.
    */
   public int sideDivider;
+
+  /**
+   * workspace horizontal scroll.
+   */
+  public int workspaceHorizontalScroll;
+
+  /**
+   * workspace vertical scroll.
+   */
+  public int workspaceVerticalScroll;
 }

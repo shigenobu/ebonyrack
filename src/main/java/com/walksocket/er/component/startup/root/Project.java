@@ -193,7 +193,7 @@ public class Project extends JPanel {
           chooser.setFileFilter(new FileNameExtensionFilter("*" + dotFormat,
               format));
           chooser.setSelectedFile(new File(file));
-          var result = chooser.showSaveDialog(this);
+          var result = chooser.showOpenDialog(this);
           if (result == JFileChooser.APPROVE_OPTION) {
             var fileName = chooser.getSelectedFile().getAbsolutePath();
             if (!fileName.endsWith(dotFormat)) {

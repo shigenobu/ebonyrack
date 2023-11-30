@@ -8,7 +8,10 @@ import com.walksocket.er.component.main.root.Side;
 import com.walksocket.er.component.main.root.Workspace;
 import com.walksocket.er.config.CfgProject;
 import java.awt.BorderLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
@@ -33,6 +36,11 @@ public class Root extends JPanel {
   private final Workspace workspace;
 
   /**
+   * resized.
+   */
+  private boolean resized;
+
+  /**
    * Constructor.
    *
    * @param main       main
@@ -40,6 +48,10 @@ public class Root extends JPanel {
    */
   public Root(Main main, CfgProject cfgProject) {
     this.main = main;
+
+    // invisible
+    var root = this;
+    root.setVisible(false);
 
     // layout
     setLayout(new BorderLayout());
@@ -89,7 +101,36 @@ public class Root extends JPanel {
     var scrollPaneWorkspace = new JScrollPane(workspace, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
         JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
     scrollPaneWorkspace.getHorizontalScrollBar().setUnitIncrement(30);
+    scrollPaneWorkspace.getHorizontalScrollBar().addAdjustmentListener(adjustmentEvent -> {
+      var sb = (JScrollBar) adjustmentEvent.getSource();
+      if (!sb.getValueIsAdjusting() && resized) {
+        cfgProject.pos.workspaceHorizontalScroll = sb.getValue();
+        Config.save();
+      }
+    });
     scrollPaneWorkspace.getVerticalScrollBar().setUnitIncrement(30);
+    scrollPaneWorkspace.getVerticalScrollBar().addAdjustmentListener(adjustmentEvent -> {
+      var sb = (JScrollBar) adjustmentEvent.getSource();
+      if (!sb.getValueIsAdjusting() && resized) {
+        cfgProject.pos.workspaceVerticalScroll = sb.getValue();
+        Config.save();
+      }
+    });
+    workspace.addComponentListener(new ComponentAdapter() {
+      @Override
+      public void componentResized(ComponentEvent e) {
+        if (!resized) {
+          scrollPaneWorkspace.getHorizontalScrollBar()
+              .setValue(cfgProject.pos.workspaceHorizontalScroll);
+          scrollPaneWorkspace.getVerticalScrollBar()
+              .setValue(cfgProject.pos.workspaceVerticalScroll);
+          resized = true;
+
+          // visible
+          root.setVisible(true);
+        }
+      }
+    });
     sp.setRightComponent(scrollPaneWorkspace);
 
     // sync side between workspace
