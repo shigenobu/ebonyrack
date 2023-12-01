@@ -49,6 +49,11 @@ import javax.swing.SwingUtilities;
 public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRelation {
 
   /**
+   * max positioned.
+   */
+  public static final int MAX_POSITIONED = 999;
+
+  /**
    * min width.
    */
   private static final int MIN_WIDTH = 200;

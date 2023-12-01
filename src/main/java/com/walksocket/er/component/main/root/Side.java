@@ -96,13 +96,15 @@ public class Side extends JPanel {
     setBackground(Color.WHITE);
 
     // table
-    treeNodeTable = new DefaultMutableTreeNode("Tables (0/999)");
+    treeNodeTable = new DefaultMutableTreeNode(
+        String.format("Tables (0/%s)", Table.MAX_POSITIONED));
 
     // sequence
-    treeNodeSequence = new DefaultMutableTreeNode("Sequences (0/999)");
+    treeNodeSequence = new DefaultMutableTreeNode(
+        String.format("Sequences (0/%s)", Sequence.MAX_POSITIONED));
 
     // note
-    treeNodeNote = new DefaultMutableTreeNode("Notes (0/999)");
+    treeNodeNote = new DefaultMutableTreeNode(String.format("Notes (0/%s)", Note.MAX_POSITIONED));
 
     // tree
     treeNode = new DefaultMutableTreeNode(cfgProject.name);
@@ -290,18 +292,21 @@ public class Side extends JPanel {
   private void reloadTree() {
     treeModel.reload();
 
-    treeNodeTable.setUserObject(String.format("Tables (%s/999)", treeNodeTable.getChildCount()));
+    treeNodeTable.setUserObject(
+        String.format("Tables (%s/%s)", treeNodeTable.getChildCount(), Table.MAX_POSITIONED));
     if (treeNodeTable.getChildCount() > 0) {
       tree.expandPath(new TreePath(treeNodeTable.getPath()));
     }
 
     treeNodeSequence.setUserObject(
-        String.format("Sequences (%s/999)", treeNodeSequence.getChildCount()));
+        String.format("Sequences (%s/%s)", treeNodeSequence.getChildCount(),
+            Sequence.MAX_POSITIONED));
     if (treeNodeSequence.getChildCount() > 0) {
       tree.expandPath(new TreePath(treeNodeSequence.getPath()));
     }
 
-    treeNodeNote.setUserObject(String.format("Notes (%s/999)", treeNodeNote.getChildCount()));
+    treeNodeNote.setUserObject(
+        String.format("Notes (%s/%s)", treeNodeNote.getChildCount(), Note.MAX_POSITIONED));
     if (treeNodeNote.getChildCount() > 0) {
       tree.expandPath(new TreePath(treeNodeNote.getPath()));
     }

@@ -89,6 +89,8 @@ public class Root extends JPanel {
     side = new Side(this, cfgProject);
     var scrollPaneSide = new JScrollPane(side, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
         JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+    scrollPaneSide.getHorizontalScrollBar().setUnitIncrement(15);
+    scrollPaneSide.getVerticalScrollBar().setUnitIncrement(15);
     sideSp.setLeftComponent(scrollPaneSide);
 
     // outline

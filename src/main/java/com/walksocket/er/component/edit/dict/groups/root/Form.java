@@ -97,7 +97,7 @@ public class Form extends JPanel {
     columnNameWidthMaps.put("<html><s>Dict group id</s></html>", 200);
     columnNameWidthMaps.put("<html><s>Group name</s></html>", 200);
     columnNameWidthMaps.put("<html><s>Columns</s></html>", 600);
-    columnNameWidthMaps.put("<html><s>Used</s></html>", 100);
+    columnNameWidthMaps.put("<html><i>Used</i></html>", 100);
   }
 
   /**
@@ -304,7 +304,7 @@ public class Form extends JPanel {
 
           buttonRemove.setEnabled(false);
           var used = Utils.getString(table.getValueAt(r, 3));
-          if (used.equals("no")) {
+          if (!used.equals("yes")) {
             buttonRemove.setEnabled(true);
           }
         }
@@ -358,7 +358,7 @@ public class Form extends JPanel {
         table.setValueAt(Json.toJsonString(groupColumns), i, 2);
       }
 
-      table.setValueAt("no", i, 3);
+      table.setValueAt("", i, 3);
       var o = dbTableGroupList.stream()
           .filter(d -> d.dictGroupId.equals(dbDictGroup.dictGroupId))
           .findFirst();

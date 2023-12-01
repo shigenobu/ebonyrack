@@ -45,6 +45,11 @@ import javax.swing.text.JTextComponent;
 public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrigin {
 
   /**
+   * max positioned.
+   */
+  public static final int MAX_POSITIONED = 999;
+
+  /**
    * min width.
    */
   private static final int MIN_WIDTH = 100;

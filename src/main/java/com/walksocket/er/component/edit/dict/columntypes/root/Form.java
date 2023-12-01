@@ -98,7 +98,7 @@ public class Form extends JPanel {
     columnNameWidthMaps.put("<html><s>Seq</s></html>", 200);
     columnNameWidthMaps.put("<html><s>Column type</s></html>", 400);
     columnNameWidthMaps.put("<html><s>Remarks</s></html>", 400);
-    columnNameWidthMaps.put("<html><s>Used</s></html>", 100);
+    columnNameWidthMaps.put("<html><i>Used</i></html>", 100);
   }
 
   /**
@@ -257,7 +257,7 @@ public class Form extends JPanel {
 
           buttonRemove.setEnabled(false);
           var used = Utils.getString(table.getValueAt(r, 4));
-          if (used.equals("no")) {
+          if (!used.equals("yes")) {
             buttonRemove.setEnabled(true);
           }
         }
@@ -293,7 +293,7 @@ public class Form extends JPanel {
       table.setValueAt(dbDictColumnType.remarks, i, 3);
 
       // used
-      table.setValueAt("no", i, 4);
+      table.setValueAt("", i, 4);
       var opt = dbDictColumnList.stream()
           .filter(d -> d.dictColumnTypeId.equals(dbDictColumnType.dictColumnTypeId))
           .findFirst();

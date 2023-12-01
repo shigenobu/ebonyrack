@@ -170,7 +170,10 @@ public class Main extends JFrame {
           var captureImage =
               new BufferedImage(rect.width, rect.height,
                   BufferedImage.TYPE_INT_ARGB);
-          workspace.paint(captureImage.getGraphics());
+          var g2 = captureImage.getGraphics();
+          workspace.paintAll(g2);
+          g2.dispose();
+
           var f = new File(fileName);
           ImageIO.write(captureImage, format, f);
           JOptionPane.showMessageDialog(main,

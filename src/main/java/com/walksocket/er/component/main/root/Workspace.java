@@ -851,7 +851,7 @@ public class Workspace extends ErConnectorPositioned {
       var menuItemNewTable = new JMenuItem("New table");
       menuItemNewTable.addActionListener(actionEvent -> {
         // check
-        if (positionedTables.size() > 999) {
+        if (positionedTables.size() > Table.MAX_POSITIONED) {
           JOptionPane.showMessageDialog(workspace, "No more create table.");
           return;
         }
@@ -888,7 +888,7 @@ public class Workspace extends ErConnectorPositioned {
       // new sequence
       var menuItemNewSequence = new JMenuItem("New sequence");
       menuItemNewSequence.addActionListener(actionEvent -> {
-        if (positionedSequences.size() > 999) {
+        if (positionedSequences.size() > Sequence.MAX_POSITIONED) {
           JOptionPane.showMessageDialog(workspace, "No more create sequence.");
           return;
         }
@@ -925,7 +925,7 @@ public class Workspace extends ErConnectorPositioned {
       var menuItemNewNote = new JMenuItem("New note");
       menuItemNewNote.addActionListener(actionEvent -> {
         // check
-        if (positionedNotes.size() > 999) {
+        if (positionedNotes.size() > Note.MAX_POSITIONED) {
           JOptionPane.showMessageDialog(workspace, "No more create note.");
           return;
         }
