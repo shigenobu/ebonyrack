@@ -307,6 +307,7 @@ public class Form extends JPanel {
           }
           return;
         }
+
         Point pt = e.getPoint();
         int r = table.rowAtPoint(pt);
         if (r >= 0) {

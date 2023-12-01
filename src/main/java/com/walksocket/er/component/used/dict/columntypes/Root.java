@@ -1,8 +1,8 @@
-package com.walksocket.er.component.used.dict.groups;
+package com.walksocket.er.component.used.dict.columntypes;
 
 import com.walksocket.er.Size.DialogSmall;
-import com.walksocket.er.component.used.dict.groups.root.Form;
-import com.walksocket.er.sqlite.entity.DbDictGroup;
+import com.walksocket.er.component.used.dict.columntypes.root.Form;
+import com.walksocket.er.sqlite.entity.DbDictColumnType;
 import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.BoxLayout;
@@ -16,14 +16,14 @@ public class Root extends JPanel {
   /**
    * Constructor.
    *
-   * @param dbDictGroup dbDictGroup
+   * @param dbDictColumnType dbDictColumnType
    */
-  public Root(DbDictGroup dbDictGroup) {
+  public Root(DbDictColumnType dbDictColumnType) {
     // layout
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
     // panel - form
-    var form = new Form(dbDictGroup);
+    var form = new Form(dbDictColumnType);
     form.setPreferredSize(new Dimension(DialogSmall.WIDTH - 20, DialogSmall.HEIGHT));
     form.setAlignmentX(Component.LEFT_ALIGNMENT);
     add(form);

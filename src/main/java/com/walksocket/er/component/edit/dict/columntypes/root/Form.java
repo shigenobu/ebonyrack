@@ -3,6 +3,7 @@ package com.walksocket.er.component.edit.dict.columntypes.root;
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
+import com.walksocket.er.component.UsedDictColumnTypes;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.entity.DbDictColumnType;
 import com.walksocket.er.sqlite.tmp.TmpDictColumnType;
@@ -247,6 +248,26 @@ public class Form extends JPanel {
     table.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
+        if (e.getClickCount() == 2) {
+          Point pt = e.getPoint();
+          int row = table.rowAtPoint(pt);
+          int col = table.columnAtPoint(pt);
+          var used = Utils.getString(table.getValueAt(row, 4));
+          if (row >= 0 && col == 4 && used.equals("yes")) {
+            var dictColumnTypeId = Utils.getString(table.getValueAt(row, 0));
+            var dbDictColumnType = Bucket.getInstance()
+                .getBucketDict().dbDictColumnTypeList.stream()
+                .filter(d -> d.dictColumnTypeId.equals(dictColumnTypeId))
+                .findFirst()
+                .get();
+
+            var usedDictColumnTypes = new UsedDictColumnTypes(dbDictColumnType);
+            usedDictColumnTypes.setModal(true);
+            usedDictColumnTypes.setVisible(true);
+          }
+          return;
+        }
+
         Point pt = e.getPoint();
         int r = table.rowAtPoint(pt);
         if (r >= 0) {
