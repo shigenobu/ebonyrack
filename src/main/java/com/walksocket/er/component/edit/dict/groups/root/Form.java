@@ -4,6 +4,7 @@ import com.walksocket.er.Json;
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
+import com.walksocket.er.component.UsedDictGroups;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.entity.DbDictColumn;
 import com.walksocket.er.sqlite.tmp.TmpDictGroup;
@@ -288,6 +289,24 @@ public class Form extends JPanel {
     table.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
+        if (e.getClickCount() == 2) {
+          Point pt = e.getPoint();
+          int row = table.rowAtPoint(pt);
+          int col = table.columnAtPoint(pt);
+          var used = Utils.getString(table.getValueAt(row, 3));
+          if (row >= 0 && col == 3 && used.equals("yes")) {
+            var dictGroupId = Utils.getString(table.getValueAt(row, 0));
+            var dbDictGroup = Bucket.getInstance().getBucketDict().dbDictGroupList.stream()
+                .filter(d -> d.dictGroupId.equals(dictGroupId))
+                .findFirst()
+                .get();
+
+            var usedDictGroups = new UsedDictGroups(dbDictGroup);
+            usedDictGroups.setModal(true);
+            usedDictGroups.setVisible(true);
+          }
+          return;
+        }
         Point pt = e.getPoint();
         int r = table.rowAtPoint(pt);
         if (r >= 0) {
