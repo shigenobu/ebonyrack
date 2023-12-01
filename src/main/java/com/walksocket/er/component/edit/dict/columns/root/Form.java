@@ -3,6 +3,7 @@ package com.walksocket.er.component.edit.dict.columns.root;
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
+import com.walksocket.er.custom.ErUnderlineBorder;
 import com.walksocket.er.definition.AutoIncrement;
 import com.walksocket.er.definition.Charset;
 import com.walksocket.er.definition.Collate;
@@ -11,9 +12,12 @@ import com.walksocket.er.definition.OnUpdate;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.entity.DbDictColumn;
 import com.walksocket.er.sqlite.tmp.TmpDictColumn;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Point;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Comparator;
@@ -144,7 +148,7 @@ public class Form extends JPanel {
   /**
    * text field option.
    */
-  private final JTextField textFieldOption = new JTextField(30);
+  private final JTextField textFieldOption = new JTextField(60);
 
   /**
    * button save.
@@ -373,6 +377,29 @@ public class Form extends JPanel {
     });
     panelButton.add(buttonRemove);
 
+    // empty
+    var emptyPanel = new JPanel();
+    emptyPanel.setPreferredSize(new Dimension(DialogMedium.WIDTH, DialogMedium.HEIGHT / 40));
+    emptyPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+    emptyPanel.setBorder(new ErUnderlineBorder());
+    add(emptyPanel);
+
+    // search
+    var panelSearch = new JPanel();
+    add(panelSearch);
+
+    var labelSearchColumnName = new JLabel("(Search) Column name:");
+    panelSearch.add(labelSearchColumnName);
+    var textFieldSearchColumnName = new JTextField(20);
+    textFieldSearchColumnName.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyReleased(KeyEvent e) {
+        var columnName = Utils.getString(textFieldSearchColumnName);
+        loadTable(columnName);
+      }
+    });
+    panelSearch.add(textFieldSearchColumnName);
+
     // table
     var panelTable = new JPanel();
     add(panelTable);
@@ -431,6 +458,15 @@ public class Form extends JPanel {
    * load table.
    */
   private void loadTable() {
+    loadTable(null);
+  }
+
+  /**
+   * load table.
+   *
+   * @param columnName columnName
+   */
+  private void loadTable(String columnName) {
     tableModel.setRowCount(0);
 
     var ctxTableList = Bucket.getInstance().getBucketTable().ctxTableList;
@@ -445,6 +481,10 @@ public class Form extends JPanel {
         .sorted(Comparator.comparing(DbDictColumn::getColumnNameForSort)
             .thenComparing(DbDictColumn::getColumnCommentForSort))
         .collect(Collectors.toList())) {
+      if (!Utils.isNullOrEmpty(columnName) && !dbDictColumn.columnName.startsWith(columnName)) {
+        continue;
+      }
+
       tableModel.setRowCount(i + 1);
 
       table.setValueAt(dbDictColumn.dictColumnId, i, 0);

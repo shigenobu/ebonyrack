@@ -76,15 +76,15 @@ public class Form extends JPanel {
     var panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
     add(panel1);
 
-    var labelColumnName = new JLabel("Column name:");
-    panel1.add(labelColumnName);
-    var textFieldColumnName = new JTextField(20);
-    textFieldColumnName.setText(tmpColumnForDict.columnName);
-    textFieldColumnName.addKeyListener(new KeyAdapter() {
+    var labelSearchColumnName = new JLabel("(Search) Column name:");
+    panel1.add(labelSearchColumnName);
+    var textFieldSearchColumnName = new JTextField(20);
+    textFieldSearchColumnName.setText(tmpColumnForDict.columnName);
+    textFieldSearchColumnName.addKeyListener(new KeyAdapter() {
 
       @Override
       public void keyReleased(KeyEvent e) {
-        var columnName = Utils.getString(textFieldColumnName);
+        var columnName = Utils.getString(textFieldSearchColumnName);
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
           root.getInputColumnName().getColumns()
               .setTmpColumnForDictOnlyColumnName(row, columnName);
@@ -94,10 +94,10 @@ public class Form extends JPanel {
         reloadTable(columnName);
       }
     });
-    panel1.add(textFieldColumnName);
+    panel1.add(textFieldSearchColumnName);
     var buttonOk = new JButton("Ok");
     buttonOk.addActionListener(actionEvent -> {
-      var columnName = Utils.getString(textFieldColumnName);
+      var columnName = Utils.getString(textFieldSearchColumnName);
       root.getInputColumnName().getColumns().setTmpColumnForDictOnlyColumnName(row, columnName);
       root.getInputColumnName().dispose();
     });
