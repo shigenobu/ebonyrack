@@ -310,6 +310,8 @@ public class Form extends JPanel {
         Point pt = e.getPoint();
         int r = table.rowAtPoint(pt);
         if (r >= 0) {
+          clear();
+
           textFieldDictGroupId.setText(Utils.getString(table.getValueAt(r, 0)));
           textFieldGroupName.setText(Utils.getString(table.getValueAt(r, 1)));
 
