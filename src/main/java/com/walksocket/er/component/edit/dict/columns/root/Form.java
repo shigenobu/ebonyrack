@@ -3,6 +3,7 @@ package com.walksocket.er.component.edit.dict.columns.root;
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
+import com.walksocket.er.component.UsedDictColumn;
 import com.walksocket.er.custom.ErUnderlineBorder;
 import com.walksocket.er.definition.AutoIncrement;
 import com.walksocket.er.definition.Charset;
@@ -423,6 +424,26 @@ public class Form extends JPanel {
     table.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
+        if (e.getClickCount() == 2) {
+          Point pt = e.getPoint();
+          int row = table.rowAtPoint(pt);
+          int col = table.columnAtPoint(pt);
+          var used = Utils.getString(table.getValueAt(row, 11));
+          if (row >= 0 && col == 11 && used.equals("yes")) {
+            var dictColumnId = Utils.getString(table.getValueAt(row, 0));
+            var dbDictColumnType = Bucket.getInstance()
+                .getBucketDict().dbDictColumnList.stream()
+                .filter(d -> d.dictColumnId.equals(dictColumnId))
+                .findFirst()
+                .get();
+
+            var usedDictColumn = new UsedDictColumn(dbDictColumnType);
+            usedDictColumn.setModal(true);
+            usedDictColumn.setVisible(true);
+          }
+          return;
+        }
+
         Point pt = e.getPoint();
         int r = table.rowAtPoint(pt);
         if (r >= 0) {
