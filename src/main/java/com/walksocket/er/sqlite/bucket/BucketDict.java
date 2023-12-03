@@ -242,6 +242,13 @@ public class BucketDict {
             throw new Exception("Auto increment is only allowed single primary.");
           }
         }
+        var optionalDbDictGroupColumn = Bucket.getInstance()
+            .getBucketDict().dbDictGroupColumnList.stream()
+            .filter(d -> d.dictColumnId.equals(tmpDictColumn.dictColumnId))
+            .findFirst();
+        if (optionalDbDictGroupColumn.isPresent()) {
+          throw new Exception("Auto increment do not apply for group.");
+        }
       }
 
       // check foreign used
@@ -439,6 +446,17 @@ public class BucketDict {
               }
             }
           }
+        }
+      }
+
+      // check auto increment
+      for (var tmpDictGroupColumn : tmpDictGroupColumnList) {
+        var o = Bucket.getInstance().getBucketDict().dbDictColumnList.stream()
+            .filter(d -> d.dictColumnId.equals(tmpDictGroupColumn.dictColumnId))
+            .filter(d -> d.autoIncrementDefinition.equals(AutoIncrement.AUTO_INCREMENT_VALUE))
+            .findFirst();
+        if (o.isPresent()) {
+          throw new Exception("Not contains 'AUTO INCREMENT' column.");
         }
       }
 

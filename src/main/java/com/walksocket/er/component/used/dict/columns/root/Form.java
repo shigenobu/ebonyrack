@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -135,30 +136,54 @@ public class Form extends JPanel {
   private final DbDictColumn dbDictColumn;
 
   /**
-   * column name and width maps.
+   * column name and width maps for group.
    */
-  private static final Map<String, Integer> columnNameWidthMaps = new LinkedHashMap<>();
+  private static final Map<String, Integer> columnNameWidthMapsForGroup = new LinkedHashMap<>();
 
   static {
     // b -> required
     // i -> open dialog
     // u -> with dict
     // s -> show only
-    columnNameWidthMaps.put("<html><s>Table id</s></html>", 200);
-    columnNameWidthMaps.put("<html><s>Table name</s></html>", 200);
-    columnNameWidthMaps.put("<html><s>Table comment</s></html>", 200);
-    columnNameWidthMaps.put("<html><s>At</s></html>", 200);
+    columnNameWidthMapsForGroup.put("<html><s>Dict group id</s></html>", 200);
+    columnNameWidthMapsForGroup.put("<html><s>Group name</s></html>", 200);
   }
 
   /**
-   * table.
+   * table for group.
    */
-  private final JTable table;
+  private final JTable tableForGroup;
 
   /**
-   * table model.
+   * table model for group.
    */
-  private final DefaultTableModel tableModel;
+  private final DefaultTableModel tableModelForGroup;
+
+  /**
+   * column name and width maps for db table.
+   */
+  private static final Map<String, Integer> columnNameWidthMapsForDbTable = new LinkedHashMap<>();
+
+  static {
+    // b -> required
+    // i -> open dialog
+    // u -> with dict
+    // s -> show only
+    columnNameWidthMapsForDbTable.put("<html><s>Table id</s></html>", 200);
+    columnNameWidthMapsForDbTable.put("<html><s>Table name</s></html>", 200);
+    columnNameWidthMapsForDbTable.put("<html><s>Table comment</s></html>", 200);
+    columnNameWidthMapsForDbTable.put("<html><s>At</s></html>", 200);
+  }
+
+  /**
+   * table for db table.
+   */
+  private final JTable tableForDbTable;
+
+  /**
+   * table model for db table.
+   */
+  private final DefaultTableModel tableModelForDbTable;
 
   /**
    * Constructor.
@@ -253,54 +278,215 @@ public class Form extends JPanel {
     textFieldOption.setText(dbDictColumn.option);
     panel11.add(textFieldOption);
 
-    // table
-    var panelTable = new JPanel();
-    add(panelTable);
+    // table for group
+    var panelTableForGroup = new JPanel();
+    add(panelTableForGroup);
 
-    var columnNames = columnNameWidthMaps.keySet().toArray();
-    tableModel = new DefaultTableModel(columnNames, 0) {
+    var columnNamesForGroup = columnNameWidthMapsForGroup.keySet().toArray();
+    tableModelForGroup = new DefaultTableModel(columnNamesForGroup, 0) {
       @Override
       public boolean isCellEditable(int row, int column) {
         return false;
       }
     };
 
-    var widthList = columnNameWidthMaps.values().toArray(new Integer[columnNameWidthMaps.size()]);
-    table = new JTable(tableModel);
-    table.putClientProperty("terminateEditOnFocusLost", true);
-    table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-    for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
-      var tc = table.getColumnModel().getColumn(i);
-      tc.setPreferredWidth(widthList[i]);
+    var widthListForGroup = columnNameWidthMapsForGroup.values()
+        .toArray(new Integer[columnNameWidthMapsForGroup.size()]);
+    tableForGroup = new JTable(tableModelForGroup);
+    tableForGroup.putClientProperty("terminateEditOnFocusLost", true);
+    tableForGroup.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    for (int i = 0; i < tableForGroup.getColumnModel().getColumnCount(); i++) {
+      var tc = tableForGroup.getColumnModel().getColumn(i);
+      tc.setPreferredWidth(widthListForGroup[i]);
     }
 
-    var sp = new JScrollPane(table);
-    sp.setPreferredSize(new Dimension(DialogSmall.WIDTH - 40, DialogSmall.HEIGHT / 20 * 9));
-    panelTable.add(sp);
+    var spForGroup = new JScrollPane(tableForGroup);
+    spForGroup.setPreferredSize(new Dimension(DialogSmall.WIDTH - 40, DialogSmall.HEIGHT / 20 * 3));
+    panelTableForGroup.add(spForGroup);
 
-    // load
-    loadTable();
+    // load for group
+    loadTableForGroup();
+
+    // table for db table
+    var panelTableForDbTable = new JPanel();
+    add(panelTableForDbTable);
+
+    var columnNamesForDbTable = columnNameWidthMapsForDbTable.keySet().toArray();
+    tableModelForDbTable = new DefaultTableModel(columnNamesForDbTable, 0) {
+      @Override
+      public boolean isCellEditable(int row, int column) {
+        return false;
+      }
+    };
+
+    var widthListForDbTable = columnNameWidthMapsForDbTable.values()
+        .toArray(new Integer[columnNameWidthMapsForDbTable.size()]);
+    tableForDbTable = new JTable(tableModelForDbTable);
+    tableForDbTable.putClientProperty("terminateEditOnFocusLost", true);
+    tableForDbTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    for (int i = 0; i < tableForDbTable.getColumnModel().getColumnCount(); i++) {
+      var tc = tableForDbTable.getColumnModel().getColumn(i);
+      tc.setPreferredWidth(widthListForDbTable[i]);
+    }
+
+    var spForDbTable = new JScrollPane(tableForDbTable);
+    spForDbTable.setPreferredSize(
+        new Dimension(DialogSmall.WIDTH - 40, DialogSmall.HEIGHT / 20 * 6));
+    panelTableForDbTable.add(spForDbTable);
+
+    // load for db table
+    loadTableForDbTable();
   }
 
   /**
-   * load table.
+   * load table for group.
    */
-  private void loadTable() {
-    tableModel.setRowCount(0);
-//
-//    var dbDictColumnList = Bucket.getInstance().getBucketDict().dbDictColumnList.stream()
-//        .filter(d -> d.dictColumnTypeId.equals(dbDictColumnType.dictColumnTypeId))
-//        .collect(Collectors.toList());
-//
-//    var i = 0;
-//    for (var dbDictColumn : dbDictColumnList) {
-//      tableModel.setRowCount(i + 1);
-//
-//      table.setValueAt(dbDictColumn.dictColumnTypeId, i, 0);
-//      table.setValueAt(dbDictColumn.columnName, i, 1);
-//      table.setValueAt(dbDictColumn.columnComment, i, 2);
-//
-//      i++;
-//    }
+  private void loadTableForGroup() {
+    tableModelForGroup.setRowCount(0);
+
+    var i = 0;
+    var dbDictGroupColumnList = Bucket.getInstance().getBucketDict().dbDictGroupColumnList.stream()
+        .filter(c -> c.dictColumnId.equals(dbDictColumn.dictColumnId))
+        .collect(Collectors.toList());
+    for (var dbDictGroupColumn : dbDictGroupColumnList) {
+      var dbDictGroupList = Bucket.getInstance().getBucketDict().dbDictGroupList.stream()
+          .filter(d -> d.dictGroupId.equals(dbDictGroupColumn.dictGroupId))
+          .collect(Collectors.toList());
+      for (var dbDictGroup : dbDictGroupList) {
+        tableModelForGroup.setRowCount(i + 1);
+
+        tableModelForGroup.setValueAt(dbDictGroup.dictGroupId, i, 0);
+        tableModelForGroup.setValueAt(dbDictGroup.groupName, i, 1);
+
+        i++;
+      }
+    }
+  }
+
+  /**
+   * load table for db table.
+   */
+  private void loadTableForDbTable() {
+    tableModelForDbTable.setRowCount(0);
+
+    var ctxTableList = Bucket.getInstance().getBucketTable().ctxTableList;
+
+    var i = 0;
+    for (var ctxTable : ctxTableList) {
+      // table column
+      var optTableColumn = ctxTable.dbTableColumnList.stream()
+          .filter(c -> c.dictColumnId.equals(dbDictColumn.dictColumnId))
+          .findFirst();
+      if (optTableColumn.isPresent()) {
+        tableModelForDbTable.setRowCount(i + 1);
+
+        tableModelForDbTable.setValueAt(ctxTable.dbTable.tableId, i, 0);
+        tableModelForDbTable.setValueAt(ctxTable.dbTable.tableName, i, 1);
+        tableModelForDbTable.setValueAt(ctxTable.dbTable.tableComment, i, 2);
+        tableModelForDbTable.setValueAt("table column", i, 3);
+
+        i++;
+      }
+
+      // primary
+      var optPrimaryKey = ctxTable.ctxInnerPrimaryKey.dbTablePrimaryKeyColumnList.stream()
+          .filter(c -> c.dictColumnId.equals(dbDictColumn.dictColumnId))
+          .findFirst();
+      if (optPrimaryKey.isPresent()) {
+        tableModelForDbTable.setRowCount(i + 1);
+
+        tableModelForDbTable.setValueAt(ctxTable.dbTable.tableId, i, 0);
+        tableModelForDbTable.setValueAt(ctxTable.dbTable.tableName, i, 1);
+        tableModelForDbTable.setValueAt(ctxTable.dbTable.tableComment, i, 2);
+        tableModelForDbTable.setValueAt("primary key", i, 3);
+
+        i++;
+      }
+
+      // unique key
+      for (var uniqueKeyColumnList : ctxTable.ctxInnerUniqueKeyList.stream()
+          .map(c -> c.dbTableUniqueKeyColumnList)
+          .collect(Collectors.toList())) {
+        var optUniqueKey = uniqueKeyColumnList.stream()
+            .filter(c -> c.dictColumnId.equals(dbDictColumn.dictColumnId))
+            .findFirst();
+        if (optUniqueKey.isPresent()) {
+          tableModelForDbTable.setRowCount(i + 1);
+
+          tableModelForDbTable.setValueAt(ctxTable.dbTable.tableId, i, 0);
+          tableModelForDbTable.setValueAt(ctxTable.dbTable.tableName, i, 1);
+          tableModelForDbTable.setValueAt(ctxTable.dbTable.tableComment, i, 2);
+          tableModelForDbTable.setValueAt("unique key", i, 3);
+
+          i++;
+        }
+      }
+
+      // key
+      for (var keyColumnList : ctxTable.ctxInnerKeyList.stream()
+          .map(c -> c.dbTableKeyColumnList)
+          .collect(Collectors.toList())) {
+        var optKey = keyColumnList.stream()
+            .filter(c -> c.dictColumnId.equals(dbDictColumn.dictColumnId))
+            .findFirst();
+        if (optKey.isPresent()) {
+          tableModelForDbTable.setRowCount(i + 1);
+
+          tableModelForDbTable.setValueAt(ctxTable.dbTable.tableId, i, 0);
+          tableModelForDbTable.setValueAt(ctxTable.dbTable.tableName, i, 1);
+          tableModelForDbTable.setValueAt(ctxTable.dbTable.tableComment, i, 2);
+          tableModelForDbTable.setValueAt("key", i, 3);
+
+          i++;
+        }
+      }
+
+      // foreign key
+      for (var foreignKeyColumnList : ctxTable.ctxInnerForeignKeyList.stream()
+          .map(c -> c.dbTableForeignKeyColumnList)
+          .collect(Collectors.toList())) {
+        var optForeignKey = foreignKeyColumnList.stream()
+            .filter(c -> c.dictColumnId.equals(dbDictColumn.dictColumnId))
+            .findFirst();
+        if (optForeignKey.isPresent()) {
+          tableModelForDbTable.setRowCount(i + 1);
+
+          tableModelForDbTable.setValueAt(ctxTable.dbTable.tableId, i, 0);
+          tableModelForDbTable.setValueAt(ctxTable.dbTable.tableName, i, 1);
+          tableModelForDbTable.setValueAt(ctxTable.dbTable.tableComment, i, 2);
+          tableModelForDbTable.setValueAt("foreign key", i, 3);
+
+          i++;
+        }
+        var optReferenceForeignKey = foreignKeyColumnList.stream()
+            .filter(c -> c.referenceDictColumnId.equals(dbDictColumn.dictColumnId))
+            .findFirst();
+        if (optReferenceForeignKey.isPresent()) {
+          tableModelForDbTable.setRowCount(i + 1);
+
+          var dbTableForeignKeyColumn = optReferenceForeignKey.get();
+          for (var ctxInnerForeignKey : ctxTable.ctxInnerForeignKeyList) {
+            if (ctxInnerForeignKey.dbTableForeignKey.seq == dbTableForeignKeyColumn.seq) {
+              var ctxReferenceDbTable = Bucket.getInstance().getBucketTable().ctxTableList.stream()
+                  .filter(c -> c.dbTable.tableId.equals(
+                      ctxInnerForeignKey.dbTableForeignKey.referenceTableId))
+                  .findFirst()
+                  .get();
+              // TODO expression
+              tableModelForDbTable.setValueAt(String.format("%s -> %s", ctxTable.dbTable.tableId,
+                  ctxReferenceDbTable.dbTable.tableId), i, 0);
+              tableModelForDbTable.setValueAt(String.format("%s -> %s", ctxTable.dbTable.tableName,
+                  ctxReferenceDbTable.dbTable.tableName), i, 1);
+              tableModelForDbTable.setValueAt(
+                  String.format("%s -> %s", ctxTable.dbTable.tableComment,
+                      ctxReferenceDbTable.dbTable.tableComment), i, 2);
+              tableModelForDbTable.setValueAt("reference foreign key", i, 3);
+
+              i++;
+            }
+          }
+        }
+      }
+    }
   }
 }
