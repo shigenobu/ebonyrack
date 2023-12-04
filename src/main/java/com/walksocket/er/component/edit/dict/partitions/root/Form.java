@@ -3,6 +3,7 @@ package com.walksocket.er.component.edit.dict.partitions.root;
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
+import com.walksocket.er.component.UsedDictPartition;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.tmp.TmpDictPartition;
 import java.awt.Component;
@@ -269,10 +270,9 @@ public class Form extends JPanel {
                 .findFirst()
                 .get();
 
-            // TODO partition used
-//            var usedDictPartitions = new UsedDictPartitions(dbDictPartition);
-//            usedDictPartitions.setModal(true);
-//            usedDictPartitions.setVisible(true);
+            var usedDictPartitions = new UsedDictPartition(dbDictPartition);
+            usedDictPartitions.setModal(true);
+            usedDictPartitions.setVisible(true);
           }
           return;
         }
@@ -280,8 +280,6 @@ public class Form extends JPanel {
         Point pt = e.getPoint();
         int r = table.rowAtPoint(pt);
         if (r >= 0) {
-          clear();
-
           textFieldDictPartitionId.setText(Utils.getString(table.getValueAt(r, 0)));
           textFieldPartitionName.setText(Utils.getString(table.getValueAt(r, 1)));
           textAreaExpression.setText(Utils.getString(table.getValueAt(r, 2)));
