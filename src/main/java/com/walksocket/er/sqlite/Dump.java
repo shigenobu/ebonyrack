@@ -18,6 +18,7 @@ import com.walksocket.er.sqlite.entity.DbNoteOption;
 import com.walksocket.er.sqlite.entity.DbSequence;
 import com.walksocket.er.sqlite.entity.DbSequenceOption;
 import com.walksocket.er.sqlite.entity.DbTable;
+import com.walksocket.er.sqlite.entity.DbTableCheck;
 import com.walksocket.er.sqlite.entity.DbTableColumn;
 import com.walksocket.er.sqlite.entity.DbTableForeignKey;
 import com.walksocket.er.sqlite.entity.DbTableForeignKeyColumn;
@@ -75,6 +76,7 @@ public class Dump {
     classes.add(DbTableKeyColumn.class);
     classes.add(DbTableForeignKey.class);
     classes.add(DbTableForeignKeyColumn.class);
+    classes.add(DbTableCheck.class);
     classes.add(DbSequence.class);
     classes.add(DbSequenceOption.class);
     classes.add(DbNote.class);

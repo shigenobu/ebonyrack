@@ -249,6 +249,18 @@ create table if not exists DbTableForeignKeyColumn
 create index if not exists DbTableForeignKeyColumnIdx01 on DbTableForeignKeyColumn (dictColumnId);
 create index if not exists DbTableForeignKeyColumnIdx02 on DbTableForeignKeyColumn (referenceDictColumnId);
 
+-- check
+create table if not exists DbTableCheck
+(
+    tableId        text,
+    seq            integer,
+    constraintName text,
+    expression     text,
+    primary key (tableId, seq),
+    unique (constraintName),
+    foreign key (tableId) references DbTable (tableId) on delete cascade
+);
+
 -- sequence
 create table if not exists DbSequence
 (
