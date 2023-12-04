@@ -1,6 +1,6 @@
 package com.walksocket.er.component.used.dict.groups.root;
 
-import com.walksocket.er.Size.DialogSmall;
+import com.walksocket.er.Size.DialogUsed;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.entity.DbDictGroup;
 import java.awt.Dimension;
@@ -111,23 +111,23 @@ public class Form extends JPanel {
 
     // columns
     var panel3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    panel3.setPreferredSize(new Dimension(DialogSmall.WIDTH, DialogSmall.HEIGHT / 20 * 6));
+    panel3.setPreferredSize(new Dimension(DialogUsed.WIDTH, DialogUsed.HEIGHT / 20 * 4));
     add(panel3);
 
     var panel3Inner1 = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 2));
-    panel3Inner1.setPreferredSize(new Dimension(50, DialogSmall.HEIGHT / 20 * 6));
+    panel3Inner1.setPreferredSize(new Dimension(50, DialogUsed.HEIGHT / 20 * 4));
     panel3.add(panel3Inner1);
     panel3Inner1.add(labelColumns);
 
     var panel3Inner2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 2));
     panel3Inner2.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH - 60, DialogSmall.HEIGHT / 20 * 6));
+        new Dimension(DialogUsed.WIDTH - 60, DialogUsed.HEIGHT / 20 * 4));
     panel3.add(panel3Inner2);
 
     for (int i = 0; i < 10; i++) {
       var textFieldDictColumn = new JTextField();
       textFieldDictColumn.setPreferredSize(
-          new Dimension((DialogSmall.WIDTH - 80) / 2, textFieldDictColumn.getFont().getSize() * 2));
+          new Dimension((DialogUsed.WIDTH - 80) / 2, textFieldDictColumn.getFont().getSize() * 2));
       panel3Inner2.add(textFieldDictColumn);
 
       textFieldDictColumnList.add(textFieldDictColumn);
@@ -177,7 +177,7 @@ public class Form extends JPanel {
     }
 
     var sp = new JScrollPane(table);
-    sp.setPreferredSize(new Dimension(DialogSmall.WIDTH - 40, DialogSmall.HEIGHT / 10 * 5));
+    sp.setPreferredSize(new Dimension(DialogUsed.WIDTH - 40, DialogUsed.HEIGHT / 10 * 7));
     panelTable.add(sp);
 
     // load

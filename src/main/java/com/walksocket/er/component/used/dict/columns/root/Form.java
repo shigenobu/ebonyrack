@@ -1,6 +1,6 @@
 package com.walksocket.er.component.used.dict.columns.root;
 
-import com.walksocket.er.Size.DialogSmall;
+import com.walksocket.er.Size.DialogUsed;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.entity.DbDictColumn;
 import java.awt.Dimension;
@@ -128,7 +128,7 @@ public class Form extends JPanel {
   /**
    * text field option.
    */
-  private final JTextField textFieldOption = new JTextField(60);
+  private final JTextField textFieldOption = new JTextField(50);
 
   /**
    * db dict column.
@@ -184,6 +184,34 @@ public class Form extends JPanel {
    * table model for db table.
    */
   private final DefaultTableModel tableModelForDbTable;
+
+  /**
+   * column name and width maps for reference.
+   */
+  private static final Map<String, Integer> columnNameWidthMapsForReference = new LinkedHashMap<>();
+
+  static {
+    // b -> required
+    // i -> open dialog
+    // u -> with dict
+    // s -> show only
+    columnNameWidthMapsForReference.put("<html><s>Table id</s></html>", 200);
+    columnNameWidthMapsForReference.put("<html><s>Table name</s></html>", 200);
+    columnNameWidthMapsForReference.put("<html><s>Table comment</s></html>", 200);
+    columnNameWidthMapsForReference.put("<html><s>Reference table id</s></html>", 200);
+    columnNameWidthMapsForReference.put("<html><s>Reference table name</s></html>", 200);
+    columnNameWidthMapsForReference.put("<html><s>Reference table comment</s></html>", 200);
+  }
+
+  /**
+   * table for reference.
+   */
+  private final JTable tableForReference;
+
+  /**
+   * table model for reference.
+   */
+  private final DefaultTableModel tableModelForReference;
 
   /**
    * Constructor.
@@ -301,7 +329,7 @@ public class Form extends JPanel {
     }
 
     var spForGroup = new JScrollPane(tableForGroup);
-    spForGroup.setPreferredSize(new Dimension(DialogSmall.WIDTH - 40, DialogSmall.HEIGHT / 20 * 3));
+    spForGroup.setPreferredSize(new Dimension(DialogUsed.WIDTH - 40, DialogUsed.HEIGHT / 20 * 2));
     panelTableForGroup.add(spForGroup);
 
     // load for group
@@ -331,11 +359,41 @@ public class Form extends JPanel {
 
     var spForDbTable = new JScrollPane(tableForDbTable);
     spForDbTable.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH - 40, DialogSmall.HEIGHT / 20 * 6));
+        new Dimension(DialogUsed.WIDTH - 40, DialogUsed.HEIGHT / 20 * 6));
     panelTableForDbTable.add(spForDbTable);
 
     // load for db table
     loadTableForDbTable();
+
+    // table for reference
+    var panelTableForReference = new JPanel();
+    add(panelTableForReference);
+
+    var columnNamesForReference = columnNameWidthMapsForReference.keySet().toArray();
+    tableModelForReference = new DefaultTableModel(columnNamesForReference, 0) {
+      @Override
+      public boolean isCellEditable(int row, int column) {
+        return false;
+      }
+    };
+
+    var widthListForReference = columnNameWidthMapsForReference.values()
+        .toArray(new Integer[columnNameWidthMapsForReference.size()]);
+    tableForReference = new JTable(tableModelForReference);
+    tableForReference.putClientProperty("terminateEditOnFocusLost", true);
+    tableForReference.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    for (int i = 0; i < tableForReference.getColumnModel().getColumnCount(); i++) {
+      var tc = tableForReference.getColumnModel().getColumn(i);
+      tc.setPreferredWidth(widthListForReference[i]);
+    }
+
+    var spForReference = new JScrollPane(tableForReference);
+    spForReference.setPreferredSize(
+        new Dimension(DialogUsed.WIDTH - 40, DialogUsed.HEIGHT / 20 * 5));
+    panelTableForReference.add(spForReference);
+
+    // load for reference
+    loadTableForReference();
   }
 
   /**
@@ -458,11 +516,29 @@ public class Form extends JPanel {
 
           i++;
         }
+      }
+    }
+  }
+
+  /**
+   * load table for reference.
+   */
+  private void loadTableForReference() {
+    tableModelForReference.setRowCount(0);
+
+    var ctxTableList = Bucket.getInstance().getBucketTable().ctxTableList;
+
+    var i = 0;
+    for (var ctxTable : ctxTableList) {
+      // reference foreign key
+      for (var foreignKeyColumnList : ctxTable.ctxInnerForeignKeyList.stream()
+          .map(c -> c.dbTableForeignKeyColumnList)
+          .collect(Collectors.toList())) {
         var optReferenceForeignKey = foreignKeyColumnList.stream()
             .filter(c -> c.referenceDictColumnId.equals(dbDictColumn.dictColumnId))
             .findFirst();
         if (optReferenceForeignKey.isPresent()) {
-          tableModelForDbTable.setRowCount(i + 1);
+          tableModelForReference.setRowCount(i + 1);
 
           var dbTableForeignKeyColumn = optReferenceForeignKey.get();
           for (var ctxInnerForeignKey : ctxTable.ctxInnerForeignKeyList) {
@@ -472,15 +548,13 @@ public class Form extends JPanel {
                       ctxInnerForeignKey.dbTableForeignKey.referenceTableId))
                   .findFirst()
                   .get();
-              // TODO expression
-              tableModelForDbTable.setValueAt(String.format("%s -> %s", ctxTable.dbTable.tableId,
-                  ctxReferenceDbTable.dbTable.tableId), i, 0);
-              tableModelForDbTable.setValueAt(String.format("%s -> %s", ctxTable.dbTable.tableName,
-                  ctxReferenceDbTable.dbTable.tableName), i, 1);
-              tableModelForDbTable.setValueAt(
-                  String.format("%s -> %s", ctxTable.dbTable.tableComment,
-                      ctxReferenceDbTable.dbTable.tableComment), i, 2);
-              tableModelForDbTable.setValueAt("reference foreign key", i, 3);
+
+              tableModelForReference.setValueAt(ctxTable.dbTable.tableId, i, 0);
+              tableModelForReference.setValueAt(ctxTable.dbTable.tableName, i, 1);
+              tableModelForReference.setValueAt(ctxTable.dbTable.tableComment, i, 2);
+              tableModelForReference.setValueAt(ctxReferenceDbTable.dbTable.tableId, i, 3);
+              tableModelForReference.setValueAt(ctxReferenceDbTable.dbTable.tableName, i, 4);
+              tableModelForReference.setValueAt(ctxReferenceDbTable.dbTable.tableComment, i, 5);
 
               i++;
             }

@@ -1,6 +1,6 @@
 package com.walksocket.er.component.used.dict.columntypes;
 
-import com.walksocket.er.Size.DialogSmall;
+import com.walksocket.er.Size.DialogUsed;
 import com.walksocket.er.component.used.dict.columntypes.root.Form;
 import com.walksocket.er.sqlite.entity.DbDictColumnType;
 import java.awt.Component;
@@ -24,7 +24,7 @@ public class Root extends JPanel {
 
     // panel - form
     var form = new Form(dbDictColumnType);
-    form.setPreferredSize(new Dimension(DialogSmall.WIDTH - 20, DialogSmall.HEIGHT));
+    form.setPreferredSize(new Dimension(DialogUsed.WIDTH - 20, DialogUsed.HEIGHT));
     form.setAlignmentX(Component.LEFT_ALIGNMENT);
     add(form);
   }

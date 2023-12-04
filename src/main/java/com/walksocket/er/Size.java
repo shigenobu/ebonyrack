@@ -132,4 +132,20 @@ public class Size {
      */
     public static final int HEIGHT = 240;
   }
+
+  /**
+   * DialogUsed.
+   */
+  public static class DialogUsed {
+
+    /**
+     * width.
+     */
+    public static final int WIDTH = 640;
+
+    /**
+     * height.
+     */
+    public static final int HEIGHT = 768;
+  }
 }

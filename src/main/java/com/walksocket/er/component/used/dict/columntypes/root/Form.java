@@ -1,6 +1,6 @@
 package com.walksocket.er.component.used.dict.columntypes.root;
 
-import com.walksocket.er.Size.DialogSmall;
+import com.walksocket.er.Size.DialogUsed;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.entity.DbDictColumnType;
 import java.awt.Dimension;
@@ -152,7 +152,7 @@ public class Form extends JPanel {
     }
 
     var sp = new JScrollPane(table);
-    sp.setPreferredSize(new Dimension(DialogSmall.WIDTH - 40, DialogSmall.HEIGHT / 10 * 6));
+    sp.setPreferredSize(new Dimension(DialogUsed.WIDTH - 40, DialogUsed.HEIGHT / 10 * 8));
     panelTable.add(sp);
 
     // load
@@ -173,7 +173,7 @@ public class Form extends JPanel {
     for (var dbDictColumn : dbDictColumnList) {
       tableModel.setRowCount(i + 1);
 
-      table.setValueAt(dbDictColumn.dictColumnTypeId, i, 0);
+      table.setValueAt(dbDictColumn.dictColumnId, i, 0);
       table.setValueAt(dbDictColumn.columnName, i, 1);
       table.setValueAt(dbDictColumn.columnComment, i, 2);
 
