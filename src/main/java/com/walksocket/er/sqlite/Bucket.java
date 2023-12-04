@@ -299,6 +299,7 @@ public class Bucket {
     var dbTable = ctxTable.dbTable;
     var dbTableColumnList = ctxTable.dbTableColumnList;
     var dbTableGroup = ctxTable.dbTableGroup;
+    var dbTablePartition = ctxTable.dbTablePartition;
 
     var ctxInnerPrimaryKey = ctxTable.ctxInnerPrimaryKey;
     var ctxInnerUniqueKeyList = ctxTable.ctxInnerUniqueKeyList;
@@ -308,6 +309,7 @@ public class Bucket {
     var dbDictColumnList = getBucketDict().dbDictColumnList;
     var dbDictGroupList = getBucketDict().dbDictGroupList;
     var dbDictGroupColumnList = getBucketDict().dbDictGroupColumnList;
+    var dbDictPartitionList = getBucketDict().dbDictPartitionList;
 
     var dbTableCheckList = ctxTable.dbTableCheckList;
 
@@ -473,6 +475,19 @@ public class Bucket {
         builder.append(String.format(" COMMENT='%s'", Utils.quote(dbTable.tableComment)));
       }
       builder.append("\n");
+
+      // partition
+      if (dbTablePartition != null) {
+        var opt = dbDictPartitionList.stream()
+            .filter(p -> p.dictPartitionId.equals(dbTablePartition.dictPartitionId))
+            .findFirst();
+        if (opt.isPresent()) {
+          builder.append(
+              String.format("  %s", opt.get().expression));
+          builder.append("\n");
+        }
+      }
+
       builder.append(";\n");
     }
     return builder.toString();

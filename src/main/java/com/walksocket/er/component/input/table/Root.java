@@ -98,6 +98,7 @@ public class Root extends JPanel {
       TmpTable tmpTable = form.getBase().getTable().getResult().getTmpList().get(0);
       List<TmpColumn> tmpColumnList = form.getColumn().getColumns().getResult().getTmpList();
       var tmpGroupName = form.getColumn().getGroup().getGroupName();
+      var tmpPartitionName = form.getColumn().getPartition().getPartitionName();
       List<TmpKey> tmpPrimaryKeyList = form.getOther().getPrimaryKey().getResult().getTmpList();
       List<TmpKey> tmpUniqueKeyList = form.getOther().getUniqueKey().getResult().getTmpList();
       List<TmpKey> tmpKeyList = form.getOther().getKey().getResult().getTmpList();
@@ -110,6 +111,7 @@ public class Root extends JPanel {
           tmpTable,
           tmpColumnList,
           tmpGroupName,
+          tmpPartitionName,
           tmpPrimaryKeyList,
           tmpUniqueKeyList,
           tmpKeyList,

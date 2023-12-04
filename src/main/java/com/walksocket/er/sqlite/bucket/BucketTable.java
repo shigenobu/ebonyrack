@@ -352,6 +352,7 @@ public class BucketTable {
    * @param tmpTable          tmpTable
    * @param tmpColumnList     tmpColumnList
    * @param tmpGroupName      tmpGroupName
+   * @param tmpPartitionName  tmpPartitionName
    * @param tmpPrimaryKeyList tmpPrimaryKeyList
    * @param tmpUniqueKeyList  tmpUniqueKeyList
    * @param tmpKeyList        tmpKeyList
@@ -364,6 +365,7 @@ public class BucketTable {
       TmpTable tmpTable,
       List<TmpColumn> tmpColumnList,
       String tmpGroupName,
+      String tmpPartitionName,
       List<TmpKey> tmpPrimaryKeyList,
       List<TmpKey> tmpUniqueKeyList,
       List<TmpKey> tmpKeyList,
@@ -408,6 +410,10 @@ public class BucketTable {
           }
         }
       }
+
+      // ----------------------------------------
+      // DbTablePartition
+      DbTablePartition dbTablePartition = saveDbTablePartition(dbTable, tmpPartitionName);
 
       // ----------------------------------------
       // DbDictColumn, DbTableColumn
@@ -569,6 +575,7 @@ public class BucketTable {
       Bucket.getInstance().getBucketDict().dbDictColumnList.addAll(
           additionalDbDictColumnList);    // for dict
       ctxTable.dbTableColumnList = dbTableColumnList;
+      ctxTable.dbTablePartition = dbTablePartition;
       ctxTable.ctxInnerPrimaryKey = ctxInnerPrimaryKey;
       ctxTable.ctxInnerUniqueKeyList = ctxInnerUniqueKeyList;
       ctxTable.ctxInnerKeyList = ctxInnerKeyList;
@@ -635,6 +642,39 @@ public class BucketTable {
       }
     }
     return dbTableGroup;
+  }
+
+  /**
+   * save db table partition.
+   *
+   * @param dbTable          dbTable
+   * @param tmpPartitionName tmpPartitionName
+   * @return db table partition
+   * @throws SQLException
+   */
+  private DbTablePartition saveDbTablePartition(DbTable dbTable, String tmpPartitionName)
+      throws SQLException {
+    var sql = String.format(
+        "DELETE FROM DbTablePartition WHERE tableId = '%s'",
+        dbTable.tableId
+    );
+    con.execute(sql);
+
+    DbTablePartition dbTablePartition = null;
+    if (!Utils.isNullOrEmpty(tmpPartitionName)) {
+      var opt = Bucket.getInstance().getBucketDict().dbDictPartitionList.stream()
+          .filter(p -> p.partitionName.equals(tmpPartitionName))
+          .findFirst();
+      if (opt.isPresent()) {
+        var dbDictPartition = opt.get();
+
+        dbTablePartition = new DbTablePartition();
+        dbTablePartition.tableId = dbTable.tableId;
+        dbTablePartition.dictPartitionId = dbDictPartition.dictPartitionId;
+        con.executeInsert(dbTablePartition);
+      }
+    }
+    return dbTablePartition;
   }
 
   /**

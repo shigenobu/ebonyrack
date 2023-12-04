@@ -5,15 +5,14 @@ import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.tmp.TmpDictPartition;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.swing.JButton;
@@ -77,9 +76,9 @@ public class Form extends JPanel {
   private final JButton buttonRemove = new JButton("Remove");
 
   /**
-   * columns.
+   * expression starting.
    */
-  private final List<String> columns = new ArrayList<>();
+  private static final String expressionStarting = "PARTITION BY ...";
 
   /**
    * column name and width maps.
@@ -129,11 +128,33 @@ public class Form extends JPanel {
     panel2.add(labelPartitionName);
     panel2.add(textFieldPartitionName);
 
+    // empty
+    var emptyPanel1 = new JPanel();
+    emptyPanel1.setPreferredSize(new Dimension(DialogMedium.WIDTH, 0));
+    emptyPanel1.setAlignmentX(Component.LEFT_ALIGNMENT);
+    add(emptyPanel1);
+
     // expression
     var panel3 = new JPanel();
     add(panel3);
     panel3.add(labelExpression);
-    panel3.add(new JScrollPane(textAreaExpression));
+
+    // empty
+    var emptyPanel2 = new JPanel();
+    emptyPanel2.setPreferredSize(new Dimension(DialogMedium.WIDTH, 0));
+    emptyPanel2.setAlignmentX(Component.LEFT_ALIGNMENT);
+    add(emptyPanel2);
+
+    var panel4 = new JPanel();
+    add(panel4);
+    textAreaExpression.setText(expressionStarting);
+    panel4.add(new JScrollPane(textAreaExpression));
+
+    // empty
+    var emptyPanel3 = new JPanel();
+    emptyPanel3.setPreferredSize(new Dimension(DialogMedium.WIDTH, 0));
+    emptyPanel3.setAlignmentX(Component.LEFT_ALIGNMENT);
+    add(emptyPanel3);
 
     // button
     var panelButton = new JPanel();
@@ -274,7 +295,7 @@ public class Form extends JPanel {
       }
     });
     var sp = new JScrollPane(table);
-    sp.setPreferredSize(new Dimension(DialogMedium.WIDTH - 40, DialogMedium.HEIGHT / 10 * 5));
+    sp.setPreferredSize(new Dimension(DialogMedium.WIDTH - 40, DialogMedium.HEIGHT / 10 * 4));
     panelTable.add(sp);
 
     // load
@@ -320,7 +341,7 @@ public class Form extends JPanel {
   private void clear() {
     textFieldDictPartitionId.setText("");
     textFieldPartitionName.setText("");
-    textAreaExpression.setText("");
+    textAreaExpression.setText(expressionStarting);
 
     buttonRemove.setEnabled(false);
   }

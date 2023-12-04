@@ -3,6 +3,7 @@ package com.walksocket.er.component.input.table.root.form;
 import com.walksocket.er.Size.DialogLarge;
 import com.walksocket.er.component.input.table.root.form.column.Columns;
 import com.walksocket.er.component.input.table.root.form.column.Group;
+import com.walksocket.er.component.input.table.root.form.column.Partition;
 import com.walksocket.er.sqlite.context.CtxTable;
 import java.awt.Dimension;
 import javax.swing.JPanel;
@@ -24,6 +25,11 @@ public class Column extends JPanel {
   private final Group group;
 
   /**
+   * partition.
+   */
+  private final Partition partition;
+
+  /**
    * Constructor.
    *
    * @param ctxTable ctxTable
@@ -37,10 +43,15 @@ public class Column extends JPanel {
     group = new Group(ctxTable);
     group.setPreferredSize(new Dimension(DialogLarge.WIDTH - 20, DialogLarge.HEIGHT / 40 * 20));
 
+    // group
+    partition = new Partition(ctxTable);
+    partition.setPreferredSize(new Dimension(DialogLarge.WIDTH - 20, DialogLarge.HEIGHT / 40 * 20));
+
     // tab
     var tab = new JTabbedPane();
     tab.addTab("columns", columns);
     tab.addTab("group", group);
+    tab.addTab("partition", partition);
     add(tab);
   }
 
@@ -60,5 +71,14 @@ public class Column extends JPanel {
    */
   public Group getGroup() {
     return group;
+  }
+
+  /**
+   * get partition.
+   *
+   * @return partition
+   */
+  public Partition getPartition() {
+    return partition;
   }
 }
