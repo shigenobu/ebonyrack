@@ -61,6 +61,15 @@ create table if not exists DbDictGroupColumn
 );
 create index if not exists DbDictGroupColumnIdx01 on DbDictGroupColumn (dictColumnId);
 
+create table if not exists DbDictPartition
+(
+    dictPartitionId text,
+    partitionName   text,
+    expression      text,
+    primary key (dictPartitionId),
+    unique (partitionName)
+);
+
 -- table
 create table if not exists DbTable
 (
@@ -107,6 +116,16 @@ create table if not exists DbTableGroup
     foreign key (dictGroupId) references DbDictGroup (dictGroupId)
 );
 create index if not exists DbTableGroupIdx01 on DbTableGroup (dictGroupId);
+
+create table if not exists DbTablePartition
+(
+    tableId         text,
+    dictPartitionId text,
+    primary key (tableId),
+    foreign key (tableId) references DbTable (tableId) on delete cascade,
+    foreign key (dictPartitionId) references DbDictPartition (dictPartitionId)
+);
+create index if not exists DbTablePartitionIdx01 on DbTablePartition (dictPartitionId);
 
 -- primary key
 create table if not exists DbTablePrimaryKey

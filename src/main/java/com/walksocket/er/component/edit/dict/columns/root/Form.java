@@ -149,7 +149,7 @@ public class Form extends JPanel {
   /**
    * text field option.
    */
-  private final JTextField textFieldOption = new JTextField(60);
+  private final JTextField textFieldOption = new JTextField(50);
 
   /**
    * button save.
