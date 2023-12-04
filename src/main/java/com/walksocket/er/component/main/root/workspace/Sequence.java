@@ -226,7 +226,7 @@ public class Sequence extends ErConnectorEndpoint {
         Bucket.getInstance().getBucketConnector().removeNoteToSequence(dbNoteConnectorSequence);
       } catch (Exception e) {
         Log.error(e);
-        JOptionPane.showMessageDialog(workspace, e.getMessage());
+        JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
       }
     }
   }
@@ -249,7 +249,7 @@ public class Sequence extends ErConnectorEndpoint {
       requestFocusInWindow();
     } catch (Exception e) {
       Log.error(e);
-      JOptionPane.showMessageDialog(workspace, e.getMessage());
+      JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
     }
   }
 
@@ -283,7 +283,7 @@ public class Sequence extends ErConnectorEndpoint {
           panelName.setBackground(color);
         } catch (Exception e) {
           Log.error(e);
-          JOptionPane.showMessageDialog(workspace, e.getMessage());
+          JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
         }
       });
       add(menuItemColor);
@@ -315,7 +315,7 @@ public class Sequence extends ErConnectorEndpoint {
           sequence.getWorkspace().removeSequence(sequence);
         } catch (Exception e) {
           Log.error(e);
-          JOptionPane.showMessageDialog(workspace, e.getMessage());
+          JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
         }
       });
       addSeparator();

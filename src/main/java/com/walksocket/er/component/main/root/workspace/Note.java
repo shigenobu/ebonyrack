@@ -561,7 +561,7 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
         Bucket.getInstance().getBucketConnector().removeNoteToTable(dbNoteConnectorTable);
       } catch (Exception e) {
         Log.error(e);
-        JOptionPane.showMessageDialog(workspace, e.getMessage());
+        JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
       }
     } else if (otherEndpoint instanceof Sequence) {
       getWorkspace().removeConnectorFromNoteToSequence(connector);
@@ -576,7 +576,7 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
         Bucket.getInstance().getBucketConnector().removeNoteToSequence(dbNoteConnectorSequence);
       } catch (Exception e) {
         Log.error(e);
-        JOptionPane.showMessageDialog(workspace, e.getMessage());
+        JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
       }
     }
   }
@@ -600,7 +600,7 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
 
     } catch (Exception e) {
       Log.error(e);
-      JOptionPane.showMessageDialog(workspace, e.getMessage());
+      JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
     }
   }
 
@@ -639,7 +639,7 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
           panelSubject.setBackground(color);
         } catch (Exception e) {
           Log.error(e);
-          JOptionPane.showMessageDialog(workspace, e.getMessage());
+          JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
         }
       });
       add(menuItemColor);
@@ -661,7 +661,7 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
           note.getWorkspace().removeNote(note);
         } catch (Exception e) {
           Log.error(e);
-          JOptionPane.showMessageDialog(workspace, e.getMessage());
+          JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
         }
       });
       addSeparator();

@@ -601,7 +601,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
         Bucket.getInstance().getBucketConnector().removeNoteToTable(dbNoteConnectorTable);
       } catch (Exception e) {
         Log.error(e);
-        JOptionPane.showMessageDialog(workspace, e.getMessage());
+        JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
       }
     } else if (otherEndpoint instanceof Table) {
       workspace.removeConnectorFromTableToTable(connector);
@@ -626,7 +626,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
       requestFocusInWindow();
     } catch (Exception e) {
       Log.error(e);
-      JOptionPane.showMessageDialog(workspace, e.getMessage());
+      JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
     }
   }
 
@@ -687,7 +687,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
           panelTable.setBackground(color);
         } catch (Exception e) {
           Log.error(e);
-          JOptionPane.showMessageDialog(workspace, e.getMessage());
+          JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
         }
       });
       add(menuItemColor);
@@ -726,7 +726,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
           table.getWorkspace().removeTable(table);
         } catch (Exception e) {
           Log.error(e);
-          JOptionPane.showMessageDialog(workspace, e.getMessage());
+          JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
         }
       });
       addSeparator();

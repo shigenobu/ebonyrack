@@ -880,7 +880,7 @@ public class Workspace extends ErConnectorPositioned {
 
         } catch (Exception e) {
           Log.error(e);
-          JOptionPane.showMessageDialog(workspace, e.getMessage());
+          JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
         }
       });
       add(menuItemNewTable);
@@ -916,7 +916,7 @@ public class Workspace extends ErConnectorPositioned {
           workspace.addSequence(sequence);
         } catch (Exception e) {
           Log.error(e);
-          JOptionPane.showMessageDialog(workspace, e.getMessage());
+          JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
         }
       });
       add(menuItemNewSequence);
@@ -954,7 +954,7 @@ public class Workspace extends ErConnectorPositioned {
 
         } catch (Exception e) {
           Log.error(e);
-          JOptionPane.showMessageDialog(workspace, e.getMessage());
+          JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
         }
       });
       add(menuItemNewNote);
