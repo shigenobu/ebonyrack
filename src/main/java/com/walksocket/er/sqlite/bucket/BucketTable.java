@@ -14,6 +14,7 @@ import com.walksocket.er.sqlite.context.inner.CtxInnerPrimaryKey;
 import com.walksocket.er.sqlite.context.inner.CtxInnerUniqueKey;
 import com.walksocket.er.sqlite.entity.DbDictColumn;
 import com.walksocket.er.sqlite.entity.DbTable;
+import com.walksocket.er.sqlite.entity.DbTableCheck;
 import com.walksocket.er.sqlite.entity.DbTableColumn;
 import com.walksocket.er.sqlite.entity.DbTableForeignKey;
 import com.walksocket.er.sqlite.entity.DbTableForeignKeyColumn;
@@ -25,6 +26,7 @@ import com.walksocket.er.sqlite.entity.DbTablePrimaryKey;
 import com.walksocket.er.sqlite.entity.DbTablePrimaryKeyColumn;
 import com.walksocket.er.sqlite.entity.DbTableUniqueKey;
 import com.walksocket.er.sqlite.entity.DbTableUniqueKeyColumn;
+import com.walksocket.er.sqlite.tmp.TmpCheck;
 import com.walksocket.er.sqlite.tmp.TmpColumn;
 import com.walksocket.er.sqlite.tmp.TmpForeignKey;
 import com.walksocket.er.sqlite.tmp.TmpKey;
@@ -280,6 +282,22 @@ public class BucketTable {
         }
       }
 
+      // --------------------
+      // DbTableCheck
+      sql = "SELECT * FROM DbTableCheck";
+      records = con.getRecords(sql);
+      for (var record : records) {
+        var dbTableCheck = Entity.convertEntity(record, DbTableCheck.class);
+        Log.trace(dbTableCheck);
+
+        var opt = ctxTableList.stream()
+            .filter(t -> t.dbTable.tableId.equals(dbTableCheck.tableId))
+            .findFirst();
+        if (opt.isPresent()) {
+          opt.get().dbTableCheckList.add(dbTableCheck);
+        }
+      }
+
     } catch (SQLException e) {
       Log.error(e);
     }
@@ -321,6 +339,7 @@ public class BucketTable {
    * @param tmpUniqueKeyList  tmpUniqueKeyList
    * @param tmpKeyList        tmpKeyList
    * @param tmpForeignKeyList tmpForeignKeyList
+   * @param tmpCheckList      tmpCheckList
    * @throws Exception
    */
   public void save(
@@ -331,7 +350,8 @@ public class BucketTable {
       List<TmpKey> tmpPrimaryKeyList,
       List<TmpKey> tmpUniqueKeyList,
       List<TmpKey> tmpKeyList,
-      List<TmpForeignKey> tmpForeignKeyList)
+      List<TmpForeignKey> tmpForeignKeyList,
+      List<TmpCheck> tmpCheckList)
       throws Exception {
     var sql = "";
     try {
@@ -503,6 +523,27 @@ public class BucketTable {
       // had DbTableForeignKey, DbTableForeignKeyColumn
       checkHadForeignKey(dbTable, dbTableColumnList, existedDbDictColumnList);
 
+      // ----------------------------------------
+      // DbTableCheck
+      sql = String.format(
+          "DELETE FROM DbTableCheck WHERE tableId = '%s'",
+          ctxTable.dbTable.tableId
+      );
+      con.execute(sql);
+      var seq = 1;
+      var dbTableCheckList = new ArrayList<DbTableCheck>();
+      for (var tmpCheck : tmpCheckList) {
+        var dbTableCheck = new DbTableCheck();
+        dbTableCheck.tableId = ctxTable.dbTable.tableId;
+        dbTableCheck.seq = seq;
+        dbTableCheck.constraintName = tmpCheck.constraintName;
+        dbTableCheck.expression = tmpCheck.expression;
+        con.executeInsert(dbTableCheck);
+        dbTableCheckList.add(dbTableCheck);
+
+        seq++;
+      }
+
       con.commit();
 
       // back
@@ -515,6 +556,7 @@ public class BucketTable {
       ctxTable.ctxInnerUniqueKeyList = ctxInnerUniqueKeyList;
       ctxTable.ctxInnerKeyList = ctxInnerKeyList;
       ctxTable.ctxInnerForeignKeyList = ctxInnerForeignKeyList;
+      ctxTable.dbTableCheckList = dbTableCheckList;
 
     } catch (Exception e) {
       con.rollback();

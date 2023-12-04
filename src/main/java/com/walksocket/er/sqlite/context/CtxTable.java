@@ -5,6 +5,7 @@ import com.walksocket.er.sqlite.context.inner.CtxInnerKey;
 import com.walksocket.er.sqlite.context.inner.CtxInnerPrimaryKey;
 import com.walksocket.er.sqlite.context.inner.CtxInnerUniqueKey;
 import com.walksocket.er.sqlite.entity.DbTable;
+import com.walksocket.er.sqlite.entity.DbTableCheck;
 import com.walksocket.er.sqlite.entity.DbTableColumn;
 import com.walksocket.er.sqlite.entity.DbTableGroup;
 import com.walksocket.er.sqlite.entity.DbTableOption;
@@ -55,4 +56,9 @@ public class CtxTable {
    * ctxInnerForeignKeyList.
    */
   public List<CtxInnerForeignKey> ctxInnerForeignKeyList = new ArrayList<>();
+
+  /**
+   * dbTableCheckList.
+   */
+  public List<DbTableCheck> dbTableCheckList = new ArrayList<>();
 }

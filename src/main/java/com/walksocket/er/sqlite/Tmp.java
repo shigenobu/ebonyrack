@@ -8,10 +8,12 @@ import com.walksocket.er.sqlite.entity.DbDictGroup;
 import com.walksocket.er.sqlite.entity.DbDictGroupColumn;
 import com.walksocket.er.sqlite.entity.DbSequence;
 import com.walksocket.er.sqlite.entity.DbTable;
+import com.walksocket.er.sqlite.entity.DbTableCheck;
 import com.walksocket.er.sqlite.entity.DbTableColumn;
 import com.walksocket.er.sqlite.entity.DbTableForeignKey;
 import com.walksocket.er.sqlite.entity.DbTableForeignKeyColumn;
 import com.walksocket.er.sqlite.entity.DbTableGroup;
+import com.walksocket.er.sqlite.tmp.TmpCheck;
 import com.walksocket.er.sqlite.tmp.TmpColumn;
 import com.walksocket.er.sqlite.tmp.TmpForeignKey;
 import com.walksocket.er.sqlite.tmp.TmpKey;
@@ -248,5 +250,18 @@ public interface Tmp {
       tmpForeignKey.relationship = dbForeignKey.relationship;
     }
     return tmpForeignKey;
+  }
+
+  /**
+   * create tmp table.
+   *
+   * @param dbTableCheck dbTableCheck
+   * @return tmp check
+   */
+  static TmpCheck createTmpCheck(DbTableCheck dbTableCheck) {
+    var tmpCheck = new TmpCheck();
+    tmpCheck.constraintName = dbTableCheck.constraintName;
+    tmpCheck.expression = dbTableCheck.expression;
+    return tmpCheck;
   }
 }

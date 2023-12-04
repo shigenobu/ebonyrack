@@ -66,7 +66,7 @@ public class Form extends JPanel {
     column.setAlignmentX(Component.LEFT_ALIGNMENT);
     add(column);
 
-    // constraint
+    // other
     other = new Other(this, ctxTable);
     other.setPreferredSize(new Dimension(DialogLarge.WIDTH - 20, DialogLarge.HEIGHT / 40 * 10));
     other.setAlignmentX(Component.LEFT_ALIGNMENT);

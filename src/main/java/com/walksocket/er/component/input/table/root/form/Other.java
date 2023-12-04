@@ -2,6 +2,7 @@ package com.walksocket.er.component.input.table.root.form;
 
 import com.walksocket.er.Size.DialogLarge;
 import com.walksocket.er.component.input.table.root.Form;
+import com.walksocket.er.component.input.table.root.form.other.Check;
 import com.walksocket.er.component.input.table.root.form.other.ForeignKey;
 import com.walksocket.er.component.input.table.root.form.other.Key;
 import com.walksocket.er.component.input.table.root.form.other.PrimaryKey;
@@ -42,6 +43,11 @@ public class Other extends JPanel {
   private final ForeignKey foreignKey;
 
   /**
+   * check.
+   */
+  private final Check check;
+
+  /**
    * Constructor.
    *
    * @param form     form
@@ -70,12 +76,18 @@ public class Other extends JPanel {
     foreignKey.setPreferredSize(
         new Dimension(DialogLarge.WIDTH - 20, DialogLarge.HEIGHT / 40 * 10));
 
+    // check
+    check = new Check(this, ctxTable);
+    check.setPreferredSize(
+        new Dimension(DialogLarge.WIDTH - 20, DialogLarge.HEIGHT / 40 * 10));
+
     // tab
     var tab = new JTabbedPane();
     tab.addTab("primary key", primaryKey);
     tab.addTab("unique key", uniqueKey);
     tab.addTab("key", key);
     tab.addTab("foreign key", foreignKey);
+    tab.addTab("check", check);
     add(tab);
   }
 
@@ -122,5 +134,14 @@ public class Other extends JPanel {
    */
   public ForeignKey getForeignKey() {
     return foreignKey;
+  }
+
+  /**
+   * get check.
+   *
+   * @return check
+   */
+  public Check getCheck() {
+    return check;
   }
 }

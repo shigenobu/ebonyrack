@@ -6,6 +6,7 @@ import com.walksocket.er.component.InputTable;
 import com.walksocket.er.component.input.table.root.Form;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.context.CtxTable;
+import com.walksocket.er.sqlite.tmp.TmpCheck;
 import com.walksocket.er.sqlite.tmp.TmpColumn;
 import com.walksocket.er.sqlite.tmp.TmpForeignKey;
 import com.walksocket.er.sqlite.tmp.TmpKey;
@@ -102,6 +103,7 @@ public class Root extends JPanel {
       List<TmpKey> tmpKeyList = form.getOther().getKey().getResult().getTmpList();
       List<TmpForeignKey> tmpForeignKeyList = form.getOther().getForeignKey().getResult()
           .getTmpList();
+      List<TmpCheck> tmpCheckList = form.getOther().getCheck().getResult().getTmpList();
 
       Bucket.getInstance().getBucketTable().save(
           ctxTable,
@@ -111,7 +113,8 @@ public class Root extends JPanel {
           tmpPrimaryKeyList,
           tmpUniqueKeyList,
           tmpKeyList,
-          tmpForeignKeyList);
+          tmpForeignKeyList,
+          tmpCheckList);
 
       // load
       inputTable.load();

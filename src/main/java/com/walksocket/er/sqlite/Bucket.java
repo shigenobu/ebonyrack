@@ -309,6 +309,8 @@ public class Bucket {
     var dbDictGroupList = getBucketDict().dbDictGroupList;
     var dbDictGroupColumnList = getBucketDict().dbDictGroupColumnList;
 
+    var dbTableCheckList = ctxTable.dbTableCheckList;
+
     var builder = new StringBuilder();
     if (dbTable != null && !dbTable.tableName.startsWith(Const.NEW_TABLE_PREFIX)
         && dbTableColumnList.size() > 0) {
@@ -435,6 +437,13 @@ public class Bucket {
             builder.append(String.format(" COMMENT '%s'", Utils.quote(tmpKey.indexComment)));
           }
         }
+      }
+
+      // check
+      for (var dbTableCheck : dbTableCheckList) {
+        builder.append(
+            String.format(",\n    CONSTRAINT `%s` CHECK (%s)", dbTableCheck.constraintName,
+                dbTableCheck.expression));
       }
 
       // table - last
