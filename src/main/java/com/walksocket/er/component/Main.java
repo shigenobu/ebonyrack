@@ -221,6 +221,13 @@ public class Main extends JFrame {
       editDictGroups.setVisible(true);
     });
     menuEdit.add(menuItemEditDictGroups);
+    var menuItemEditDictPartitions = new JMenuItem("Edit dict partitions");
+    menuItemEditDictPartitions.addActionListener(actionEvent -> {
+      var editDictPartitions = new EditDictPartitions(main);
+      editDictPartitions.setModal(true);
+      editDictPartitions.setVisible(true);
+    });
+    menuEdit.add(menuItemEditDictPartitions);
     menuBar.add(menuEdit);
 
     // revalidate and repaint

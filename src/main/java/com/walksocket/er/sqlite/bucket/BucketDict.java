@@ -11,10 +11,12 @@ import com.walksocket.er.sqlite.entity.DbDictColumn;
 import com.walksocket.er.sqlite.entity.DbDictColumnType;
 import com.walksocket.er.sqlite.entity.DbDictGroup;
 import com.walksocket.er.sqlite.entity.DbDictGroupColumn;
+import com.walksocket.er.sqlite.entity.DbDictPartition;
 import com.walksocket.er.sqlite.tmp.TmpDictColumn;
 import com.walksocket.er.sqlite.tmp.TmpDictColumnType;
 import com.walksocket.er.sqlite.tmp.TmpDictGroup;
 import com.walksocket.er.sqlite.tmp.TmpDictGroupColumn;
+import com.walksocket.er.sqlite.tmp.TmpDictPartition;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +53,11 @@ public class BucketDict {
   public List<DbDictGroupColumn> dbDictGroupColumnList = new ArrayList<>();
 
   /**
+   * dbDictPartitionList.
+   */
+  public List<DbDictPartition> dbDictPartitionList = new ArrayList<>();
+
+  /**
    * Constructor.
    *
    * @param con con
@@ -69,6 +76,7 @@ public class BucketDict {
     dbDictColumnList.clear();
     dbDictGroupList.clear();
     dbDictGroupColumnList.clear();
+    dbDictPartitionList.clear();
 
     try {
       // --------------------
@@ -112,6 +120,17 @@ public class BucketDict {
         Log.trace(dbDictGroupColumn);
 
         dbDictGroupColumnList.add(dbDictGroupColumn);
+      }
+
+      // --------------------
+      // DbDictColumnType
+      sql = "SELECT * FROM DbDictPartition";
+      records = con.getRecords(sql);
+      for (var record : records) {
+        var dbDictPartition = Entity.convertEntity(record, DbDictPartition.class);
+        Log.trace(dbDictPartition);
+
+        dbDictPartitionList.add(dbDictPartition);
       }
 
     } catch (SQLException e) {
@@ -549,6 +568,88 @@ public class BucketDict {
           .filter(t -> t.dictGroupId.equals(tmpDictGroup.dictGroupId))
           .collect(Collectors.toList());
       dbDictGroupColumnList.removeAll(nds);
+
+    } catch (Exception e) {
+      con.rollback();
+      Log.error(e);
+
+      throw e;
+    }
+  }
+
+  /**
+   * save dict partition.
+   *
+   * @param tmpDictPartition tmpDictPartition
+   * @throws Exception
+   */
+  public void saveDictPartition(TmpDictPartition tmpDictPartition) throws Exception {
+    try {
+      con.begin();
+
+      // database
+      var d = new DbDictPartition();
+      d.dictPartitionId = tmpDictPartition.dictPartitionId;
+      d.partitionName = tmpDictPartition.partitionName;
+      d.expression = tmpDictPartition.expression;
+      var sql = String.format(
+          "SELECT * FROM DbDictPartition WHERE dictPartitionId = '%s'",
+          Utils.quote(d.dictPartitionId));
+      var record = con.getRecord(sql);
+      if (record == null) {
+        d.dictPartitionId = Utils.randomString();
+        con.executeInsert(d);
+      } else {
+        con.executeUpdate(d);
+      }
+
+      con.commit();
+
+      // memory
+      var opt = dbDictPartitionList.stream()
+          .filter(t -> t.dictPartitionId.equals(d.dictPartitionId))
+          .findFirst();
+      if (opt.isPresent()) {
+        dbDictPartitionList.remove(opt.get());
+      }
+      dbDictPartitionList.add(d);
+    } catch (Exception e) {
+      con.rollback();
+      Log.error(e);
+
+      throw e;
+    }
+  }
+
+  /**
+   * remove dict partition.
+   *
+   * @param tmpDictPartition tmpDictPartition
+   * @throws Exception
+   */
+  public void removeDictPartition(TmpDictPartition tmpDictPartition) throws Exception {
+    try {
+      con.begin();
+
+      // database
+      var sql = String.format(
+          "SELECT * FROM DbDictPartition WHERE dictPartitionId = '%s'",
+          Utils.quote(tmpDictPartition.dictPartitionId));
+      var record = con.getRecord(sql);
+      if (record != null) {
+        var d = Entity.convertEntity(record, DbDictPartition.class);
+        con.executeDelete(d);
+      }
+
+      con.commit();
+
+      // memory
+      var opt = dbDictPartitionList.stream()
+          .filter(t -> t.dictPartitionId.equals(tmpDictPartition.dictPartitionId))
+          .findFirst();
+      if (opt.isPresent()) {
+        dbDictPartitionList.remove(opt.get());
+      }
 
     } catch (Exception e) {
       con.rollback();

@@ -22,6 +22,7 @@ import com.walksocket.er.sqlite.entity.DbTableGroup;
 import com.walksocket.er.sqlite.entity.DbTableKey;
 import com.walksocket.er.sqlite.entity.DbTableKeyColumn;
 import com.walksocket.er.sqlite.entity.DbTableOption;
+import com.walksocket.er.sqlite.entity.DbTablePartition;
 import com.walksocket.er.sqlite.entity.DbTablePrimaryKey;
 import com.walksocket.er.sqlite.entity.DbTablePrimaryKeyColumn;
 import com.walksocket.er.sqlite.entity.DbTableUniqueKey;
@@ -134,6 +135,22 @@ public class BucketTable {
             .findFirst();
         if (opt.isPresent()) {
           opt.get().dbTableColumnList.add(dbTableColumn);
+        }
+      }
+
+      // --------------------
+      // DbTablePartition
+      sql = "SELECT * FROM DbTablePartition";
+      records = con.getRecords(sql);
+      for (var record : records) {
+        var dbTablePartition = Entity.convertEntity(record, DbTablePartition.class);
+        Log.trace(dbTablePartition);
+
+        var opt = ctxTableList.stream()
+            .filter(t -> t.dbTable.tableId.equals(dbTablePartition.tableId))
+            .findFirst();
+        if (opt.isPresent()) {
+          opt.get().dbTablePartition = dbTablePartition;
         }
       }
 
