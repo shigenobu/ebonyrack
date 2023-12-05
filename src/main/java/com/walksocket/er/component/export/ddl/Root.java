@@ -129,6 +129,19 @@ public class Root extends JPanel {
           .stream()
           .sorted(Comparator.comparing(s -> s.dbSequence.sequenceName))
           .collect(Collectors.toList())) {
+        var actionCommand = tmpDdl.filterSequenceActionCommand;
+        var filterValue = tmpDdl.filterSequenceValue;
+        if (actionCommand.equals(TmpDdl.FILTER_CONTAINS)
+            && !ctxSequence.dbSequence.sequenceName.contains(filterValue)) {
+          continue;
+        } else if (actionCommand.equals(TmpDdl.FILTER_START_WITH)
+            && !ctxSequence.dbSequence.sequenceName.startsWith(filterValue)) {
+          continue;
+        } else if (actionCommand.equals(TmpDdl.FILTER_END_WITH)
+            && !ctxSequence.dbSequence.sequenceName.endsWith(filterValue)) {
+          continue;
+        }
+
         var ddl = Bucket.getInstance().getSequenceDdl(ctxSequence);
         if (Utils.isNullOrEmpty(ddl)) {
           continue;
@@ -147,6 +160,19 @@ public class Root extends JPanel {
           .stream()
           .sorted(Comparator.comparing(t -> t.dbTable.tableName))
           .collect(Collectors.toList())) {
+        var actionCommand = tmpDdl.filterTableActionCommand;
+        var filterValue = tmpDdl.filterTableValue;
+        if (actionCommand.equals(TmpDdl.FILTER_CONTAINS)
+            && !ctxTable.dbTable.tableName.contains(filterValue)) {
+          continue;
+        } else if (actionCommand.equals(TmpDdl.FILTER_START_WITH)
+            && !ctxTable.dbTable.tableName.startsWith(filterValue)) {
+          continue;
+        } else if (actionCommand.equals(TmpDdl.FILTER_END_WITH)
+            && !ctxTable.dbTable.tableName.endsWith(filterValue)) {
+          continue;
+        }
+
         var ddl = Bucket.getInstance().getTableDdl(ctxTable);
         if (Utils.isNullOrEmpty(ddl)) {
           continue;
@@ -165,6 +191,19 @@ public class Root extends JPanel {
           .stream()
           .sorted(Comparator.comparing(t -> t.dbTable.tableName))
           .collect(Collectors.toList())) {
+        var actionCommand = tmpDdl.filterTableActionCommand;
+        var filterValue = tmpDdl.filterTableValue;
+        if (actionCommand.equals(TmpDdl.FILTER_CONTAINS)
+            && !ctxTable.dbTable.tableName.contains(filterValue)) {
+          continue;
+        } else if (actionCommand.equals(TmpDdl.FILTER_START_WITH)
+            && !ctxTable.dbTable.tableName.startsWith(filterValue)) {
+          continue;
+        } else if (actionCommand.equals(TmpDdl.FILTER_END_WITH)
+            && !ctxTable.dbTable.tableName.endsWith(filterValue)) {
+          continue;
+        }
+
         var ddl = Bucket.getInstance().getForeignKeyDdl(ctxTable);
         if (Utils.isNullOrEmpty(ddl)) {
           continue;
