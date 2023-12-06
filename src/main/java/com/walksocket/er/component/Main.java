@@ -10,6 +10,7 @@ import com.walksocket.er.Utils;
 import com.walksocket.er.component.main.Root;
 import com.walksocket.er.component.main.root.Workspace;
 import com.walksocket.er.config.CfgProject;
+import com.walksocket.er.custom.ErLinkLabel;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.Connection;
 import java.awt.Dimension;
@@ -19,6 +20,8 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.imageio.ImageIO;
@@ -176,14 +179,20 @@ public class Main extends JFrame {
 
           var f = new File(fileName);
           ImageIO.write(captureImage, format, f);
-          JOptionPane.showMessageDialog(main,
-              String.format("<html>Saved image:<br /><u>%s</u></html>",
-                  f.getAbsolutePath()));
 
           cfgProject.lastImageSavePath = f.getAbsolutePath();
           Config.save();
+
+          JOptionPane.showMessageDialog(
+              this,
+              new ErLinkLabel(
+                  String.format("<html>At: <a>%s</a></html>", f.getAbsolutePath()),
+                  new URI(String.format("file://%s", f.getAbsolutePath()))
+              ),
+              "Saved image",
+              JOptionPane.INFORMATION_MESSAGE);
         }
-      } catch (IOException e) {
+      } catch (IOException | URISyntaxException e) {
         Log.error(e);
         JOptionPane.showMessageDialog(main, e.getMessage());
       }

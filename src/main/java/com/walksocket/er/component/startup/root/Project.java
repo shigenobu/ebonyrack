@@ -8,12 +8,15 @@ import com.walksocket.er.component.Main;
 import com.walksocket.er.component.SetupProject;
 import com.walksocket.er.component.startup.Root;
 import com.walksocket.er.config.CfgProject;
+import com.walksocket.er.custom.ErLinkLabel;
 import com.walksocket.er.custom.ErUnderlineBorder;
 import com.walksocket.er.sqlite.Dump;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 import javax.swing.BoxLayout;
@@ -161,11 +164,16 @@ public class Project extends JPanel {
             cfgProject.lastWriteOutPath = f.getAbsolutePath();
             Config.save();
 
-            JOptionPane.showMessageDialog(this,
-                String.format("<html>Saved json:<br /><u>%s</u></html>",
-                    f.getAbsolutePath()));
+            JOptionPane.showMessageDialog(
+                this,
+                new ErLinkLabel(
+                    String.format("<html>At: <a>%s</a></html>", f.getAbsolutePath()),
+                    new URI(String.format("file://%s", f.getAbsolutePath()))
+                ),
+                "Written json",
+                JOptionPane.INFORMATION_MESSAGE);
           }
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
           Log.error(e);
           JOptionPane.showMessageDialog(this, e.getMessage());
         }
@@ -212,15 +220,20 @@ public class Project extends JPanel {
             cfgProject.lastReadFromPath = f.getAbsolutePath();
             Config.save();
 
-            JOptionPane.showMessageDialog(this,
-                String.format("<html>Read json:<br /><u>%s</u></html>",
-                    f.getAbsolutePath()));
+            JOptionPane.showMessageDialog(
+                this,
+                new ErLinkLabel(
+                    String.format("<html>At: <a>%s</a></html>", f.getAbsolutePath()),
+                    new URI(String.format("file://%s", f.getAbsolutePath()))
+                ),
+                "Read json",
+                JOptionPane.INFORMATION_MESSAGE);
 
             // enable
             buttonOpenReadonly.setEnabled(true);
             buttonWrite.setEnabled(true);
           }
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
           Log.error(e);
           JOptionPane.showMessageDialog(this, e.getMessage());
         }

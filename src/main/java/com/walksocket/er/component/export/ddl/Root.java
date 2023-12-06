@@ -7,6 +7,7 @@ import com.walksocket.er.Utils;
 import com.walksocket.er.component.ExportDdl;
 import com.walksocket.er.component.export.ddl.root.Form;
 import com.walksocket.er.config.CfgProject;
+import com.walksocket.er.custom.ErLinkLabel;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.tmp.TmpDdl;
 import java.awt.Component;
@@ -14,6 +15,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.net.URI;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 import javax.swing.BoxLayout;
@@ -94,14 +96,18 @@ public class Root extends JPanel {
           var ddl = getDdl(form.getResult().getTmpList().get(0));
           var f = new File(fileName);
           com.walksocket.er.File.writeString(new FileOutputStream(f), ddl);
-          JOptionPane.showMessageDialog(this,
-              String.format("<html>Saved ddl:<br /><u>%s</u></html>",
-                  f.getAbsolutePath()));
 
           cfgProject.lastDdlSavePath = f.getAbsolutePath();
           Config.save();
 
-          exportDdl.dispose();
+          JOptionPane.showMessageDialog(
+              this,
+              new ErLinkLabel(
+                  String.format("<html>At: <a>%s</a></html>", f.getAbsolutePath()),
+                  new URI(String.format("file://%s", f.getAbsolutePath()))
+              ),
+              "Saved ddl",
+              JOptionPane.INFORMATION_MESSAGE);
         }
       } catch (Exception e) {
         Log.error(e);
