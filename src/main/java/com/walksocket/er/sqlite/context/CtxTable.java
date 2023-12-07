@@ -1,5 +1,6 @@
 package com.walksocket.er.sqlite.context;
 
+import com.walksocket.er.Value;
 import com.walksocket.er.sqlite.context.inner.CtxInnerForeignKey;
 import com.walksocket.er.sqlite.context.inner.CtxInnerKey;
 import com.walksocket.er.sqlite.context.inner.CtxInnerPrimaryKey;
@@ -16,7 +17,7 @@ import java.util.List;
 /**
  * CtxTable.
  */
-public class CtxTable {
+public class CtxTable implements Value {
 
   /**
    * dbTable.

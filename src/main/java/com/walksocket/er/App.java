@@ -126,4 +126,13 @@ public class App {
     });
     Runtime.getRuntime().addShutdownHook(hook);
   }
+
+  /**
+   * get version.
+   *
+   * @return version
+   */
+  public static String getVersion() {
+    return App.class.getPackage().getImplementationVersion();
+  }
 }

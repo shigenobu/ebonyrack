@@ -2,13 +2,14 @@ package com.walksocket.er.sqlite;
 
 import com.walksocket.er.Json;
 import com.walksocket.er.Log;
+import com.walksocket.er.Value;
 import java.sql.SQLException;
 import java.util.List;
 
 /**
  * Entity.
  */
-public abstract class Entity implements Cloneable {
+public abstract class Entity implements Cloneable, Value {
 
   /**
    * convert entity.

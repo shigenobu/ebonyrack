@@ -1,5 +1,6 @@
 package com.walksocket.er.sqlite.tmp;
 
+import com.walksocket.er.Value;
 import com.walksocket.er.parts.ColumnForeignKeyOption;
 import com.walksocket.er.sqlite.Tmp;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * TmpForeignKey.
  */
-public class TmpForeignKey implements Tmp {
+public class TmpForeignKey implements Tmp, Value {
 
   /**
    * constraintName.

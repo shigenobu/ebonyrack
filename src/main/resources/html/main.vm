@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>${title}</title>
+  <style>
+  #foreach($css in $cssList)
+      ${ErTemplateUtils.nonEscape($css)}
+  #end
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <a class="menu">${name}</a>
+    <nav>
+      <p>Tables</p>
+      <ul>
+          #foreach($table in $tables)
+              #set($ctxTable = $table.getCtxTable())
+            <li><a href="javascript:void(0);"
+                   onclick="scrollwindow('table-${ctxTable.dbTable.tableId}');">${ctxTable.dbTable.getShowTableName()}</a>
+            </li>
+          #end
+      </ul>
+      <p>Sequences</p>
+      <ul>
+          #foreach($sequence in $sequences)
+              #set($ctxSequence = $sequence.getCtxSequence())
+            <li><a href="javascript:void(0);"
+                   onclick="scrollwindow('sequence-${ctxSequence.dbSequence.sequenceId}');">${ctxSequence.dbSequence.sequenceName}</a>
+            </li>
+          #end
+      </ul>
+      <p>Notes</p>
+      <ul>
+          #foreach($note in $notes)
+              #set($ctxNote = $note.getCtxNote())
+            <li><a href="javascript:void(0);"
+                   onclick="scrollwindow('note-${ctxNote.dbNote.noteId}');">${ctxNote.dbNote.subject}</a>
+            </li>
+          #end
+      </ul>
+    </nav>
+  </header>
+  <section>
+    <img usemap="#components" id="image" src="data:image/png;base64,${imageData}"/>
+    <map name="components">
+        #foreach($table in $tables)
+            #set($ctxTable = $table.getCtxTable())
+          <area id="table-${ctxTable.dbTable.tableId}" shape="rect" coords="${table.getCoords()}"/>
+        #end
+        #foreach($sequence in $sequences)
+            #set($ctxSequence = $sequence.getCtxSequence())
+          <area id="sequence-${ctxSequence.dbSequence.sequenceId}" shape="rect"
+                coords="${sequence.getCoords()}"/>
+        #end
+        #foreach($note in $notes)
+            #set($ctxNote = $note.getCtxNote())
+          <area id="note-${ctxNote.dbNote.noteId}" shape="rect" coords="${note.getCoords()}"/>
+        #end
+    </map>
+  </section>
+    #foreach($dialog in $dialogTableList)
+        ${ErTemplateUtils.nonEscape($dialog)}
+    #end
+    #foreach($dialog in $dialogSequenceList)
+        ${ErTemplateUtils.nonEscape($dialog)}
+    #end
+    #foreach($dialog in $dialogNoteList)
+        ${ErTemplateUtils.nonEscape($dialog)}
+    #end
+</main>
+
+<script>
+        #foreach($js in $jsList)
+            ${ErTemplateUtils.nonEscape($js)}
+        #end
+</script>
+
+</body>
+</html>

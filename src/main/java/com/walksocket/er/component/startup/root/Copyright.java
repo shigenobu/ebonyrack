@@ -33,7 +33,7 @@ public class Copyright extends JPanel {
 
       var labelCopyRight = new ErLinkLabel(
           String.format("<html><font color='white'>version %s @%s project.</font></html>",
-              App.class.getPackage().getImplementationVersion(), Const.TITLE),
+              App.getVersion(), Const.TITLE),
           new URI("https://github.com/shigenobu/ebonyrack")
       );
       panel1.add(labelCopyRight);

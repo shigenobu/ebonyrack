@@ -1,6 +1,7 @@
 package com.walksocket.er.sqlite.tmp;
 
 import com.walksocket.er.Utils;
+import com.walksocket.er.Value;
 import com.walksocket.er.Word;
 import com.walksocket.er.definition.DataType;
 import com.walksocket.er.sqlite.Tmp;
@@ -9,7 +10,7 @@ import com.walksocket.er.sqlite.entity.DbDictColumnType;
 /**
  * TmpColumn.
  */
-public class TmpColumn implements Tmp {
+public class TmpColumn implements Tmp, Value {
 
   /**
    * columnName.

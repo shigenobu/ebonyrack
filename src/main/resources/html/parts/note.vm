@@ -1,0 +1,57 @@
+#set($ctxNote = $note.getCtxNote())
+<dialog id="dialog-note-${ctxNote.dbNote.noteId}">
+  <div class="detail">
+    <h3>Note:</h3>
+    <table>
+      <tbody>
+      <tr>
+        <td class="headline">Subject</td>
+        <td>${ctxNote.dbNote.subject}</td>
+      </tr>
+      <tr>
+        <td class="headline">Body</td>
+        <td class="unwrap">${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="detail">
+    <h3>Related tables:</h3>
+    <table>
+      <thead>
+      <tr>
+        <th>Table name</th>
+        <th>Table comment</th>
+      </tr>
+      </thead>
+      <tbody>
+          #foreach($table in $relatedTables)
+              #set($ctxTable = $table.getCtxTable())
+          <tr>
+            <td>${ctxTable.dbTable.tableName}</td>
+            <td>${ctxTable.dbTable.tableComment}</td>
+          </tr>
+          #end
+      </tbody>
+    </table>
+  </div>
+  <div class="detail">
+    <h3>Related sequences:</h3>
+    <table>
+      <thead>
+      <tr>
+        <th>Sequence name</th>
+      </tr>
+      </thead>
+      <tbody>
+          #foreach($sequence in $relatedSequences)
+              #set($ctxSequence = $sequence.getCtxSequence())
+          <tr>
+            <td>${ctxSequence.dbSequence.sequenceName}</td>
+          </tr>
+          #end
+      </tbody>
+    </table>
+  </div>
+  <button class="close" id="close-note-${ctxNote.dbNote.noteId}">CLOSE</button>
+</dialog>

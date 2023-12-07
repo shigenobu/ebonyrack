@@ -31,6 +31,11 @@ public class CfgProject {
   public String lastImageSavePath;
 
   /**
+   * last html save path.
+   */
+  public String lastHtmlSavePath;
+
+  /**
    * last write out path.
    */
   public String lastWriteOutPath;

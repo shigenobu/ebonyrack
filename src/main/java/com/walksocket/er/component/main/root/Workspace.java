@@ -835,6 +835,61 @@ public class Workspace extends ErConnectorPositioned {
   }
 
   /**
+   * get ordered positioned tables.
+   *
+   * @return tables
+   */
+  public List<Table> getOrderedPositionedTables() {
+    return positionedTables.stream()
+        .sorted(Comparator.comparing(t -> t.getCtxTable().dbTable.tableName))
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * get ordered positioned sequences.
+   *
+   * @return sequences
+   */
+  public List<Sequence> getOrderedPositionedSequences() {
+    return positionedSequences.stream()
+        .sorted(Comparator.comparing(t -> t.getCtxSequence().dbSequence.sequenceName))
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * get ordered positioned notes.
+   *
+   * @return notes
+   */
+  public List<Note> getOrderedPositionedNotes() {
+    return positionedNotes.stream()
+        .sorted(Comparator.comparing(t -> t.getCtxNote().dbNote.subject))
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * get ordered positioned connectors note to table.
+   *
+   * @return connectors
+   */
+  public List<ErConnector> getOrderedPositionedConnectorsNoteToTableList() {
+    return positionedConnectorsNoteToTable.stream()
+        .sorted(Comparator.comparing(t -> t.getSortName()))
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * get ordered positioned connectors note to sequence.
+   *
+   * @return connectors
+   */
+  public List<ErConnector> getOrderedPositionedConnectorsNoteToSequenceList() {
+    return positionedConnectorsNoteToSequence.stream()
+        .sorted(Comparator.comparing(t -> t.getSortName()))
+        .collect(Collectors.toList());
+  }
+
+  /**
    * PopupMenu.
    */
   public class PopupMenu extends JPopupMenu {

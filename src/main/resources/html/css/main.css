@@ -1,0 +1,180 @@
+main {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  cursor: all-scroll;
+}
+
+header {
+  width: 100%;
+  height: 24px;
+  font-weight: bold;
+  position: absolute;
+}
+
+a.menu {
+  background-color: rgba(73, 70, 44);
+  opacity: 0.5;
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 2px 12px 2px 12px;
+  cursor: pointer;
+}
+
+nav {
+  background-color: rgba(73, 70, 44);
+  opacity: 0.5;
+  color: #fff;
+  position: absolute;
+  z-index: 1;
+  top: 26px;
+  left: 0;
+  text-align: left;
+  width: 0;
+  max-width: 400px;
+  overflow: scroll;
+  padding-bottom: 10px;
+}
+
+nav p {
+  padding-left: 12px;
+  font-size: 16px;
+}
+
+nav ul {
+  padding-bottom: 12px;
+}
+
+nav ul li {
+  list-style: none;
+  padding: 2px 8px 2px 16px;
+  font-size: 14px;
+}
+
+nav.menu-open {
+  width: 20%;
+}
+
+section {
+
+}
+
+map area {
+  cursor: pointer;
+}
+
+dialog {
+  width: 70%;
+  max-width: 2000px;
+  height: 90%;
+  max-height: 2000px;
+  margin: 0 0 0 auto;
+  overflow: scroll;
+  cursor: default;
+  padding: 8px;
+  border: 3px solid rgb(73, 70, 44);
+  font-size: 12px;
+}
+
+dialog .close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-block;
+  font-size: 12px;
+  padding: 3px 6px;
+  text-decoration: none;
+  color: rgb(73, 70, 44);
+  border: none;
+  border-radius: 3px;
+  transition: .4s;
+}
+
+dialog .close:hover {
+  background: rgb(73, 70, 44);
+  color: white;
+}
+
+dialog::backdrop {
+  background: rgba(94, 94, 94, 0.4);
+}
+
+dialog h3 {
+  margin-bottom: 6px;
+}
+
+dialog div.detail {
+  border-bottom: 1px dotted rgb(73, 70, 44);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  width: 100%;
+  overflow: scroll;
+}
+
+dialog div.detail-last {
+  border-bottom: none;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  width: 100%;
+  overflow: scroll;
+}
+
+dialog div.detail pre {
+  background: rgba(94, 94, 94, 0.2);
+  margin-left: 4px;
+  margin-right: 4px;
+  padding: 4px;
+  border-radius: 3px;
+}
+
+dialog table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-left: 4px;
+  margin-right: 4px;
+  border: none;
+}
+
+dialog thead th {
+  font-weight: normal;
+  border: 1px solid rgba(73, 70, 44, 0.8);
+  background: rgba(73, 70, 44, 0.6);
+  color: white;
+  padding: 3px 6px;
+}
+
+dialog tr {
+  border: 1px solid rgba(73, 70, 44, 0.8);
+}
+
+dialog tbody td {
+  border: 1px solid rgba(73, 70, 44, 0.8);
+  padding: 3px 6px;
+  min-width: 100px;
+  max-width: 300px;
+  white-space: nowrap;
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+dialog tbody td:hover {
+  white-space: normal;
+  overflow: scroll;
+  text-overflow: unset;
+}
+
+dialog tbody td.headline {
+  background: rgba(73, 70, 44, 0.6);
+  color: white;
+  padding: 3px 6px;
+}
+
+dialog tbody td.unwrap {
+  max-width: 500px;
+  white-space: normal;
+  overflow: scroll;
+  text-overflow: unset;
+}

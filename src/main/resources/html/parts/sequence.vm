@@ -1,0 +1,59 @@
+#set($ctxSequence = $sequence.getCtxSequence())
+<dialog id="dialog-sequence-${ctxSequence.dbSequence.sequenceId}">
+  <div class="detail">
+    <h3>Sequence:</h3>
+    <table>
+      <tbody>
+      <tr>
+        <td class="headline">Sequence name</td>
+        <td>${ctxSequence.dbSequence.sequenceName}</td>
+      </tr>
+      <tr>
+        <td class="headline">Start value</td>
+        <td>${ctxSequence.dbSequence.startValue}</td>
+      </tr>
+      <tr>
+        <td class="headline">Minimum value</td>
+        <td>${ctxSequence.dbSequence.minimumValue}</td>
+      </tr>
+      <tr>
+        <td class="headline">Maximum value</td>
+        <td>${ctxSequence.dbSequence.maximumValue}</td>
+      </tr>
+      <tr>
+        <td class="headline">Increment value</td>
+        <td>${ctxSequence.dbSequence.incrementValue}</td>
+      </tr>
+      <tr>
+        <td class="headline">Cache size</td>
+        <td>${ctxSequence.dbSequence.cacheSize}</td>
+      </tr>
+      <tr>
+        <td class="headline">Cycle</td>
+        <td>${ctxSequence.dbSequence.cycle}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="detail-last">
+    <h3>Related notes:</h3>
+    <table>
+      <thead>
+      <tr>
+        <th>Subject</th>
+        <th>Body</th>
+      </tr>
+      </thead>
+      <tbody>
+          #foreach($note in $relatedNotes)
+              #set($ctxNote = $note.getCtxNote())
+          <tr>
+            <td>${ctxNote.dbNote.subject}</td>
+            <td class="unwrap">${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}</td>
+          </tr>
+          #end
+      </tbody>
+    </table>
+  </div>
+  <button class="close" id="close-sequence-${ctxSequence.dbSequence.sequenceId}">CLOSE</button>
+</dialog>

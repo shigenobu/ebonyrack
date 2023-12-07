@@ -161,4 +161,13 @@ public abstract class ErConnectorEndpoint extends ErMover {
     }
     setBorder(ErConnectorColor.DEFAULT_BORDER);
   }
+
+  /**
+   * get coords.
+   *
+   * @return coords
+   */
+  public String getCoords() {
+    return String.format("%s,%s,%s,%s", getX(), getY(), getX() + getWidth(), getY() + getHeight());
+  }
 }

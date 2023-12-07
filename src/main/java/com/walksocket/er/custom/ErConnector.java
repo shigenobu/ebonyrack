@@ -204,6 +204,18 @@ public class ErConnector extends JPanel {
   }
 
   /**
+   * get endpoint.
+   *
+   * @return endpoint
+   */
+  public <T extends ErConnectorEndpoint> T getEndpoint(Class<T> cls) {
+    if (src.getClass() == cls) {
+      return (T) src;
+    }
+    return (T) dst;
+  }
+
+  /**
    * draw.
    */
   public void draw() {
