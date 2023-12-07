@@ -79,15 +79,16 @@ dialog {
 }
 
 dialog .close {
-  position: absolute;
-  top: 8px;
-  right: 8px;
+  position: fixed;
+  top: 10px;
+  right: 10px;
   display: inline-block;
   font-size: 12px;
   padding: 3px 6px;
   text-decoration: none;
   color: rgb(73, 70, 44);
-  border: none;
+  background: white;
+  border: 2px solid rgb(73, 70, 44);
   border-radius: 3px;
   transition: .4s;
 }
@@ -178,3 +179,4 @@ dialog tbody td.unwrap {
   overflow: scroll;
   text-overflow: unset;
 }
+

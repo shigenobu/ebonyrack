@@ -40,6 +40,7 @@
         <th>On update</th>
         <th>Auto increment</th>
         <th>Option</th>
+        <th>Note</th>
       </tr>
       </thead>
       <tbody>
@@ -55,6 +56,14 @@
             <td>${tmpColumn.onUpdate}</td>
             <td>${tmpColumn.autoIncrementDefinition}</td>
             <td>${tmpColumn.option}</td>
+            <td>
+                #foreach($note in $relatedNotes)
+                    #set($ctxNote = $note.getCtxNote())
+                    #if($ctxNote.dbNote.subject == $tmpColumn.columnName)
+                      <div>${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}</div>
+                    #end
+                #end
+            </td>
           </tr>
           #end
           #foreach($tmpColumn in $tmpGroupColumnList)
