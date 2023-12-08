@@ -191,6 +191,27 @@
     </table>
   </div>
   <div class="detail">
+    <h3>Referenced tables:</h3>
+    <table>
+      <thead>
+      <tr>
+        <th>Table name</th>
+        <th>Table comment</th>
+      </tr>
+      </thead>
+      <tbody>
+          #foreach($referencedDbTable in $referencedDbTableList)
+          <tr>
+            <td><a href="javascript:void(0)"
+                   onclick="let aid = 'table-${referencedDbTable.tableId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${referencedDbTable.tableName}</a>
+            </td>
+            <td>${referencedDbTable.tableComment}</td>
+          </tr>
+          #end
+      </tbody>
+    </table>
+  </div>
+  <div class="detail">
     <h3>Ddl:</h3>
     <pre>${ddl}</pre>
   </div>

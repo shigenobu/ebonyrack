@@ -18,6 +18,8 @@ import com.walksocket.er.custom.ErLinkLabel;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.Connection;
 import com.walksocket.er.sqlite.Tmp;
+import com.walksocket.er.sqlite.entity.DbTable;
+import com.walksocket.er.sqlite.entity.DbTableForeignKey;
 import com.walksocket.er.sqlite.tmp.TmpColumn;
 import com.walksocket.er.sqlite.tmp.TmpForeignKey;
 import com.walksocket.er.sqlite.tmp.TmpKey;
@@ -410,6 +412,13 @@ public class Main extends JFrame {
     var dbDictGroupList = Bucket.getInstance().getBucketDict().dbDictGroupList;
     var dbDictGroupColumnList = Bucket.getInstance().getBucketDict().dbDictGroupColumnList;
 
+    var dbTableForeignKeyList = new ArrayList<DbTableForeignKey>();
+    for (var ctxTable : Bucket.getInstance().getBucketTable().ctxTableList) {
+      for (var ctxInnerForeignKey : ctxTable.ctxInnerForeignKeyList) {
+        dbTableForeignKeyList.add(ctxInnerForeignKey.dbTableForeignKey);
+      }
+    }
+
     var connectorsNoteToTableList = workspace.getOrderedPositionedConnectorsNoteToTableList();
     var connectorsNoteToSequenceList = workspace.getOrderedPositionedConnectorsNoteToSequenceList();
 
@@ -484,6 +493,20 @@ public class Main extends JFrame {
             dbDictColumnList));
       }
       template.assign("tmpForeignKeyList", tmpForeignKeyList);
+
+      // referenced tables
+      var referencedDbTableList = new ArrayList<DbTable>();
+      var referenceDbTableForeignKeyList = dbTableForeignKeyList.stream()
+          .filter(d -> d.referenceTableId.equals(table.getCtxTable().dbTable.tableId))
+          .collect(Collectors.toList());
+      for (var referenceDbTableForeignKey : referenceDbTableForeignKeyList) {
+        var referencedDbTable = dbTableList.stream()
+            .filter(d -> d.tableId.equals(referenceDbTableForeignKey.tableId))
+            .findFirst()
+            .get();
+        referencedDbTableList.add(referencedDbTable);
+      }
+      template.assign("referencedDbTableList", referencedDbTableList);
 
       // ddl
       var builder = new StringBuilder();
