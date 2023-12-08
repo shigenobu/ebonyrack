@@ -134,6 +134,22 @@ public class Size {
   }
 
   /**
+   * DialogProcessing.
+   */
+  public static class DialogProcessing {
+
+    /**
+     * width.
+     */
+    public static final int WIDTH = 400;
+
+    /**
+     * height.
+     */
+    public static final int HEIGHT = 400;
+  }
+
+  /**
    * DialogUsed.
    */
   public static class DialogUsed {

@@ -5,6 +5,7 @@ import com.walksocket.er.Config;
 import com.walksocket.er.Const;
 import com.walksocket.er.Date;
 import com.walksocket.er.Log;
+import com.walksocket.er.Size.DialogProcessing;
 import com.walksocket.er.Size.Screen;
 import com.walksocket.er.Size.WindowMain;
 import com.walksocket.er.Utils;
@@ -25,6 +26,8 @@ import com.walksocket.er.sqlite.tmp.TmpForeignKey;
 import com.walksocket.er.sqlite.tmp.TmpKey;
 import com.walksocket.er.template.ErTemplate;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -42,8 +45,10 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -212,50 +217,69 @@ public class Main extends JFrame {
     var menuItemExportHtml = new JMenuItem("Export html");
     menuItemExportHtml.addActionListener(actionEvent -> {
       Workspace workspace = root.getWorkspace();
-      try {
-        // chooser
-        var format = "html";
-        var dotFormat = "." + format;
-        var dir = System.getProperty("user.home");
-        var file = String.format("%s%s", cfgProject.name, dotFormat);
-        var lastHtmlSavePath = cfgProject.lastHtmlSavePath;
-        if (!Utils.isNullOrEmpty(lastHtmlSavePath)) {
-          dir = new File(lastHtmlSavePath).getParent();
-          file = new File(lastHtmlSavePath).getName();
+      // chooser
+      var format = "html";
+      var dotFormat = "." + format;
+      var dir = System.getProperty("user.home");
+      var file = String.format("%s%s", cfgProject.name, dotFormat);
+      var lastHtmlSavePath = cfgProject.lastHtmlSavePath;
+      if (!Utils.isNullOrEmpty(lastHtmlSavePath)) {
+        dir = new File(lastHtmlSavePath).getParent();
+        file = new File(lastHtmlSavePath).getName();
+      }
+      var chooser = new JFileChooser(dir);
+      chooser.setAcceptAllFileFilterUsed(false);
+      chooser.setFileFilter(new FileNameExtensionFilter("*" + dotFormat,
+          format));
+      chooser.setSelectedFile(new File(file));
+      var result = chooser.showSaveDialog(main);
+      if (result == JFileChooser.APPROVE_OPTION) {
+        var fileName = chooser.getSelectedFile().getAbsolutePath();
+        if (!fileName.endsWith(dotFormat)) {
+          fileName += dotFormat;
         }
-        var chooser = new JFileChooser(dir);
-        chooser.setAcceptAllFileFilterUsed(false);
-        chooser.setFileFilter(new FileNameExtensionFilter("*" + dotFormat,
-            format));
-        chooser.setSelectedFile(new File(file));
-        var result = chooser.showSaveDialog(main);
-        if (result == JFileChooser.APPROVE_OPTION) {
-          var fileName = chooser.getSelectedFile().getAbsolutePath();
-          if (!fileName.endsWith(dotFormat)) {
-            fileName += dotFormat;
+
+        // exporting
+        var dialogExporting = createExportingDialog();
+
+        String finalFileName = fileName;
+        (new SwingWorker<File, Void>() {
+          @Override
+          protected File doInBackground() throws Exception {
+            // create
+            var html = createHtml(workspace);
+
+            var f = new File(finalFileName);
+            com.walksocket.er.File.writeString(new FileOutputStream(f), html);
+
+            cfgProject.lastHtmlSavePath = f.getAbsolutePath();
+            Config.save();
+
+            return f;
           }
 
-          // create
-          var html = createHtml(workspace);
+          @Override
+          protected void done() {
+            try {
+              dialogExporting.dispose();
 
-          var f = new File(fileName);
-          com.walksocket.er.File.writeString(new FileOutputStream(f), html);
-
-          cfgProject.lastHtmlSavePath = f.getAbsolutePath();
-          Config.save();
-
-          JOptionPane.showMessageDialog(
-              this,
-              new ErLinkLabel(
-                  String.format("<html>At: <a>%s</a></html>", f.getAbsolutePath()),
-                  new URI(String.format("file://%s", f.getAbsolutePath()))
-              ),
-              "Saved html",
-              JOptionPane.INFORMATION_MESSAGE);
-        }
-      } catch (IOException | URISyntaxException e) {
-        Log.error(e);
-        JOptionPane.showMessageDialog(main, e.getMessage());
+              var f = get();
+              JOptionPane.showMessageDialog(
+                  main,
+                  new ErLinkLabel(
+                      String.format("<html>At: <a>%s</a></html>", f.getAbsolutePath()),
+                      new URI(String.format("file://%s", f.getAbsolutePath()))
+                  ),
+                  "Saved html",
+                  JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception e) {
+              Log.error(e);
+              JOptionPane.showMessageDialog(main, e.getMessage());
+            }
+          }
+        }).execute();
+        dialogExporting.setModal(true);
+        dialogExporting.setVisible(true);
       }
     });
     menuFile.add(menuItemExportHtml);
@@ -338,6 +362,25 @@ public class Main extends JFrame {
     container.add(root);
     container.revalidate();
     container.repaint();
+  }
+
+  /**
+   * create exporting dialog.
+   *
+   * @return dialog
+   */
+  private JDialog createExportingDialog() {
+    var px = (Screen.getWidth() - DialogProcessing.WIDTH) / 2;
+    var py = (Screen.getHeight() - DialogProcessing.HEIGHT) / 2;
+    var dialogProcessing = new JDialog(this, "Exporting");
+    dialogProcessing.setResizable(false);
+    dialogProcessing.setLayout(new GridBagLayout());
+    dialogProcessing.setLocation(px, py);
+    dialogProcessing.setSize(new Dimension(DialogProcessing.WIDTH, DialogProcessing.HEIGHT));
+    var labelProcessing = new JLabel("Please wait ...");
+    labelProcessing.setFont(new Font(labelProcessing.getFont().getName(), Font.BOLD, 24));
+    dialogProcessing.add(labelProcessing);
+    return dialogProcessing;
   }
 
   /**
