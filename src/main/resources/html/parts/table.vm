@@ -1,5 +1,5 @@
 #set($ctxTable = $table.getCtxTable())
-#set($dialogId = "dialog-table-${ctxTable.dbTable.tableId}");
+#set($dialogId = "dialog-table-${ctxTable.dbTable.tableId}")
 <dialog id="${dialogId}">
   <div class="detail">
     <h3>Table:</h3>

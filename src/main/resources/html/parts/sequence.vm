@@ -1,5 +1,5 @@
 #set($ctxSequence = $sequence.getCtxSequence())
-#set($dialogId = "dialog-sequence-${ctxSequence.dbSequence.sequenceId}");
+#set($dialogId = "dialog-sequence-${ctxSequence.dbSequence.sequenceId}")
 <dialog id="${dialogId}">
   <div class="detail">
     <h3>Sequence:</h3>

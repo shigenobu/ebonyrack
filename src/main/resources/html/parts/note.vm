@@ -1,5 +1,5 @@
 #set($ctxNote = $note.getCtxNote())
-#set($dialogId = "dialog-note-${ctxNote.dbNote.noteId}");
+#set($dialogId = "dialog-note-${ctxNote.dbNote.noteId}")
 <dialog id="${dialogId}">
   <div class="detail">
     <h3>Note:</h3>
