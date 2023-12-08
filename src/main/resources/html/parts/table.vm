@@ -1,5 +1,6 @@
 #set($ctxTable = $table.getCtxTable())
-<dialog id="dialog-table-${ctxTable.dbTable.tableId}">
+#set($dialogId = "dialog-table-${ctxTable.dbTable.tableId}");
+<dialog id="${dialogId}">
   <div class="detail">
     <h3>Table:</h3>
     <table>
@@ -173,7 +174,13 @@
             <td>${tmpForeignKey.constraintName}</td>
             <td>${tmpForeignKey.keyName}</td>
             <td>${tmpForeignKey.getColumns()}</td>
-            <td>${tmpForeignKey.referenceTableName}</td>
+              #foreach($dbTable in $dbTableList)
+                  #if($dbTable.tableName == $tmpForeignKey.referenceTableName)
+                    <td><a href="javascript:void(0)"
+                           onclick="let aid = 'table-${dbTable.tableId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${tmpForeignKey.referenceTableName}</a>
+                    </td>
+                  #end
+              #end
             <td>${tmpForeignKey.getReferenceColumns()}</td>
             <td>${tmpForeignKey.onUpdate}</td>
             <td>${tmpForeignKey.onDelete}</td>
@@ -200,7 +207,13 @@
           #foreach($note in $relatedNotes)
               #set($ctxNote = $note.getCtxNote())
           <tr>
-            <td>${ctxNote.dbNote.subject}</td>
+              #foreach($dbNote in $dbNoteList)
+                  #if($dbNote.subject == $ctxNote.dbNote.subject)
+                    <td><a href="javascript:void(0)"
+                           onclick="let aid = 'note-${dbNote.noteId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${ctxNote.dbNote.subject}</a>
+                    </td>
+                  #end
+              #end
             <td class="unwrap">${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}</td>
           </tr>
           #end

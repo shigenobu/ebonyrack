@@ -398,6 +398,13 @@ public class Main extends JFrame {
     var dbTableList = Bucket.getInstance().getBucketTable().ctxTableList.stream()
         .map(c -> c.dbTable)
         .collect(Collectors.toList());
+    var dbSequenceList = Bucket.getInstance().getBucketSequence().ctxSequenceList.stream()
+        .map(c -> c.dbSequence)
+        .collect(Collectors.toList());
+    var dbNoteList = Bucket.getInstance().getBucketNote().ctxNoteList.stream()
+        .map(c -> c.dbNote)
+        .collect(Collectors.toList());
+
     var dbDictColumnTypeList = Bucket.getInstance().getBucketDict().dbDictColumnTypeList;
     var dbDictColumnList = Bucket.getInstance().getBucketDict().dbDictColumnList;
     var dbDictGroupList = Bucket.getInstance().getBucketDict().dbDictGroupList;
@@ -412,6 +419,10 @@ public class Main extends JFrame {
     for (var table : tables) {
       var template = getTemplate("html/parts/table.vm");
       template.assign("table", table);
+
+      // table, note
+      template.assign("dbTableList", dbTableList);
+      template.assign("dbNoteList", dbNoteList);
 
       // column
       template.assign("tmpColumnList", Tmp.createTmpColumnList(
@@ -503,6 +514,12 @@ public class Main extends JFrame {
       var template = getTemplate("html/parts/sequence.vm");
       template.assign("sequence", sequence);
 
+      // note
+      template.assign("dbNoteList", dbNoteList);
+
+      // ddl
+      template.assign("ddl", Bucket.getInstance().getSequenceDdl(sequence.getCtxSequence()));
+
       // notes
       var relatedNotes = connectorsNoteToSequenceList.stream()
           .filter(c -> c.getEndpoint(Sequence.class) == sequence)
@@ -521,6 +538,10 @@ public class Main extends JFrame {
     for (var note : notes) {
       var template = getTemplate("html/parts/note.vm");
       template.assign("note", note);
+
+      // table, sequence
+      template.assign("dbTableList", dbTableList);
+      template.assign("dbSequenceList", dbSequenceList);
 
       // related
       var relatedTables = connectorsNoteToTableList.stream()

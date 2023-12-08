@@ -1,5 +1,6 @@
 #set($ctxNote = $note.getCtxNote())
-<dialog id="dialog-note-${ctxNote.dbNote.noteId}">
+#set($dialogId = "dialog-note-${ctxNote.dbNote.noteId}");
+<dialog id="${dialogId}">
   <div class="detail">
     <h3>Note:</h3>
     <table>
@@ -28,7 +29,13 @@
           #foreach($table in $relatedTables)
               #set($ctxTable = $table.getCtxTable())
           <tr>
-            <td>${ctxTable.dbTable.tableName}</td>
+              #foreach($dbTable in $dbTableList)
+                  #if($dbTable.tableName == $ctxTable.dbTable.tableName)
+                    <td><a href="javascript:void(0)"
+                           onclick="let aid = 'table-${dbTable.tableId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${ctxTable.dbTable.tableName}</a>
+                    </td>
+                  #end
+              #end
             <td>${ctxTable.dbTable.tableComment}</td>
           </tr>
           #end
@@ -47,7 +54,13 @@
           #foreach($sequence in $relatedSequences)
               #set($ctxSequence = $sequence.getCtxSequence())
           <tr>
-            <td>${ctxSequence.dbSequence.sequenceName}</td>
+              #foreach($dbSequence in $dbSequenceList)
+                  #if($dbSequence.sequenceName == $ctxSequence.dbSequence.sequenceName)
+                    <td><a href="javascript:void(0)"
+                           onclick="let aid = 'sequence-${dbSequence.sequenceId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${ctxSequence.dbSequence.sequenceName}</a>
+                    </td>
+                  #end
+              #end
           </tr>
           #end
       </tbody>

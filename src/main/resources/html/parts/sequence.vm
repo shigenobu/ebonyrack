@@ -1,5 +1,6 @@
 #set($ctxSequence = $sequence.getCtxSequence())
-<dialog id="dialog-sequence-${ctxSequence.dbSequence.sequenceId}">
+#set($dialogId = "dialog-sequence-${ctxSequence.dbSequence.sequenceId}");
+<dialog id="${dialogId}">
   <div class="detail">
     <h3>Sequence:</h3>
     <table>
@@ -35,6 +36,10 @@
       </tbody>
     </table>
   </div>
+  <div class="detail">
+    <h3>Ddl:</h3>
+    <pre>${ddl}</pre>
+  </div>
   <div class="detail-last">
     <h3>Related notes:</h3>
     <table>
@@ -48,7 +53,13 @@
           #foreach($note in $relatedNotes)
               #set($ctxNote = $note.getCtxNote())
           <tr>
-            <td>${ctxNote.dbNote.subject}</td>
+              #foreach($dbNote in $dbNoteList)
+                  #if($dbNote.subject == $ctxNote.dbNote.subject)
+                    <td><a href="javascript:void(0)"
+                           onclick="let aid = 'note-${dbNote.noteId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${ctxNote.dbNote.subject}</a>
+                    </td>
+                  #end
+              #end
             <td class="unwrap">${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}</td>
           </tr>
           #end

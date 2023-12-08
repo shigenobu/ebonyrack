@@ -38,6 +38,25 @@ nav {
   padding-bottom: 10px;
 }
 
+
+nav a:link {
+  color: white;
+  text-decoration: underline;
+}
+
+nav a:visited {
+  color: white;
+  text-decoration: underline;
+}
+
+nav a:hover {
+}
+
+nav a:active {
+  color: white;
+  text-decoration: underline;
+}
+
 nav p {
   padding-left: 12px;
   font-size: 16px;
@@ -180,3 +199,20 @@ dialog tbody td.unwrap {
   text-overflow: unset;
 }
 
+dialog a:link {
+  color: rgb(73, 70, 44);
+  text-decoration: underline;
+}
+
+dialog a:visited {
+  color: rgb(73, 70, 44);
+  text-decoration: underline;
+}
+
+dialog a:hover {
+}
+
+dialog a:active {
+  color: rgb(73, 70, 44);
+  text-decoration: underline;
+}

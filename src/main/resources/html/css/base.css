@@ -13,22 +13,20 @@ body {
   height: 100%;
 }
 
-a:link {
-  color: white;
-  text-decoration: underline;
+a {
+  text-decoration: none;
 }
 
-a:visited {
-  color: white;
-  text-decoration: underline;
-}
-
-a:hover {
+a {
+  color: #000000;
 }
 
 a:active {
-  color: white;
-  text-decoration: underline;
+  color: #000000;
+}
+
+a:focus {
+  outline: none;
 }
 
 button {

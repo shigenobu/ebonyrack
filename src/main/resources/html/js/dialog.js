@@ -16,5 +16,24 @@ for (let i = 0; i < es.length; i++) {
       }
     })
     d.showModal();
+    d.scrollTo({
+      left: 0,
+      top: 0,
+    });
   });
+}
+
+function openOtherDialog(aid, said) {
+  let area = document.getElementById(aid);
+  area.dispatchEvent(new Event('click'));
+
+  var did = "dialog-" + aid;
+  var d = document.getElementById(did)
+  d.scrollTo({
+    left: 0,
+    top: 0,
+  });
+
+  var sd = document.getElementById(said);
+  sd.close();
 }
