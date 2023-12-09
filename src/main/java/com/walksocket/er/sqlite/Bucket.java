@@ -15,7 +15,11 @@ import com.walksocket.er.sqlite.context.CtxSequence;
 import com.walksocket.er.sqlite.context.CtxTable;
 import com.walksocket.er.sqlite.entity.DbDefault;
 import com.walksocket.er.sqlite.entity.DbDictColumnType;
+import java.io.File;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -29,6 +33,11 @@ public class Bucket {
    * bucket.
    */
   private static Bucket bucket;
+
+  /**
+   * lock.
+   */
+  private static FileLock lock;
 
   /**
    * create ddl.
@@ -62,63 +71,66 @@ public class Bucket {
     }
   }
 
-
   /**
    * init.
    *
    * @param con con
+   * @throws Exception
    */
-  public static void init(Connection con) {
-    try {
-      // ----------
-      createDdl(con);
+  public static void init(Connection con) throws Exception {
+    // ----------
+    var lockPath = con.getDbPath() + ".exlock";
+    var f = new File(lockPath);
+    var lockChannel = FileChannel.open(f.toPath(), StandardOpenOption.CREATE,
+        StandardOpenOption.WRITE);
+    lock = lockChannel.tryLock();
+    if (lock == null) {
+      throw new Exception("Already locked.");
+    }
 
-      // ----------
-      con.begin();
+    // ----------
+    createDdl(con);
 
-      // init default
-      var sql = "SELECT * FROM DbDefault LIMIT 1";
-      var record = con.getRecord(sql);
-      if (record == null) {
-        var dbDefault = new DbDefault();
-        con.executeInsert(dbDefault);
-      }
+    // ----------
+    con.begin();
 
-      // init dict column type
-      sql = "SELECT * FROM DbDictColumnType LIMIT 1";
-      record = con.getRecord(sql);
-      if (record == null) {
-        var seq = 101;
-        for (int i = 0; i < DataType.getDataTypeList().size(); i++) {
-          var dataType = DataType.getDataTypeList().get(i);
-          for (int j = 0; j < dataType.getLengths().length; j++) {
-            var l = dataType.getLengths()[j];
+    // init default
+    var sql = "SELECT * FROM DbDefault LIMIT 1";
+    var record = con.getRecord(sql);
+    if (record == null) {
+      var dbDefault = new DbDefault();
+      con.executeInsert(dbDefault);
+    }
 
-            var dbDictColumnType = new DbDictColumnType();
-            dbDictColumnType.dictColumnTypeId = String.format("PRESET_%05d", seq);
-            dbDictColumnType.seq = seq;
-            if (l == 0) {
-              dbDictColumnType.columnType = dataType.getTypeName();
-            } else {
-              dbDictColumnType.columnType = String.format("%s(%s)", dataType.getTypeName(), l);
-            }
-            dbDictColumnType.remarks = dataType.getRemarks();
-            con.executeInsert(dbDictColumnType);
-            seq += 100;
-            if (l == 0) {
-              break;
-            }
+    // init dict column type
+    sql = "SELECT * FROM DbDictColumnType LIMIT 1";
+    record = con.getRecord(sql);
+    if (record == null) {
+      var seq = 101;
+      for (int i = 0; i < DataType.getDataTypeList().size(); i++) {
+        var dataType = DataType.getDataTypeList().get(i);
+        for (int j = 0; j < dataType.getLengths().length; j++) {
+          var l = dataType.getLengths()[j];
+
+          var dbDictColumnType = new DbDictColumnType();
+          dbDictColumnType.dictColumnTypeId = String.format("PRESET_%05d", seq);
+          dbDictColumnType.seq = seq;
+          if (l == 0) {
+            dbDictColumnType.columnType = dataType.getTypeName();
+          } else {
+            dbDictColumnType.columnType = String.format("%s(%s)", dataType.getTypeName(), l);
+          }
+          dbDictColumnType.remarks = dataType.getRemarks();
+          con.executeInsert(dbDictColumnType);
+          seq += 100;
+          if (l == 0) {
+            break;
           }
         }
       }
-      con.commit();
-
-      bucket = new Bucket(con);
-
-    } catch (SQLException | IOException e) {
-      Log.error(e);
-      con.rollback();
     }
+    con.commit();
+    bucket = new Bucket(con);
   }
 
   /**
@@ -136,6 +148,15 @@ public class Bucket {
   public static void release() {
     bucket.by();
     bucket = null;
+
+    // ----------
+    if (lock != null) {
+      try {
+        lock.release();
+      } catch (IOException e) {
+        Log.error(e);
+      }
+    }
   }
 
   /**

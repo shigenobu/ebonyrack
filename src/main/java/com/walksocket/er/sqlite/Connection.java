@@ -23,6 +23,11 @@ public class Connection implements AutoCloseable {
   public static final String DB_PATH_PREFIX = ".sqlite3";
 
   /**
+   * db path.
+   */
+  private final String dbPath;
+
+  /**
    * connection string.
    */
   private final String connectionString;
@@ -48,6 +53,7 @@ public class Connection implements AutoCloseable {
    * @param dbPath dbPath
    */
   public Connection(String dbPath) {
+    this.dbPath = dbPath;
     this.connectionString = String.format("jdbc:sqlite:%s", dbPath);
   }
 
@@ -68,6 +74,7 @@ public class Connection implements AutoCloseable {
       props.put("sync_mode", "OFF");
       props.put("foreign_keys", "ON");
       props.put("busy_timeout", 10000);
+      props.put("locking_mode", "EXCLUSIVE");
 
       Class.forName("org.sqlite.JDBC");
       con = DriverManager.getConnection(connectionString, props);
@@ -78,6 +85,15 @@ public class Connection implements AutoCloseable {
     } catch (ClassNotFoundException e) {
       Log.error(e);
     }
+  }
+
+  /**
+   * get db path.
+   *
+   * @return db path
+   */
+  public String getDbPath() {
+    return dbPath;
   }
 
   /**

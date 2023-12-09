@@ -101,7 +101,14 @@ public class Main extends JFrame {
     }
 
     // init bucket
-    Bucket.init(con);
+    try {
+      Bucket.init(con);
+    } catch (Exception e) {
+      Log.error(e);
+      JOptionPane.showMessageDialog(main, e.getMessage());
+      dispose();
+      return;
+    }
 
     // pos
     var x = (Screen.getWidth() - WindowMain.WIDTH) / 2;
