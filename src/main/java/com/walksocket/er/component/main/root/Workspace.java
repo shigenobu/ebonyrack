@@ -824,6 +824,7 @@ public class Workspace extends ErConnectorPositioned {
     return new Dimension(maxWidth, maxHeight);
   }
 
+
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);

@@ -169,6 +169,11 @@ dialog tr {
   border: 1px solid rgba(73, 70, 44, 0.8);
 }
 
+dialog tr.key > td:nth-child(1) {
+  min-width: 20px;
+  text-align: center;
+}
+
 dialog tbody td {
   border: 1px solid rgba(73, 70, 44, 0.8);
   padding: 3px 6px;

@@ -31,6 +31,7 @@
     <table>
       <thead>
       <tr>
+        <th>-</th>
         <th>Column name</th>
         <th>Column comment</th>
         <th>Column type</th>
@@ -46,7 +47,12 @@
       </thead>
       <tbody>
           #foreach($tmpColumn in $tmpColumnList)
-          <tr>
+          <tr class="key">
+              #if($tmpPrimaryKey && $tmpPrimaryKey.getColumnNames().contains($tmpColumn.columnName))
+                <td>PK</td>
+              #else
+                <td></td>
+              #end
             <td>${tmpColumn.columnName}</td>
             <td>${tmpColumn.columnComment}</td>
             <td>${tmpColumn.columnType}</td>
@@ -68,7 +74,12 @@
           </tr>
           #end
           #foreach($tmpColumn in $tmpGroupColumnList)
-          <tr>
+          <tr class="key">
+              #if($tmpPrimaryKey && $tmpPrimaryKey.getColumnNames().contains($tmpColumn.columnName))
+                <td>PK</td>
+              #else
+                <td></td>
+              #end
             <td>${tmpColumn.columnName}</td>
             <td>${tmpColumn.columnComment}</td>
             <td>${tmpColumn.columnType}</td>

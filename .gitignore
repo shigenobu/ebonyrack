@@ -40,4 +40,5 @@ bin
 *.sqlite3-wal
 ebonyrack_*.sql
 ebonyrack_*.png
+*.exlock
 .checkstyle

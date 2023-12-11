@@ -51,4 +51,15 @@ public class TmpKey implements Tmp, Value {
     }
     return columnsAndCollations;
   }
+
+  /**
+   * get column names.
+   *
+   * @return column names
+   */
+  public List<String> getColumnNames() {
+    return columnKeyOptionList.stream()
+        .map(t -> t.columnName)
+        .collect(Collectors.toList());
+  }
 }
