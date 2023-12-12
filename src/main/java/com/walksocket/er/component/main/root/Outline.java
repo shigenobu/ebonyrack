@@ -93,10 +93,9 @@ public class Outline extends JPanel {
     }
     viewFrame.updateScaleRatio(scaleRatio);
 
-    var g2 = (Graphics2D) g.create();
+    var g2 = (Graphics2D) g;
     g2.drawImage(captureImage.getScaledInstance(w, h, Image.SCALE_DEFAULT), 0, 0, w, h,
         new Color(73, 70, 44, 8), null);
-    g2.dispose();
 
     var p = workspace.getParent();
     var pw = scaleRatio * (double) p.getWidth();

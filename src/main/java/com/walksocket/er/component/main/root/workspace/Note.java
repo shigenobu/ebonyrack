@@ -365,6 +365,8 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
     panelFooter = new JPanel(new FlowLayout(FlowLayout.LEFT)) {
       @Override
       protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
         var g2 = (Graphics2D) g;
 
         var x1 = getWidth();

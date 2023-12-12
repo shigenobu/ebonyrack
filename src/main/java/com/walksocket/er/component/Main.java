@@ -5,7 +5,6 @@ import com.walksocket.er.Config;
 import com.walksocket.er.Const;
 import com.walksocket.er.Date;
 import com.walksocket.er.Log;
-import com.walksocket.er.Size.DialogProcessing;
 import com.walksocket.er.Size.Screen;
 import com.walksocket.er.Size.WindowMain;
 import com.walksocket.er.Utils;
@@ -27,8 +26,6 @@ import com.walksocket.er.sqlite.tmp.TmpForeignKey;
 import com.walksocket.er.sqlite.tmp.TmpKey;
 import com.walksocket.er.template.ErTemplate;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -46,10 +43,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -62,6 +57,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * Main.
  */
 public class Main extends JFrame {
+
+  /**
+   * draw lock.
+   */
+  private final Object drawLock = new Object();
 
   /**
    * cfg project.
@@ -352,8 +352,10 @@ public class Main extends JFrame {
 
       @Override
       protected void process(List<Void> chunks) {
-        revalidate();
-        repaint();
+        synchronized (drawLock) {
+          revalidate();
+          repaint();
+        }
       }
     }).execute();
 
@@ -386,9 +388,11 @@ public class Main extends JFrame {
     var captureImage =
         new BufferedImage(rect.width, rect.height,
             BufferedImage.TYPE_INT_ARGB);
-    var g2 = captureImage.getGraphics();
-    workspace.paintAll(g2);
-    g2.dispose();
+    synchronized (drawLock) {
+      var g2 = captureImage.getGraphics();
+      workspace.paintAll(g2);
+      g2.dispose();
+    }
 
     return captureImage;
   }

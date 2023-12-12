@@ -253,8 +253,8 @@ public class ErConnector extends JPanel {
     Log.trace(String.format("start:%s", start));
     Log.trace(String.format("end:%s", end));
 
+    setOpaque(false);
     setBackground(new Color(0, 0, 0, 0));
-//    setBackground(new Color(255, 0, 0, 20));
     setBounds(minX, minY, maxX - minX, maxY - minY);
 
     // ---
@@ -346,6 +346,8 @@ public class ErConnector extends JPanel {
 
     // ---
     for (var line : lines) {
+      line.setOpaque(false);
+      line.setBackground(new Color(0, 0, 0, 0));
       add(line);
       line.addMouseListener(adapter);
     }
@@ -497,8 +499,6 @@ public class ErConnector extends JPanel {
           g2.drawString(e, ex, ey);
         }
       }
-
-      g2.dispose();
     }
   }
 

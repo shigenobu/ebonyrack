@@ -20,8 +20,7 @@ public class ErDialogWaiting extends JDialog {
    * @param owner owner
    * @param title title
    */
-  public ErDialogWaiting(Frame owner, String title)
-  {
+  public ErDialogWaiting(Frame owner, String title) {
     super(owner, title);
 
     // pos

@@ -441,13 +441,12 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
                 .filter(c -> c.dictColumnId.equals(dbDictColumn.dictColumnId))
                 .findFirst()
                 .isPresent()) {
-              Graphics2D g2 = (Graphics2D) g.create();
+              Graphics2D g2 = (Graphics2D) g;
               if (dbDictColumn.autoIncrementDefinition.equals(AutoIncrement.AUTO_INCREMENT_VALUE)) {
                 g2.drawImage(imageKeyPrimaryAi, 0, 4, 12, 12, null);
               } else {
                 g2.drawImage(imageKeyPrimary, 0, 4, 12, 12, null);
               }
-              g2.dispose();
             }
             if (ctxTable.ctxInnerUniqueKeyList.stream()
                 .filter(d -> d.dbTableUniqueKeyColumnList.stream()
@@ -456,9 +455,8 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
                     .isPresent())
                 .findFirst()
                 .isPresent()) {
-              Graphics2D g2 = (Graphics2D) g.create();
+              Graphics2D g2 = (Graphics2D) g;
               g2.drawImage(imageKeyUnique, 12, 4, 12, 12, null);
-              g2.dispose();
             }
             if (ctxTable.ctxInnerKeyList.stream()
                 .filter(d -> d.dbTableKeyColumnList.stream()
@@ -467,9 +465,8 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
                     .isPresent())
                 .findFirst()
                 .isPresent()) {
-              Graphics2D g2 = (Graphics2D) g.create();
+              Graphics2D g2 = (Graphics2D) g;
               g2.drawImage(imageKey, 24, 4, 12, 12, null);
-              g2.dispose();
             }
           }
         };
@@ -497,7 +494,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
           @Override
           protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            Graphics2D g2 = (Graphics2D) g.create();
+            Graphics2D g2 = (Graphics2D) g;
             var image = imageTypeOther;
             var typeGroup = DataType.getTypeGroup(dbDictColumnType.columnType);
             switch (typeGroup) {
@@ -515,7 +512,6 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
                 break;
             }
             g2.drawImage(image, 0, 3, 12, 12, null);
-            g2.dispose();
           }
         };
         p3.setBackground(Color.WHITE);
@@ -545,9 +541,8 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
                     .isPresent())
                 .findFirst()
                 .isPresent()) {
-              Graphics2D g2 = (Graphics2D) g.create();
+              Graphics2D g2 = (Graphics2D) g;
               g2.drawImage(imageKeyForeign, 4, 4, 12, 12, null);
-              g2.dispose();
             }
           }
         };

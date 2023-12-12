@@ -15,10 +15,8 @@ import com.walksocket.er.sqlite.Dump;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 import javax.swing.BoxLayout;
@@ -243,7 +241,8 @@ public class Project extends JPanel {
             protected File doInBackground() throws Exception {
               var f = new File(finalFileName);
               if (!Dump.readFrom(cfgProject, f.getAbsolutePath())) {
-                throw new IOException(String.format("Fail to read from '%s'.", f.getAbsolutePath()));
+                throw new IOException(
+                    String.format("Fail to read from '%s'.", f.getAbsolutePath()));
               }
 
               cfgProject.lastReadFromPath = f.getAbsolutePath();
