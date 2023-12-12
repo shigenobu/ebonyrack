@@ -8,12 +8,14 @@ import com.walksocket.er.component.Main;
 import com.walksocket.er.component.SetupProject;
 import com.walksocket.er.component.startup.Root;
 import com.walksocket.er.config.CfgProject;
+import com.walksocket.er.custom.ErDialogWaiting;
 import com.walksocket.er.custom.ErLinkLabel;
 import com.walksocket.er.custom.ErUnderlineBorder;
 import com.walksocket.er.sqlite.Dump;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,6 +29,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -132,50 +135,69 @@ public class Project extends JPanel {
       }
       buttonWrite.setToolTipText("Write all data out to json file.");
       buttonWrite.addActionListener(actionEvent -> {
-        try {
-          // chooser
-          var format = Dump.EXTENSION;
-          var dotFormat = "." + format;
-          var dir = System.getProperty("user.home");
-          var file = String.format("%s%s", cfgProject.name, dotFormat);
-          var lastWriteOutPath = cfgProject.lastWriteOutPath;
-          if (!Utils.isNullOrEmpty(lastWriteOutPath)) {
-            dir = new File(lastWriteOutPath).getParent();
-            file = new File(lastWriteOutPath).getName();
+        // chooser
+        var format = Dump.EXTENSION;
+        var dotFormat = "." + format;
+        var dir = System.getProperty("user.home");
+        var file = String.format("%s%s", cfgProject.name, dotFormat);
+        var lastWriteOutPath = cfgProject.lastWriteOutPath;
+        if (!Utils.isNullOrEmpty(lastWriteOutPath)) {
+          dir = new File(lastWriteOutPath).getParent();
+          file = new File(lastWriteOutPath).getName();
+        }
+        var chooser = new JFileChooser(dir);
+        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.setFileFilter(new FileNameExtensionFilter("*" + dotFormat,
+            format));
+        chooser.setSelectedFile(new File(file));
+        var result = chooser.showSaveDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+          var fileName = chooser.getSelectedFile().getAbsolutePath();
+          if (!fileName.endsWith(dotFormat)) {
+            fileName += dotFormat;
           }
-          var chooser = new JFileChooser(dir);
-          chooser.setAcceptAllFileFilterUsed(false);
-          chooser.setFileFilter(new FileNameExtensionFilter("*" + dotFormat,
-              format));
-          chooser.setSelectedFile(new File(file));
-          var result = chooser.showSaveDialog(this);
-          if (result == JFileChooser.APPROVE_OPTION) {
-            var fileName = chooser.getSelectedFile().getAbsolutePath();
-            if (!fileName.endsWith(dotFormat)) {
-              fileName += dotFormat;
+
+          // writing
+          var dialogWriting = new ErDialogWaiting(getRoot().getStartup(), "Writing");
+
+          String finalFileName = fileName;
+          (new SwingWorker<File, Void>() {
+            @Override
+            protected File doInBackground() throws Exception {
+              var f = new File(finalFileName);
+              if (!Dump.writeOut(cfgProject, f.getAbsolutePath())) {
+                throw new IOException(
+                    String.format("Fail to write out to '%s'.", f.getAbsolutePath()));
+              }
+
+              cfgProject.lastWriteOutPath = f.getAbsolutePath();
+              Config.save();
+
+              return f;
             }
 
-            var f = new File(fileName);
-            if (!Dump.writeOut(cfgProject, f.getAbsolutePath())) {
-              throw new IOException(
-                  String.format("Fail to write out to '%s'.", f.getAbsolutePath()));
+            @Override
+            protected void done() {
+              try {
+                dialogWriting.dispose();
+
+                var f = get();
+                JOptionPane.showMessageDialog(
+                    getRoot(),
+                    new ErLinkLabel(
+                        String.format("<html>At: <a>%s</a></html>", f.getAbsolutePath()),
+                        new URI(String.format("file://%s", f.getAbsolutePath()))
+                    ),
+                    "Written json",
+                    JOptionPane.INFORMATION_MESSAGE);
+              } catch (Exception e) {
+                Log.error(e);
+                JOptionPane.showMessageDialog(getRoot(), e.getMessage());
+              }
             }
-
-            cfgProject.lastWriteOutPath = f.getAbsolutePath();
-            Config.save();
-
-            JOptionPane.showMessageDialog(
-                this,
-                new ErLinkLabel(
-                    String.format("<html>At: <a>%s</a></html>", f.getAbsolutePath()),
-                    new URI(String.format("file://%s", f.getAbsolutePath()))
-                ),
-                "Written json",
-                JOptionPane.INFORMATION_MESSAGE);
-          }
-        } catch (IOException | URISyntaxException e) {
-          Log.error(e);
-          JOptionPane.showMessageDialog(this, e.getMessage());
+          }).execute();
+          dialogWriting.setModal(true);
+          dialogWriting.setVisible(true);
         }
       });
       p.add(buttonWrite);
@@ -185,57 +207,77 @@ public class Project extends JPanel {
       buttonRead.setToolTipText(
           "Read all data from json file, be careful to overwrite completely.");
       buttonRead.addActionListener(actionEvent -> {
-        if (JOptionPane.showConfirmDialog(this, "Can you overwrite completely ?") != 0) {
-          return;
+        // chooser
+        var format = Dump.EXTENSION;
+        var dotFormat = "." + format;
+        var dir = System.getProperty("user.home");
+        var file = String.format("%s%s", cfgProject.name, dotFormat);
+        var lastReadFromPath = cfgProject.lastReadFromPath;
+        if (!Utils.isNullOrEmpty(lastReadFromPath)) {
+          dir = new File(lastReadFromPath).getParent();
+          file = new File(lastReadFromPath).getName();
         }
-
-        try {
-          // chooser
-          var format = Dump.EXTENSION;
-          var dotFormat = "." + format;
-          var dir = System.getProperty("user.home");
-          var file = String.format("%s%s", cfgProject.name, dotFormat);
-          var lastReadFromPath = cfgProject.lastReadFromPath;
-          if (!Utils.isNullOrEmpty(lastReadFromPath)) {
-            dir = new File(lastReadFromPath).getParent();
-            file = new File(lastReadFromPath).getName();
+        var chooser = new JFileChooser(dir);
+        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.setFileFilter(new FileNameExtensionFilter("*" + dotFormat,
+            format));
+        chooser.setSelectedFile(new File(file));
+        var result = chooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+          var fileName = chooser.getSelectedFile().getAbsolutePath();
+          if (!fileName.endsWith(dotFormat)) {
+            fileName += dotFormat;
           }
-          var chooser = new JFileChooser(dir);
-          chooser.setAcceptAllFileFilterUsed(false);
-          chooser.setFileFilter(new FileNameExtensionFilter("*" + dotFormat,
-              format));
-          chooser.setSelectedFile(new File(file));
-          var result = chooser.showOpenDialog(this);
-          if (result == JFileChooser.APPROVE_OPTION) {
-            var fileName = chooser.getSelectedFile().getAbsolutePath();
-            if (!fileName.endsWith(dotFormat)) {
-              fileName += dotFormat;
+
+          // confirm
+          if (JOptionPane.showConfirmDialog(this, "Can you overwrite completely ?") != 0) {
+            return;
+          }
+
+          // reading
+          var dialogReading = new ErDialogWaiting(getRoot().getStartup(), "Reading");
+
+          String finalFileName = fileName;
+          (new SwingWorker<File, Void>() {
+            @Override
+            protected File doInBackground() throws Exception {
+              var f = new File(finalFileName);
+              if (!Dump.readFrom(cfgProject, f.getAbsolutePath())) {
+                throw new IOException(String.format("Fail to read from '%s'.", f.getAbsolutePath()));
+              }
+
+              cfgProject.lastReadFromPath = f.getAbsolutePath();
+              Config.save();
+
+              return f;
             }
 
-            var f = new File(fileName);
-            if (!Dump.readFrom(cfgProject, f.getAbsolutePath())) {
-              throw new IOException(String.format("Fail to read from '%s'.", f.getAbsolutePath()));
+            @Override
+            protected void done() {
+              try {
+                dialogReading.dispose();
+
+                var f = get();
+                JOptionPane.showMessageDialog(
+                    getRoot(),
+                    new ErLinkLabel(
+                        String.format("<html>At: <a>%s</a></html>", f.getAbsolutePath()),
+                        new URI(String.format("file://%s", f.getAbsolutePath()))
+                    ),
+                    "Read json",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+                // enable
+                buttonOpenReadonly.setEnabled(true);
+                buttonWrite.setEnabled(true);
+              } catch (Exception e) {
+                Log.error(e);
+                JOptionPane.showMessageDialog(getRoot(), e.getMessage());
+              }
             }
-
-            cfgProject.lastReadFromPath = f.getAbsolutePath();
-            Config.save();
-
-            JOptionPane.showMessageDialog(
-                this,
-                new ErLinkLabel(
-                    String.format("<html>At: <a>%s</a></html>", f.getAbsolutePath()),
-                    new URI(String.format("file://%s", f.getAbsolutePath()))
-                ),
-                "Read json",
-                JOptionPane.INFORMATION_MESSAGE);
-
-            // enable
-            buttonOpenReadonly.setEnabled(true);
-            buttonWrite.setEnabled(true);
-          }
-        } catch (IOException | URISyntaxException e) {
-          Log.error(e);
-          JOptionPane.showMessageDialog(this, e.getMessage());
+          }).execute();
+          dialogReading.setModal(true);
+          dialogReading.setVisible(true);
         }
       });
       p.add(buttonRead);

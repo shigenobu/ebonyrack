@@ -15,6 +15,7 @@ import com.walksocket.er.component.main.root.workspace.Note;
 import com.walksocket.er.component.main.root.workspace.Sequence;
 import com.walksocket.er.component.main.root.workspace.Table;
 import com.walksocket.er.config.CfgProject;
+import com.walksocket.er.custom.ErDialogWaiting;
 import com.walksocket.er.custom.ErLinkLabel;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.Connection;
@@ -247,7 +248,7 @@ public class Main extends JFrame {
         }
 
         // exporting
-        var dialogExporting = createExportingDialog();
+        var dialogExporting = new ErDialogWaiting(main, "Exporting");
 
         String finalFileName = fileName;
         (new SwingWorker<File, Void>() {
@@ -336,11 +337,14 @@ public class Main extends JFrame {
 
       @Override
       protected Void doInBackground() throws Exception {
-        while (!stopRedraw.get()) {
+        while (true) {
           try {
             Thread.sleep(100);
             publish();
           } catch (InterruptedException e) {
+          }
+          if (stopRedraw.get()) {
+            break;
           }
         }
         return null;
@@ -369,25 +373,6 @@ public class Main extends JFrame {
     container.add(root);
     container.revalidate();
     container.repaint();
-  }
-
-  /**
-   * create exporting dialog.
-   *
-   * @return dialog
-   */
-  private JDialog createExportingDialog() {
-    var px = (Screen.getWidth() - DialogProcessing.WIDTH) / 2;
-    var py = (Screen.getHeight() - DialogProcessing.HEIGHT) / 2;
-    var dialogProcessing = new JDialog(this, "Exporting");
-    dialogProcessing.setResizable(false);
-    dialogProcessing.setLayout(new GridBagLayout());
-    dialogProcessing.setLocation(px, py);
-    dialogProcessing.setSize(new Dimension(DialogProcessing.WIDTH, DialogProcessing.HEIGHT));
-    var labelProcessing = new JLabel("Please wait ...");
-    labelProcessing.setFont(new Font(labelProcessing.getFont().getName(), Font.BOLD, 24));
-    dialogProcessing.add(labelProcessing);
-    return dialogProcessing;
   }
 
   /**
