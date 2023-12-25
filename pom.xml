@@ -81,6 +81,19 @@
       <artifactId>velocity-engine-core</artifactId>
       <version>2.3</version>
     </dependency>
+    <!-- jsqlparser -->
+    <dependency>
+      <groupId>com.github.jsqlparser</groupId>
+      <artifactId>jsqlparser</artifactId>
+      <version>4.7</version>
+    </dependency>
+    <!-- junit-jupiter-api -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.10.1</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <!-- build -->
