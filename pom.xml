@@ -24,6 +24,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>11</java.version>
     <compile.version>11</compile.version>
+    <antlr.version>4.13.1</antlr.version>
   </properties>
 
   <!-- dependencies -->
@@ -87,6 +88,17 @@
       <artifactId>jsqlparser</artifactId>
       <version>4.7</version>
     </dependency>
+    <!-- antlr4 -->
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr4</artifactId>
+      <version>${antlr.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr4-runtime</artifactId>
+      <version>${antlr.version}</version>
+    </dependency>
     <!-- junit-jupiter-api -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -142,6 +154,30 @@
             <phase>package</phase>
             <goals>
               <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- antlr4-maven-plugin -->
+      <plugin>
+        <groupId>org.antlr</groupId>
+        <artifactId>antlr4-maven-plugin</artifactId>
+        <version>${antlr.version}</version>
+        <configuration>
+          <sourceDirectory>src/main/antlr4/imports</sourceDirectory>
+          <outputDirectory>src/main/java/com/walksocket/er/antlr4</outputDirectory>
+          <visitor>true</visitor>
+          <arguments>
+            <argument>-package</argument>
+            <argument>com.walksocket.er.antlr4</argument>
+          </arguments>
+        </configuration>
+        <executions>
+          <execution>
+            <id>antlr</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>antlr4</goal>
             </goals>
           </execution>
         </executions>
