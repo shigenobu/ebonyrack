@@ -132,7 +132,7 @@ public class Dump {
       var tmpClasses = new ArrayList<>(classes);
       Collections.reverse(tmpClasses);
       for (var cls : tmpClasses) {
-        var sql = String.format("DROP TABLE %s", cls.getSimpleName());
+        var sql = String.format("DROP TABLE IF EXISTS %s", cls.getSimpleName());
         con.execute(sql);
       }
       Bucket.createDdl(con);
