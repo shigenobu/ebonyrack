@@ -129,16 +129,15 @@ public class Dump {
    */
   public static boolean readFrom(CfgProject cfgProject, String path) {
     try (var con = new Connection(cfgProject.dbPath)) {
-      Bucket.createDdl(con);
-
-      con.begin();
-
       var tmpClasses = new ArrayList<>(classes);
       Collections.reverse(tmpClasses);
       for (var cls : tmpClasses) {
-        var sql = String.format("DELETE FROM %s", cls.getSimpleName());
+        var sql = String.format("DROP TABLE IF EXISTS %s", cls.getSimpleName());
         con.execute(sql);
       }
+      Bucket.createDdl(con);
+
+      con.begin();
 
       Map<String, ?> data = Json.toObject(File.readString(new FileInputStream(path)), Map.class);
       for (var entry : data.entrySet()) {

@@ -257,7 +257,6 @@ create table if not exists DbTableCheck
     constraintName text,
     expression     text,
     primary key (tableId, seq),
-    unique (constraintName),
     foreign key (tableId) references DbTable (tableId) on delete cascade
 );
 
@@ -292,8 +291,7 @@ create table if not exists DbNote
     noteId  text,
     subject text,
     body    text,
-    primary key (noteId),
-    unique (subject)
+    primary key (noteId)
 );
 
 create table if not exists DbNoteOption

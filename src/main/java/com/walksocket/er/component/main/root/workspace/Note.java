@@ -608,7 +608,7 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
 
   @Override
   public String getNameForSort() {
-    return toString();
+    return String.format("%s-%s", this, ctxNote.dbNote.noteId);
   }
 
   @Override

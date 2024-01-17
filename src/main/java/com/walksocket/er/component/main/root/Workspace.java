@@ -863,7 +863,7 @@ public class Workspace extends ErConnectorPositioned {
    */
   public List<Note> getOrderedPositionedNotes() {
     return positionedNotes.stream()
-        .sorted(Comparator.comparing(t -> t.getCtxNote().dbNote.subject))
+        .sorted(Comparator.comparing(t -> t.getNameForSort()))
         .collect(Collectors.toList());
   }
 

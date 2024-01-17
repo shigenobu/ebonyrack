@@ -1,7 +1,7 @@
 package com.walksocket.er.component.main.root;
 
 import com.walksocket.er.component.main.Root;
-import com.walksocket.er.component.main.root.workspace.ViewFrame;
+import com.walksocket.er.component.main.root.outline.ViewFrame;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
