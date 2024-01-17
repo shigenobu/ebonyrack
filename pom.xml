@@ -6,7 +6,7 @@
 
   <groupId>com.walksocket</groupId>
   <artifactId>ebonyrack</artifactId>
-  <version>0.3.8</version>
+  <version>0.4.0</version>
   <packaging>jar</packaging>
 
   <name>ebonyrack</name>
@@ -33,18 +33,18 @@
     <dependency>
       <groupId>org.xerial</groupId>
       <artifactId>sqlite-jdbc</artifactId>
-      <version>3.44.0.0</version>
+      <version>3.44.1.0</version>
     </dependency>
     <!-- slf4j-simple -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
-      <version>2.0.9</version>
+      <version>2.0.11</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>2.0.9</version>
+      <version>2.0.11</version>
     </dependency>
     <!-- gson -->
     <dependency>
@@ -74,19 +74,13 @@
     <dependency>
       <groupId>com.formdev</groupId>
       <artifactId>flatlaf</artifactId>
-      <version>3.2.5</version>
+      <version>3.3</version>
     </dependency>
     <!-- velocity-engine-core -->
     <dependency>
       <groupId>org.apache.velocity</groupId>
       <artifactId>velocity-engine-core</artifactId>
       <version>2.3</version>
-    </dependency>
-    <!-- jsqlparser -->
-    <dependency>
-      <groupId>com.github.jsqlparser</groupId>
-      <artifactId>jsqlparser</artifactId>
-      <version>4.7</version>
     </dependency>
     <!-- antlr4 -->
     <dependency>
@@ -167,6 +161,7 @@
           <sourceDirectory>src/main/antlr4/imports</sourceDirectory>
           <outputDirectory>src/main/java/com/walksocket/er/antlr4</outputDirectory>
           <visitor>true</visitor>
+          <listener>true</listener>
           <arguments>
             <argument>-package</argument>
             <argument>com.walksocket.er.antlr4</argument>

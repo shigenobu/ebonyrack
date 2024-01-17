@@ -4,7 +4,10 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.walksocket.er.File;
 import com.walksocket.er.Json;
 import com.walksocket.er.Log;
+import com.walksocket.er.antlr4.MariaDBLexer;
+import com.walksocket.er.antlr4.MariaDBParser;
 import com.walksocket.er.config.CfgProject;
+import com.walksocket.er.parse.SequenceListener;
 import com.walksocket.er.sqlite.entity.DbDefault;
 import com.walksocket.er.sqlite.entity.DbDictColumn;
 import com.walksocket.er.sqlite.entity.DbDictColumnType;
@@ -31,8 +34,12 @@ import com.walksocket.er.sqlite.entity.DbTablePrimaryKey;
 import com.walksocket.er.sqlite.entity.DbTablePrimaryKeyColumn;
 import com.walksocket.er.sqlite.entity.DbTableUniqueKey;
 import com.walksocket.er.sqlite.entity.DbTableUniqueKeyColumn;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,6 +47,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 /**
  * Dump.
@@ -172,5 +182,93 @@ public class Dump {
       Log.error(e);
     }
     return false;
+  }
+
+  /**
+   * import.
+   *
+   * @param cfgProject cfgProject
+   * @param path       read path
+   * @return if success, true
+   */
+  public static boolean importFromDdl(CfgProject cfgProject, String path) {
+    try (var con = new Connection(cfgProject.dbPath)) {
+//      var tmpClasses = new ArrayList<>(classes);
+//      Collections.reverse(tmpClasses);
+//      for (var cls : tmpClasses) {
+//        var sql = String.format("DROP TABLE IF EXISTS %s", cls.getSimpleName());
+//        con.execute(sql);
+//      }
+//      Bucket.createDdl(con);
+
+      con.begin();
+
+      // sequence
+      var ddlSequenceList = parseCreateSequence(path);
+      for (var ddl : ddlSequenceList) {
+        var stream = CharStreams.fromString(ddl);
+        var lexer = new MariaDBLexer(stream);
+        var tokens = new CommonTokenStream(lexer);
+        var parser = new MariaDBParser(tokens);
+
+        var listener = new SequenceListener();
+        ParseTreeWalker.DEFAULT.walk(listener, parser.root());
+      }
+
+
+      con.commit();
+      return true;
+    } catch (Exception e) {
+      Log.error(e);
+    }
+    return false;
+  }
+
+  public static List<String> parseCreateSequence(String path) throws IOException {
+    var ddlList = new ArrayList<String >();
+    try (var reader = new BufferedReader(new FileReader(path))) {
+      String data;
+      boolean processing = false;
+      var builder = new StringBuilder();
+      while ((data = reader.readLine()) != null) {
+        if (data.toLowerCase().startsWith("create sequence")) {
+          processing = true;
+        }
+        if (processing) {
+          builder.append(data);
+
+          if (data.endsWith(";")) {
+            processing = false;
+            ddlList.add(builder.toString());
+            builder = new StringBuilder();
+          }
+        }
+      }
+    }
+    return ddlList;
+  }
+
+  public static List<String> parseCreateTable(String path) throws IOException {
+    var ddlList = new ArrayList<String >();
+    try (var reader = new BufferedReader(new FileReader(path))) {
+      String data;
+      boolean processing = false;
+      var builder = new StringBuilder();
+      while ((data = reader.readLine()) != null) {
+        if (data.toLowerCase().startsWith("create table")) {
+          processing = true;
+        }
+        if (processing) {
+          builder.append(data);
+
+          if (data.endsWith(";")) {
+            processing = false;
+            ddlList.add(builder.toString());
+            builder = new StringBuilder();
+          }
+        }
+      }
+    }
+    return ddlList;
   }
 }
