@@ -127,7 +127,8 @@ public class ErConnector extends JPanel {
     }
 
     // relation
-    if (src instanceof ErConnectorEndpointRelation relation && dst instanceof ErConnectorEndpointRelation) {
+    if (src instanceof ErConnectorEndpointRelation relation
+        && dst instanceof ErConnectorEndpointRelation) {
       this.sortName = relation.getNameForSort();
       this.relation = true;
     }
