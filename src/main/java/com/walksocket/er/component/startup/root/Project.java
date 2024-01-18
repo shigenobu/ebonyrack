@@ -290,6 +290,72 @@ public class Project extends JPanel {
       });
       p.add(buttonEdit);
 
+      // import
+      var buttonImport = new JButton("Import");
+      if ((new File(cfgProject.dbPath)).exists()) {
+        buttonImport.setEnabled(false);
+      }
+      buttonImport.setToolTipText("Import from ddl, be careful to overwrite completely.");
+      buttonImport.addActionListener(actionEvent -> {
+        // chooser
+        var dir = System.getProperty("user.home");
+        var chooser = new JFileChooser(dir);
+        var result = chooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+          var fileName = chooser.getSelectedFile().getAbsolutePath();
+
+          // confirm
+          if (JOptionPane.showConfirmDialog(this, "Can you overwrite completely ?") != 0) {
+            return;
+          }
+
+          // importing
+          var dialogImporting = new ErDialogWaiting(getRoot().getStartup(), "Importing");
+
+          String finalFileName = fileName;
+          (new SwingWorker<File, Void>() {
+            @Override
+            protected File doInBackground() throws Exception {
+              var f = new File(finalFileName);
+              if (!Dump.importFromDdl(cfgProject, f.getAbsolutePath())) {
+                throw new IOException(
+                    String.format("Fail to import from '%s'.", f.getAbsolutePath()));
+              }
+
+              return f;
+            }
+
+            @Override
+            protected void done() {
+              try {
+                dialogImporting.dispose();
+
+                var f = get();
+                JOptionPane.showMessageDialog(
+                    getRoot(),
+                    new ErLinkLabel(
+                        String.format("<html>At: <a>%s</a></html>", f.getAbsolutePath()),
+                        new URI(String.format("file://%s", f.getAbsolutePath()))
+                    ),
+                    "Import ddl",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+                // enable
+                buttonOpenReadonly.setEnabled(true);
+                buttonWrite.setEnabled(true);
+                buttonImport.setEnabled(false);
+              } catch (Exception e) {
+                Log.error(e);
+                JOptionPane.showMessageDialog(getRoot(), e.getMessage());
+              }
+            }
+          }).execute();
+          dialogImporting.setModal(true);
+          dialogImporting.setVisible(true);
+        }
+      });
+      p.add(buttonImport);
+
       // remove
       var buttonRemove = new JButton("Remove");
       buttonRemove.addActionListener(actionEvent -> {
