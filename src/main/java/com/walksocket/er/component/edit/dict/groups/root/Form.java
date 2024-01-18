@@ -5,6 +5,7 @@ import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.UsedDictGroups;
+import com.walksocket.er.component.edit.dict.groups.Root;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.entity.DbDictColumn;
 import com.walksocket.er.sqlite.tmp.TmpDictGroup;
@@ -113,8 +114,10 @@ public class Form extends JPanel {
 
   /**
    * Constructor.
+   *
+   * @param root root
    */
-  public Form() {
+  public Form(Root root) {
     var form = this;
 
     // layout
@@ -213,6 +216,7 @@ public class Form extends JPanel {
 
         // save
         Bucket.getInstance().getBucketDict().saveDictGroup(tmpDictGroup, tmpDictGroupColumnList);
+        root.getEditDictGroups().changeState();
 
         // load
         loadTable();
@@ -249,6 +253,7 @@ public class Form extends JPanel {
 
         // remove
         Bucket.getInstance().getBucketDict().removeDictGroup(tmpDictGroup);
+        root.getEditDictGroups().changeState();
 
         // load
         loadTable();

@@ -14,6 +14,11 @@ import javax.swing.JPanel;
 public class Root extends JPanel {
 
   /**
+   * editDictColumnTypes.
+   */
+  private final EditDictColumnTypes editDictColumnTypes;
+
+  /**
    * form.
    */
   private final Form form;
@@ -24,13 +29,24 @@ public class Root extends JPanel {
    * @param editDictColumnTypes editDictColumnTypes
    */
   public Root(EditDictColumnTypes editDictColumnTypes) {
+    this.editDictColumnTypes = editDictColumnTypes;
+
     // layout
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
     // panel - form
-    form = new Form();
+    form = new Form(this);
     form.setPreferredSize(new Dimension(DialogMedium.WIDTH - 20, DialogMedium.HEIGHT));
     form.setAlignmentX(Component.LEFT_ALIGNMENT);
     add(form);
+  }
+
+  /**
+   * get edit dict column types.
+   *
+   * @return edit dict column types
+   */
+  public EditDictColumnTypes getEditDictColumnTypes() {
+    return editDictColumnTypes;
   }
 }

@@ -14,6 +14,11 @@ import javax.swing.JPanel;
 public class Root extends JPanel {
 
   /**
+   * editDictPartitions.
+   */
+  private final EditDictPartitions editDictPartitions;
+
+  /**
    * form.
    */
   private final Form form;
@@ -24,13 +29,24 @@ public class Root extends JPanel {
    * @param editDictPartitions editDictPartitions
    */
   public Root(EditDictPartitions editDictPartitions) {
+    this.editDictPartitions = editDictPartitions;
+
     // layout
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
     // panel - form
-    form = new Form();
+    form = new Form(this);
     form.setPreferredSize(new Dimension(DialogMedium.WIDTH - 20, DialogMedium.HEIGHT));
     form.setAlignmentX(Component.LEFT_ALIGNMENT);
     add(form);
+  }
+
+  /**
+   * get edit dict partitions.
+   *
+   * @return edit dict partitions
+   */
+  public EditDictPartitions getEditDictPartitions() {
+    return editDictPartitions;
   }
 }

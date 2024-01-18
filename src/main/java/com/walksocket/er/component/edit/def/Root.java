@@ -85,9 +85,7 @@ public class Root extends JPanel {
       // save
       var tmp = result.getTmpList().get(0);
       Bucket.getInstance().getBucketDefault().save(tmp);
-
-      // load
-      editDefault.getMain().load();
+      editDefault.changeState();
 
       return true;
 

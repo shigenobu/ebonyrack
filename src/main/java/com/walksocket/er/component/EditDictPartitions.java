@@ -17,6 +17,11 @@ import javax.swing.WindowConstants;
 public class EditDictPartitions extends ErDialog {
 
   /**
+   * changed.
+   */
+  private boolean changed;
+
+  /**
    * main.
    */
   private final Main main;
@@ -44,7 +49,9 @@ public class EditDictPartitions extends ErDialog {
       @Override
       public void windowClosed(WindowEvent e) {
         dispose();
-        main.load();
+        if (changed) {
+          main.load();
+        }
       }
     });
 
@@ -63,5 +70,12 @@ public class EditDictPartitions extends ErDialog {
    */
   public Main getMain() {
     return main;
+  }
+
+  /**
+   * change state.
+   */
+  public void changeState() {
+    this.changed = true;
   }
 }

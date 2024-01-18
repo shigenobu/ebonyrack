@@ -4,6 +4,7 @@ import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.UsedDictPartition;
+import com.walksocket.er.component.edit.dict.partitions.Root;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.tmp.TmpDictPartition;
 import java.awt.Component;
@@ -109,8 +110,10 @@ public class Form extends JPanel {
 
   /**
    * Constructor.
+   *
+   * @param root root
    */
-  public Form() {
+  public Form(Root root) {
     var form = this;
 
     // layout
@@ -182,6 +185,7 @@ public class Form extends JPanel {
 
         // save
         Bucket.getInstance().getBucketDict().saveDictPartition(tmpDictPartition);
+        root.getEditDictPartitions().changeState();
 
         // load
         loadTable();
@@ -218,6 +222,7 @@ public class Form extends JPanel {
 
         // remove
         Bucket.getInstance().getBucketDict().removeDictPartition(tmpDictPartition);
+        root.getEditDictPartitions().changeState();
 
         // load
         loadTable();

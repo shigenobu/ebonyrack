@@ -4,6 +4,7 @@ import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.UsedDictColumn;
+import com.walksocket.er.component.edit.dict.columns.Root;
 import com.walksocket.er.custom.ErUnderlineBorder;
 import com.walksocket.er.definition.AutoIncrement;
 import com.walksocket.er.definition.Charset;
@@ -167,6 +168,11 @@ public class Form extends JPanel {
   private final JButton buttonRemove = new JButton("Remove");
 
   /**
+   * text field search column name.
+   */
+  private final JTextField textFieldSearchColumnName = new JTextField(20);
+
+  /**
    * column name and width maps.
    */
   private static final Map<String, Integer> columnNameWidthMaps = new LinkedHashMap<>();
@@ -202,8 +208,10 @@ public class Form extends JPanel {
 
   /**
    * Constructor.
+   *
+   * @param root root
    */
-  public Form() {
+  public Form(Root root) {
     var form = this;
 
     // layout
@@ -325,6 +333,7 @@ public class Form extends JPanel {
 
         // save
         Bucket.getInstance().getBucketDict().saveDictColumn(tmpDictColumn);
+        root.getEditDictColumns().changeState();
 
         // load
         loadTable();
@@ -361,6 +370,7 @@ public class Form extends JPanel {
 
         // save
         Bucket.getInstance().getBucketDict().removeDictColumn(tmpDictColumn);
+        root.getEditDictColumns().changeState();
 
         // load
         loadTable();
@@ -391,7 +401,6 @@ public class Form extends JPanel {
 
     var labelSearchColumnName = new JLabel("(Search) Column name:");
     panelSearch.add(labelSearchColumnName);
-    var textFieldSearchColumnName = new JTextField(20);
     textFieldSearchColumnName.addKeyListener(new KeyAdapter() {
       @Override
       public void keyReleased(KeyEvent e) {
@@ -479,6 +488,7 @@ public class Form extends JPanel {
    * load table.
    */
   private void loadTable() {
+    textFieldSearchColumnName.setText("");
     loadTable(null);
   }
 

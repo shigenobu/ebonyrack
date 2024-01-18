@@ -35,7 +35,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -175,50 +174,70 @@ public class Main extends JFrame {
     var menuItemExportImage = new JMenuItem("Export image");
     menuItemExportImage.addActionListener(actionEvent -> {
       Workspace workspace = root.getWorkspace();
-      try {
-        // chooser
-        var format = "png";
-        var dotFormat = "." + format;
-        var dir = System.getProperty("user.home");
-        var file = String.format("%s%s", cfgProject.name, dotFormat);
-        var lastImageSavePath = cfgProject.lastImageSavePath;
-        if (!Utils.isNullOrEmpty(lastImageSavePath)) {
-          dir = new File(lastImageSavePath).getParent();
-          file = new File(lastImageSavePath).getName();
+
+      // chooser
+      var format = "png";
+      var dotFormat = "." + format;
+      var dir = System.getProperty("user.home");
+      var file = String.format("%s%s", cfgProject.name, dotFormat);
+      var lastImageSavePath = cfgProject.lastImageSavePath;
+      if (!Utils.isNullOrEmpty(lastImageSavePath)) {
+        dir = new File(lastImageSavePath).getParent();
+        file = new File(lastImageSavePath).getName();
+      }
+      var chooser = new JFileChooser(dir);
+      chooser.setAcceptAllFileFilterUsed(false);
+      chooser.setFileFilter(new FileNameExtensionFilter("*" + dotFormat,
+          format));
+      chooser.setSelectedFile(new File(file));
+      var result = chooser.showSaveDialog(main);
+      if (result == JFileChooser.APPROVE_OPTION) {
+        var fileName = chooser.getSelectedFile().getAbsolutePath();
+        if (!fileName.endsWith(dotFormat)) {
+          fileName += dotFormat;
         }
-        var chooser = new JFileChooser(dir);
-        chooser.setAcceptAllFileFilterUsed(false);
-        chooser.setFileFilter(new FileNameExtensionFilter("*" + dotFormat,
-            format));
-        chooser.setSelectedFile(new File(file));
-        var result = chooser.showSaveDialog(main);
-        if (result == JFileChooser.APPROVE_OPTION) {
-          var fileName = chooser.getSelectedFile().getAbsolutePath();
-          if (!fileName.endsWith(dotFormat)) {
-            fileName += dotFormat;
+
+        // exporting
+        var dialogExporting = new ErDialogWaiting(main, "Exporting");
+
+        String finalFileName = fileName;
+        (new SwingWorker<File, Void>() {
+          @Override
+          protected File doInBackground() throws Exception {
+            // capture
+            var captureImage = createWorkspaceImage(workspace);
+
+            var f = new File(finalFileName);
+            ImageIO.write(captureImage, format, f);
+
+            cfgProject.lastImageSavePath = f.getAbsolutePath();
+            Config.save();
+
+            return f;
           }
 
-          // capture
-          var captureImage = createWorkspaceImage(workspace);
+          @Override
+          protected void done() {
+            try {
+              dialogExporting.dispose();
 
-          var f = new File(fileName);
-          ImageIO.write(captureImage, format, f);
-
-          cfgProject.lastImageSavePath = f.getAbsolutePath();
-          Config.save();
-
-          JOptionPane.showMessageDialog(
-              this,
-              new ErLinkLabel(
-                  String.format("<html>At: <a>%s</a></html>", f.getAbsolutePath()),
-                  new URI(String.format("file://%s", f.getAbsolutePath()))
-              ),
-              "Saved image",
-              JOptionPane.INFORMATION_MESSAGE);
-        }
-      } catch (IOException | URISyntaxException e) {
-        Log.error(e);
-        JOptionPane.showMessageDialog(main, e.getMessage());
+              var f = get();
+              JOptionPane.showMessageDialog(
+                  main,
+                  new ErLinkLabel(
+                      String.format("<html>At: <a>%s</a></html>", f.getAbsolutePath()),
+                      new URI(String.format("file://%s", f.getAbsolutePath()))
+                  ),
+                  "Saved image",
+                  JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception e) {
+              Log.error(e);
+              JOptionPane.showMessageDialog(main, e.getMessage());
+            }
+          }
+        }).execute();
+        dialogExporting.setModal(true);
+        dialogExporting.setVisible(true);
       }
     });
     menuFile.add(menuItemExportImage);
@@ -367,14 +386,32 @@ public class Main extends JFrame {
    * load.
    */
   public void load() {
-    var container = getContentPane();
-    container.removeAll();
+    var main = this;
 
-    this.root = new Root(this, cfgProject);
+    // loading
+    var dialogLoading = new ErDialogWaiting(this, "Loading");
+    (new SwingWorker<Void, Void>() {
 
-    container.add(root);
-    container.revalidate();
-    container.repaint();
+      @Override
+      protected Void doInBackground() throws Exception {
+        var container = getContentPane();
+        container.removeAll();
+
+        main.root = new Root(main, cfgProject);
+
+        container.add(root);
+        container.revalidate();
+        container.repaint();
+        return null;
+      }
+
+      @Override
+      protected void done() {
+        dialogLoading.dispose();
+      }
+    }).execute();
+    dialogLoading.setModal(true);
+    dialogLoading.setVisible(true);
   }
 
   /**
