@@ -40,6 +40,13 @@ public class Env {
   }
 
   /**
+   * set debug.
+   */
+  public static void setDebug() {
+    isDebug = true;
+  }
+
+  /**
    * get home directory.
    *
    * @return home directory

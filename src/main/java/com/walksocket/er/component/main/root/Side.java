@@ -123,19 +123,15 @@ public class Side extends JPanel {
         }
 
         var tmpNode = treePath.getLastPathComponent();
-        if (tmpNode != null && tmpNode instanceof DefaultMutableTreeNode) {
-          var node = (DefaultMutableTreeNode) tmpNode;
+        if (tmpNode != null && tmpNode instanceof DefaultMutableTreeNode node) {
           var tmpObject = node.getUserObject();
           if (tmpObject != null) {
             JScrollPane sp = null;
-            if (tmpObject instanceof Table) {
-              var table = (Table) tmpObject;
+            if (tmpObject instanceof Table table) {
               sp = (JScrollPane) table.getWorkspace().getParent().getParent();
-            } else if (tmpObject instanceof Sequence) {
-              var sequence = (Sequence) tmpObject;
+            } else if (tmpObject instanceof Sequence sequence) {
               sp = (JScrollPane) sequence.getWorkspace().getParent().getParent();
-            } else if (tmpObject instanceof Note) {
-              var note = (Note) tmpObject;
+            } else if (tmpObject instanceof Note note) {
               sp = (JScrollPane) note.getWorkspace().getParent().getParent();
             }
 

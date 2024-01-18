@@ -2287,7 +2287,7 @@ dataType
         | UNSIGNED
         | ZEROFILL
     )*                                                                                                      # dimensionDataType
-    | typeName = (DATE | TINYBLOB | MEDIUMBLOB | LONGBLOB | BOOL | BOOLEAN | SERIAL)                        # simpleDataType
+    | typeName = (DATE | TINYBLOB | MEDIUMBLOB | LONGBLOB | BOOL | BOOLEAN | SERIAL | INET4 | INET6 | UUID) # simpleDataType
     | typeName = (BIT | TIME | TIMESTAMP | DATETIME | BINARY | VARBINARY | BLOB | YEAR) lengthOneDimension? # dimensionDataType
     | typeName = (ENUM | SET) collectionOptions BINARY? (charSet charsetName)?                              # collectionDataType
     | typeName = (

@@ -180,6 +180,16 @@ public class DbDictColumn extends Entity {
   }
 
   /**
+   * create and get checksum.
+   *
+   * @return checksum
+   */
+  public String createAndGetCheckSum() {
+    setChecksum();
+    return checksum;
+  }
+
+  /**
    * get show column name.
    *
    * @return show column name

@@ -1,9 +1,11 @@
 package com.walksocket.er.parse;
 
+import com.walksocket.antlr4.MariaDBParser.CreateSequenceContext;
+import com.walksocket.antlr4.MariaDBParser.DecimalLiteralContext;
+import com.walksocket.antlr4.MariaDBParserBaseListener;
+import com.walksocket.er.Json;
+import com.walksocket.er.Log;
 import com.walksocket.er.Utils;
-import com.walksocket.er.antlr4.MariaDBParser.CreateSequenceContext;
-import com.walksocket.er.antlr4.MariaDBParser.DecimalLiteralContext;
-import com.walksocket.er.antlr4.MariaDBParserBaseListener;
 import com.walksocket.er.sqlite.tmp.TmpSequence;
 
 /**
@@ -72,9 +74,10 @@ public class SequenceListener extends MariaDBParserBaseListener {
         }
 
         if (c == s.CYCLE() || c == s.NOCYCLE()) {
-          tmpSequence.cycle = c.getText();
+          tmpSequence.cycle = c.getText().toUpperCase();
         }
       }
     }
+    Log.trace(Json.toJsonString(tmpSequence));
   }
 }

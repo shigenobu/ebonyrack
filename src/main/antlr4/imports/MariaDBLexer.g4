@@ -286,6 +286,8 @@ LONGTEXT   : 'LONGTEXT';
 ENUM       : 'ENUM';
 VARYING    : 'VARYING';
 SERIAL     : 'SERIAL';
+INET4      : 'INET4';
+INET6      : 'INET6';
 
 // Interval type Keywords
 

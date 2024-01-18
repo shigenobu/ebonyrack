@@ -165,8 +165,7 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
           return;
         }
         Log.trace("connected from note:" + target.getClass().getName());
-        if (target instanceof Table) {
-          var table = (Table) target;
+        if (target instanceof Table table) {
 
           try {
             // register
@@ -183,8 +182,7 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
             Log.error(ex);
             JOptionPane.showMessageDialog(workspace, ex.getMessage());
           }
-        } else if (target instanceof Sequence) {
-          var sequence = (Sequence) target;
+        } else if (target instanceof Sequence sequence) {
 
           try {
             // register

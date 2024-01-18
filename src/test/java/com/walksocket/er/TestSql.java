@@ -3,11 +3,18 @@ package com.walksocket.er;
 import com.walksocket.er.config.CfgProject;
 import com.walksocket.er.sqlite.Dump;
 import java.io.IOException;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class TestSql {
 
-  private static final String path = "src/test/data/1_base.sql";
+  private static final String path = "";
+
+  @BeforeAll
+  public static void beforeClass() throws IOException {
+    Log.open("STDOUT");
+    Env.setDebug();
+  }
 
   @Test
   public void testParseCreateSequence() throws IOException {
@@ -27,6 +34,8 @@ public class TestSql {
 
   @Test
   public void testParse() throws IOException {
-    Dump.importFromDdl(new CfgProject(), path);
+    var cfgProject = new CfgProject();
+    cfgProject.dbPath = "test.sqlite3";
+    Dump.importFromDdl(cfgProject, path);
   }
 }

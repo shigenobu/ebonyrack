@@ -159,18 +159,17 @@
         <version>${antlr.version}</version>
         <configuration>
           <sourceDirectory>src/main/antlr4/imports</sourceDirectory>
-          <outputDirectory>src/main/java/com/walksocket/er/antlr4</outputDirectory>
+          <outputDirectory>src/main/java/com/walksocket/antlr4</outputDirectory>
           <visitor>true</visitor>
           <listener>true</listener>
           <arguments>
             <argument>-package</argument>
-            <argument>com.walksocket.er.antlr4</argument>
+            <argument>com.walksocket.antlr4</argument>
           </arguments>
         </configuration>
         <executions>
           <execution>
             <id>antlr</id>
-            <phase>generate-sources</phase>
             <goals>
               <goal>antlr4</goal>
             </goals>

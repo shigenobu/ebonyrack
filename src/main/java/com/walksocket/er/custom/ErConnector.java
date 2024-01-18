@@ -120,17 +120,14 @@ public class ErConnector extends JPanel {
     dst.addConnector(this);
 
     // sort name
-    if (src instanceof ErConnectorEndpointOrigin) {
-      var origin = (ErConnectorEndpointOrigin) src;
+    if (src instanceof ErConnectorEndpointOrigin origin) {
       this.sortName = origin.getNameForSort();
-    } else if (dst instanceof ErConnectorEndpointOrigin) {
-      var origin = (ErConnectorEndpointOrigin) dst;
+    } else if (dst instanceof ErConnectorEndpointOrigin origin) {
       this.sortName = origin.getNameForSort();
     }
 
     // relation
-    if (src instanceof ErConnectorEndpointRelation && dst instanceof ErConnectorEndpointRelation) {
-      var relation = (ErConnectorEndpointRelation) src;
+    if (src instanceof ErConnectorEndpointRelation relation && dst instanceof ErConnectorEndpointRelation) {
       this.sortName = relation.getNameForSort();
       this.relation = true;
     }
