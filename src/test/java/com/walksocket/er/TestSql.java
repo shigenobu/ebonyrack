@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 public class TestSql {
 
-  private static final String path = "/home/furuta/00-down/20240111_bens_t/mdb_ddl.sql";
+  private static final String path = "src/test/data/1_base.sql";
 
   @Test
   public void testParseCreateSequence() throws IOException {

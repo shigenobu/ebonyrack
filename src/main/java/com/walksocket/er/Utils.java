@@ -145,6 +145,32 @@ public class Utils {
   }
 
   /**
+   * remove backslash.
+   *
+   * @param src string
+   * @return backslash removed string
+   */
+  public static String removeBackslash(String src) {
+    if (src == null) {
+      return "";
+    }
+    return StringUtils.replace(src, "`", "");
+  }
+
+  /**
+   * remove single quote.
+   *
+   * @param src string
+   * @return single quote removed string
+   */
+  public static String removeSingleQuote(String src) {
+    if (src == null) {
+      return "";
+    }
+    return StringUtils.replace(src, "'", "");
+  }
+
+  /**
    * get string.
    *
    * @param textField textField

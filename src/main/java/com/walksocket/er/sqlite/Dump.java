@@ -4,10 +4,13 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.walksocket.er.File;
 import com.walksocket.er.Json;
 import com.walksocket.er.Log;
+import com.walksocket.er.Pos;
+import com.walksocket.er.Utils;
 import com.walksocket.er.antlr4.MariaDBLexer;
 import com.walksocket.er.antlr4.MariaDBParser;
 import com.walksocket.er.config.CfgProject;
 import com.walksocket.er.parse.SequenceListener;
+import com.walksocket.er.parse.TableListener;
 import com.walksocket.er.sqlite.entity.DbDefault;
 import com.walksocket.er.sqlite.entity.DbDictColumn;
 import com.walksocket.er.sqlite.entity.DbDictColumnType;
@@ -34,6 +37,9 @@ import com.walksocket.er.sqlite.entity.DbTablePrimaryKey;
 import com.walksocket.er.sqlite.entity.DbTablePrimaryKeyColumn;
 import com.walksocket.er.sqlite.entity.DbTableUniqueKey;
 import com.walksocket.er.sqlite.entity.DbTableUniqueKeyColumn;
+import com.walksocket.er.sqlite.tmp.TmpColumn;
+import com.walksocket.er.sqlite.tmp.TmpSequence;
+import com.walksocket.er.sqlite.tmp.TmpTable;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -205,16 +211,56 @@ public class Dump {
 
       // sequence
       var ddlSequenceList = parseCreateSequence(path);
-      for (var ddl : ddlSequenceList) {
+      for (int i = 0; i < ddlSequenceList.size(); i++) {
+        var ddl = ddlSequenceList.get(i);
+
         var stream = CharStreams.fromString(ddl);
         var lexer = new MariaDBLexer(stream);
         var tokens = new CommonTokenStream(lexer);
         var parser = new MariaDBParser(tokens);
 
-        var listener = new SequenceListener();
+        var tmpSequence = new TmpSequence();
+        var listener = new SequenceListener(tmpSequence);
         ParseTreeWalker.DEFAULT.walk(listener, parser.root());
+
+        var sequenceId = Utils.randomString();
+
+        // DbSequence
+        var dbSequence = new DbSequence();
+        dbSequence.sequenceId = sequenceId;
+        dbSequence.sequenceName = tmpSequence.sequenceName;
+        dbSequence.startValue = tmpSequence.startValue;
+        dbSequence.minimumValue = tmpSequence.minimumValue;
+        dbSequence.maximumValue = tmpSequence.maximumValue;
+        dbSequence.incrementValue = tmpSequence.incrementValue;
+        dbSequence.cacheSize = tmpSequence.cacheSize;
+        dbSequence.cycle = tmpSequence.cycle;
+
+        // DbSequenceOption
+        var dbSequenceOption = new DbSequenceOption();
+        dbSequenceOption.sequenceId = sequenceId;
+        dbSequenceOption.posX = 100;
+        dbSequenceOption.posY = 100;
       }
 
+      // table
+      var ddlTableList = parseCreateTable(path);
+      for (int i = 0; i < ddlTableList.size(); i++) {
+        var ddl = ddlTableList.get(i);
+
+        var stream = CharStreams.fromString(ddl);
+        var lexer = new MariaDBLexer(stream);
+        var tokens = new CommonTokenStream(lexer);
+        var parser = new MariaDBParser(tokens);
+
+        var tmpTable = new TmpTable();
+        var tmpColumnList = new ArrayList<TmpColumn>();
+        var listener = new TableListener(tmpTable, tmpColumnList);
+        ParseTreeWalker.DEFAULT.walk(listener, parser.root());
+
+        System.out.println(Json.toJsonStringFriendly(tmpTable));
+        System.out.println(Json.toJsonStringFriendly(tmpColumnList));
+      }
 
       con.commit();
       return true;

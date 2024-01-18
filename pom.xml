@@ -22,8 +22,8 @@
   <!-- properties -->
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.version>11</java.version>
-    <compile.version>11</compile.version>
+    <java.version>17</java.version>
+    <compile.version>17</compile.version>
     <antlr.version>4.13.1</antlr.version>
   </properties>
 
