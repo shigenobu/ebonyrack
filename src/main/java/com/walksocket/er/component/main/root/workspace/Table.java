@@ -554,6 +554,18 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
       }
       panelColumn.setSize(new Dimension(w - BORDER_SIZE * 2, targetDbDictColumList.size() * ph));
       setSize(new Dimension(w, panelTable.getHeight() + panelColumn.getHeight() + 10));
+
+      if (ctxTable.dbTablePartition != null) {
+        var hasPartitionPanel = new JPanel();
+        hasPartitionPanel.setPreferredSize(new Dimension(w - BORDER_SIZE * 2, 10));
+        hasPartitionPanel.setBackground(Color.YELLOW);
+        panelColumnInner.add(hasPartitionPanel);
+
+        panelColumn.setSize(
+            new Dimension(w - BORDER_SIZE * 2, targetDbDictColumList.size() * ph + 10));
+        setSize(new Dimension(w, panelTable.getHeight() + panelColumn.getHeight() + 4));
+      }
+
     } else {
       panelColumn.setSize(
           new Dimension(w - BORDER_SIZE * 2, 100 - panelTable.getHeight() - BORDER_SIZE * 2));
