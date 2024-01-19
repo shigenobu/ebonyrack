@@ -580,7 +580,7 @@ public class Dump {
           processing = true;
         }
         if (processing) {
-          builder.append(data.trim());
+          builder.append(data);
 
           if (data.endsWith(";")) {
             processing = false;
@@ -611,7 +611,7 @@ public class Dump {
           processing = true;
         }
         if (processing) {
-          builder.append(data.trim());
+          builder.append(data);
 
           if (data.endsWith(";")) {
             processing = false;
