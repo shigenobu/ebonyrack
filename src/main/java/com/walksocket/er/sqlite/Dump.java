@@ -41,6 +41,7 @@ import com.walksocket.er.sqlite.entity.DbTableUniqueKeyColumn;
 import com.walksocket.er.sqlite.tmp.TmpCheck;
 import com.walksocket.er.sqlite.tmp.TmpColumn;
 import com.walksocket.er.sqlite.tmp.TmpKey;
+import com.walksocket.er.sqlite.tmp.TmpPartition;
 import com.walksocket.er.sqlite.tmp.TmpSequence;
 import com.walksocket.er.sqlite.tmp.TmpTable;
 import java.io.BufferedReader;
@@ -294,8 +295,9 @@ public class Dump {
         var tmpUniqueKeyList = new ArrayList<TmpKey>();
         var tmpKeyList = new ArrayList<TmpKey>();
         var tmpCheckList = new ArrayList<TmpCheck>();
+        var tmpPartition = new TmpPartition();
         var listener = new TableListener(tmpTable, tmpColumnList, tmpPrimaryKey, tmpUniqueKeyList,
-            tmpKeyList, tmpCheckList);
+            tmpKeyList, tmpCheckList, tmpPartition);
         ParseTreeWalker.DEFAULT.walk(listener, parser.root());
 
         if (createdTableNames.contains(tmpTable.tableName)) {
@@ -407,6 +409,30 @@ public class Dump {
           dbTableColumn.dictColumnId = dbDictColumn.dictColumnId;
           con.executeInsert(dbTableColumn);
           ordinalPosition++;
+        }
+
+        // partition
+        if (!Utils.isNullOrEmpty(tmpPartition.expression)) {
+          // DbDictPartition
+          var dbDictPartition = new DbDictPartition();
+          var sql = String.format(
+              "SELECT * FROM DbDictPartition WHERE partitionName = '%s'",
+              Utils.quote(tmpPartition.getExpressionHash()));
+          var record = con.getRecord(sql);
+          if (record != null) {
+            dbDictPartition.bind(record);
+          } else {
+            dbDictPartition.dictPartitionId = Utils.randomString();
+            dbDictPartition.partitionName = tmpPartition.getExpressionHash();
+            dbDictPartition.expression = tmpPartition.expression;
+            con.executeInsert(dbDictPartition);
+          }
+
+          // DbTablePartition
+          var dbTablePartition = new DbTablePartition();
+          dbTablePartition.tableId = dbTable.tableId;
+          dbTablePartition.dictPartitionId = dbDictPartition.dictPartitionId;
+          con.executeInsert(dbTablePartition);
         }
 
         // primary key

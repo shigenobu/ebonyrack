@@ -17,6 +17,7 @@ import com.walksocket.antlr4.MariaDBParser.LengthOneDimensionContext;
 import com.walksocket.antlr4.MariaDBParser.LengthTwoDimensionContext;
 import com.walksocket.antlr4.MariaDBParser.LengthTwoOptionalDimensionContext;
 import com.walksocket.antlr4.MariaDBParser.NullColumnConstraintContext;
+import com.walksocket.antlr4.MariaDBParser.PartitionDefinitionsContext;
 import com.walksocket.antlr4.MariaDBParser.PrimaryKeyTableConstraintContext;
 import com.walksocket.antlr4.MariaDBParser.SimpleIndexDeclarationContext;
 import com.walksocket.antlr4.MariaDBParser.TableOptionAutoIncrementContext;
@@ -33,6 +34,7 @@ import com.walksocket.er.parts.ColumnKeyOption;
 import com.walksocket.er.sqlite.tmp.TmpCheck;
 import com.walksocket.er.sqlite.tmp.TmpColumn;
 import com.walksocket.er.sqlite.tmp.TmpKey;
+import com.walksocket.er.sqlite.tmp.TmpPartition;
 import com.walksocket.er.sqlite.tmp.TmpTable;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -73,6 +75,11 @@ public class TableListener extends MariaDBParserBaseListener {
   private final List<TmpCheck> tmpCheckList;
 
   /**
+   * tmpPartition.
+   */
+  private final TmpPartition tmpPartition;
+
+  /**
    * Constructor.
    *
    * @param tmpTable         tmpTable
@@ -81,15 +88,18 @@ public class TableListener extends MariaDBParserBaseListener {
    * @param tmpUniqueKeyList tmpUniqueKeyList
    * @param tmpKeyList       tmpKeyList
    * @param tmpCheckList     tmpCheckList
+   * @param tmpPartition     tmpPartition
    */
   public TableListener(TmpTable tmpTable, List<TmpColumn> tmpColumnList, TmpKey tmpPrimaryKey,
-      List<TmpKey> tmpUniqueKeyList, List<TmpKey> tmpKeyList, List<TmpCheck> tmpCheckList) {
+      List<TmpKey> tmpUniqueKeyList, List<TmpKey> tmpKeyList, List<TmpCheck> tmpCheckList,
+      TmpPartition tmpPartition) {
     this.tmpTable = tmpTable;
     this.tmpColumnList = tmpColumnList;
     this.tmpPrimaryKey = tmpPrimaryKey;
     this.tmpUniqueKeyList = tmpUniqueKeyList;
     this.tmpKeyList = tmpKeyList;
     this.tmpCheckList = tmpCheckList;
+    this.tmpPartition = tmpPartition;
   }
 
   @Override
@@ -394,5 +404,13 @@ public class TableListener extends MariaDBParserBaseListener {
       }
       Log.trace(Json.toJsonString(tmpKey));
     }
+  }
+
+  @Override
+  public void enterPartitionDefinitions(PartitionDefinitionsContext ctx) {
+    tmpPartition.expression = ctx.children.stream()
+        .map(c -> c.getText())
+        .collect(Collectors.joining(" "));
+    Log.trace(Json.toJsonString(tmpPartition));
   }
 }
