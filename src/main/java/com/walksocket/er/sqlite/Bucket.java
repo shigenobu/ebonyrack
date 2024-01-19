@@ -22,6 +22,7 @@ import java.nio.channels.FileLock;
 import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 /**
@@ -292,8 +293,37 @@ public class Bucket {
   public String getSequenceDdl(CtxSequence ctxSequence) {
     var dbSequence = ctxSequence.dbSequence;
 
+    // note
+    var relatedNoteIdList = getBucketConnector().dbNoteConnectorSequenceList.stream()
+        .filter(c -> c.sequenceId.equals(dbSequence.sequenceId))
+        .map(c -> c.noteId)
+        .collect(Collectors.toList());
+    var relatedCtxNoteList = getBucketNote().ctxNoteList.stream()
+        .filter(n -> relatedNoteIdList.contains(n.dbNote.noteId))
+        .sorted(
+            Comparator.comparing(n -> String.format("%s-%s", n.dbNote.subject, n.dbNote.noteId)))
+        .collect(Collectors.toList());
+
     var builder = new StringBuilder();
     if (dbSequence != null && !dbSequence.sequenceName.startsWith(Const.NEW_SEQUENCE_PREFIX)) {
+      // note
+      for (var relatedCtxNote : relatedCtxNoteList) {
+        if (Utils.isNullOrEmpty(relatedCtxNote.dbNote.subject)
+            || relatedCtxNote.dbNote.subject.startsWith(Const.NEW_NOTE_PREFIX)) {
+          continue;
+        }
+
+        builder.append(String.format("-- %s :\n", relatedCtxNote.dbNote.subject));
+        if (!Utils.isNullOrEmpty(relatedCtxNote.dbNote.body)) {
+          var bodies = relatedCtxNote.dbNote.body.split("\n");
+          for (var body : bodies) {
+            if (!Utils.isNullOrEmpty(body)) {
+              builder.append(String.format("-- -- %s\n", body));
+            }
+          }
+        }
+      }
+
       // CREATE SEQUENCE `s_1` start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 1 cache 1000 nocycle ENGINE=InnoDB;
       builder.append(String.format("CREATE SEQUENCE `%s`\n", dbSequence.sequenceName));
       builder.append(String.format("    start with %s\n", dbSequence.startValue));
@@ -334,9 +364,38 @@ public class Bucket {
 
     var dbTableCheckList = ctxTable.dbTableCheckList;
 
+    // note
+    var relatedNoteIdList = getBucketConnector().dbNoteConnectorTableList.stream()
+        .filter(c -> c.tableId.equals(dbTable.tableId))
+        .map(c -> c.noteId)
+        .collect(Collectors.toList());
+    var relatedCtxNoteList = getBucketNote().ctxNoteList.stream()
+        .filter(n -> relatedNoteIdList.contains(n.dbNote.noteId))
+        .sorted(
+            Comparator.comparing(n -> String.format("%s-%s", n.dbNote.subject, n.dbNote.noteId)))
+        .collect(Collectors.toList());
+
     var builder = new StringBuilder();
     if (dbTable != null && !dbTable.tableName.startsWith(Const.NEW_TABLE_PREFIX)
         && dbTableColumnList.size() > 0) {
+      // note
+      for (var relatedCtxNote : relatedCtxNoteList) {
+        if (Utils.isNullOrEmpty(relatedCtxNote.dbNote.subject)
+            || relatedCtxNote.dbNote.subject.startsWith(Const.NEW_NOTE_PREFIX)) {
+          continue;
+        }
+
+        builder.append(String.format("-- %s :\n", relatedCtxNote.dbNote.subject));
+        if (!Utils.isNullOrEmpty(relatedCtxNote.dbNote.body)) {
+          var bodies = relatedCtxNote.dbNote.body.split("\n");
+          for (var body : bodies) {
+            if (!Utils.isNullOrEmpty(body)) {
+              builder.append(String.format("-- -- %s\n", body));
+            }
+          }
+        }
+      }
+
       // table - first
       builder.append(String.format("CREATE TABLE `%s`\n", dbTable.tableName));
       builder.append("(\n");

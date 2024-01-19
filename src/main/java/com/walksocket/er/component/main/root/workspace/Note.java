@@ -554,11 +554,14 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
       try {
         // remove
         var table = (Table) otherEndpoint;
-        var dbNoteConnectorTable = new DbNoteConnectorTable();
-        dbNoteConnectorTable.noteId = ctxNote.dbNote.noteId;
-        dbNoteConnectorTable.tableId = table.getCtxTable().dbTable.tableId;
-
-        Bucket.getInstance().getBucketConnector().removeNoteToTable(dbNoteConnectorTable);
+        var opt = Bucket.getInstance().getBucketConnector().dbNoteConnectorTableList.stream()
+            .filter(c -> c.noteId.equals(ctxNote.dbNote.noteId) && c.tableId.equals(
+                table.getCtxTable().dbTable.tableId))
+            .findFirst();
+        if (opt.isPresent()) {
+          var dbNoteConnectorTable = opt.get();
+          Bucket.getInstance().getBucketConnector().removeNoteToTable(dbNoteConnectorTable);
+        }
       } catch (Exception e) {
         Log.error(e);
         JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
@@ -569,11 +572,14 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
       try {
         // remove
         var sequence = (Sequence) otherEndpoint;
-        var dbNoteConnectorSequence = new DbNoteConnectorSequence();
-        dbNoteConnectorSequence.noteId = ctxNote.dbNote.noteId;
-        dbNoteConnectorSequence.sequenceId = sequence.getCtxSequence().dbSequence.sequenceId;
-
-        Bucket.getInstance().getBucketConnector().removeNoteToSequence(dbNoteConnectorSequence);
+        var opt = Bucket.getInstance().getBucketConnector().dbNoteConnectorSequenceList.stream()
+            .filter(c -> c.noteId.equals(ctxNote.dbNote.noteId) && c.sequenceId.equals(
+                sequence.getCtxSequence().dbSequence.sequenceId))
+            .findFirst();
+        if (opt.isPresent()) {
+          var dbNoteConnectorSequence = opt.get();
+          Bucket.getInstance().getBucketConnector().removeNoteToSequence(dbNoteConnectorSequence);
+        }
       } catch (Exception e) {
         Log.error(e);
         JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());

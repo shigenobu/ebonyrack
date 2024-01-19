@@ -10,7 +10,6 @@ import com.walksocket.er.custom.ErConnector;
 import com.walksocket.er.custom.ErConnectorEndpoint;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.context.CtxSequence;
-import com.walksocket.er.sqlite.entity.DbNoteConnectorSequence;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -219,11 +218,14 @@ public class Sequence extends ErConnectorEndpoint {
       try {
         // remove
         var note = (Note) otherEndpoint;
-        var dbNoteConnectorSequence = new DbNoteConnectorSequence();
-        dbNoteConnectorSequence.noteId = note.getCtxNote().dbNote.noteId;
-        dbNoteConnectorSequence.sequenceId = getCtxSequence().dbSequence.sequenceId;
-
-        Bucket.getInstance().getBucketConnector().removeNoteToSequence(dbNoteConnectorSequence);
+        var opt = Bucket.getInstance().getBucketConnector().dbNoteConnectorSequenceList.stream()
+            .filter(c -> c.noteId.equals(note.getCtxNote().dbNote.noteId) && c.sequenceId.equals(
+                getCtxSequence().dbSequence.sequenceId))
+            .findFirst();
+        if (opt.isPresent()) {
+          var dbNoteConnectorSequence = opt.get();
+          Bucket.getInstance().getBucketConnector().removeNoteToSequence(dbNoteConnectorSequence);
+        }
       } catch (Exception e) {
         Log.error(e);
         JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());

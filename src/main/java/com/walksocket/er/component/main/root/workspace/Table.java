@@ -17,7 +17,6 @@ import com.walksocket.er.definition.NotNull;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.context.CtxTable;
 import com.walksocket.er.sqlite.entity.DbDictColumn;
-import com.walksocket.er.sqlite.entity.DbNoteConnectorTable;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -601,11 +600,14 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
       try {
         // remove
         var note = (Note) otherEndpoint;
-        var dbNoteConnectorTable = new DbNoteConnectorTable();
-        dbNoteConnectorTable.noteId = note.getCtxNote().dbNote.noteId;
-        dbNoteConnectorTable.tableId = getCtxTable().dbTable.tableId;
-
-        Bucket.getInstance().getBucketConnector().removeNoteToTable(dbNoteConnectorTable);
+        var opt = Bucket.getInstance().getBucketConnector().dbNoteConnectorTableList.stream()
+            .filter(c -> c.noteId.equals(note.getCtxNote().dbNote.noteId) && c.tableId.equals(
+                getCtxTable().dbTable.tableId))
+            .findFirst();
+        if (opt.isPresent()) {
+          var dbNoteConnectorTable = opt.get();
+          Bucket.getInstance().getBucketConnector().removeNoteToTable(dbNoteConnectorTable);
+        }
       } catch (Exception e) {
         Log.error(e);
         JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());

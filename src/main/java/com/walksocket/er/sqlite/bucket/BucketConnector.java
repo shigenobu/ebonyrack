@@ -95,6 +95,9 @@ public class BucketConnector {
       con.executeInsert(dbNoteConnectorTable);
       con.commit();
 
+      // memory
+      dbNoteConnectorTableList.add(dbNoteConnectorTable);
+
     } catch (Exception e) {
       con.rollback();
       Log.error(e);
@@ -117,6 +120,9 @@ public class BucketConnector {
       con.executeInsert(dbNoteConnectorSequence);
       con.commit();
 
+      // memory
+      dbNoteConnectorSequenceList.add(dbNoteConnectorSequence);
+
     } catch (Exception e) {
       con.rollback();
       Log.error(e);
@@ -137,6 +143,9 @@ public class BucketConnector {
       con.begin();
       con.executeDelete(dbNoteConnectorTable);
       con.commit();
+
+      // memory
+      dbNoteConnectorTableList.remove(dbNoteConnectorTable);
 
     } catch (Exception e) {
       con.rollback();
@@ -159,6 +168,9 @@ public class BucketConnector {
       con.begin();
       con.executeDelete(dbNoteConnectorSequence);
       con.commit();
+
+      // memory
+      dbNoteConnectorSequenceList.remove(dbNoteConnectorSequence);
 
     } catch (Exception e) {
       con.rollback();
