@@ -3,6 +3,7 @@ package com.walksocket.er.parse;
 import com.walksocket.antlr4.MariaDBParser.AutoIncrementColumnConstraintContext;
 import com.walksocket.antlr4.MariaDBParser.CharSetContext;
 import com.walksocket.antlr4.MariaDBParser.CharsetNameContext;
+import com.walksocket.antlr4.MariaDBParser.CheckTableConstraintContext;
 import com.walksocket.antlr4.MariaDBParser.CollationNameContext;
 import com.walksocket.antlr4.MariaDBParser.CollectionOptionsContext;
 import com.walksocket.antlr4.MariaDBParser.ColumnCreateTableContext;
@@ -29,6 +30,7 @@ import com.walksocket.er.Json;
 import com.walksocket.er.Log;
 import com.walksocket.er.Utils;
 import com.walksocket.er.parts.ColumnKeyOption;
+import com.walksocket.er.sqlite.tmp.TmpCheck;
 import com.walksocket.er.sqlite.tmp.TmpColumn;
 import com.walksocket.er.sqlite.tmp.TmpKey;
 import com.walksocket.er.sqlite.tmp.TmpTable;
@@ -66,6 +68,11 @@ public class TableListener extends MariaDBParserBaseListener {
   private final List<TmpKey> tmpKeyList;
 
   /**
+   * tmpCheckList.
+   */
+  private final List<TmpCheck> tmpCheckList;
+
+  /**
    * Constructor.
    *
    * @param tmpTable         tmpTable
@@ -73,14 +80,16 @@ public class TableListener extends MariaDBParserBaseListener {
    * @param tmpPrimaryKey    tmpPrimaryKey
    * @param tmpUniqueKeyList tmpUniqueKeyList
    * @param tmpKeyList       tmpKeyList
+   * @param tmpCheckList     tmpCheckList
    */
   public TableListener(TmpTable tmpTable, List<TmpColumn> tmpColumnList, TmpKey tmpPrimaryKey,
-      List<TmpKey> tmpUniqueKeyList, List<TmpKey> tmpKeyList) {
+      List<TmpKey> tmpUniqueKeyList, List<TmpKey> tmpKeyList, List<TmpCheck> tmpCheckList) {
     this.tmpTable = tmpTable;
     this.tmpColumnList = tmpColumnList;
     this.tmpPrimaryKey = tmpPrimaryKey;
     this.tmpUniqueKeyList = tmpUniqueKeyList;
     this.tmpKeyList = tmpKeyList;
+    this.tmpCheckList = tmpCheckList;
   }
 
   @Override
@@ -104,6 +113,11 @@ public class TableListener extends MariaDBParserBaseListener {
         if (constraintDeclarationContext.tableConstraint() instanceof UniqueKeyTableConstraintContext uniqueKeyTableConstraintContext) {
           parseUniqueKey(uniqueKeyTableConstraintContext);
         }
+
+        // check
+        if (constraintDeclarationContext.tableConstraint() instanceof CheckTableConstraintContext checkTableConstraintContext) {
+          parseCheck(checkTableConstraintContext);
+        }
       }
     }
   }
@@ -114,7 +128,7 @@ public class TableListener extends MariaDBParserBaseListener {
    * @param ctx ctx
    */
   private void parseTable(ColumnCreateTableContext ctx) {
-    tmpTable.tableName = Utils.removeBackslash(ctx.tableName().getText());
+    tmpTable.tableName = Utils.removeBackQuote(ctx.tableName().getText());
     for (var opt : ctx.tableOption()) {
       if (opt instanceof TableOptionCommentContext tableOptionCommentContext) {
         tmpTable.tableComment = Utils.removeSingleQuote(
@@ -142,7 +156,7 @@ public class TableListener extends MariaDBParserBaseListener {
    * @param columnDeclarationContext columnDeclarationContext
    */
   private void parseColumn(ColumnDeclarationContext columnDeclarationContext) {
-    var columnName = Utils.removeBackslash(columnDeclarationContext.uid().getText());
+    var columnName = Utils.removeBackQuote(columnDeclarationContext.uid().getText());
     if (Utils.isNullOrEmpty(columnName)) {
       return;
     }
@@ -246,7 +260,7 @@ public class TableListener extends MariaDBParserBaseListener {
       var columnKeyOption = new ColumnKeyOption();
       tmpPrimaryKey.columnKeyOptionList.add(columnKeyOption);
 
-      columnKeyOption.columnName = Utils.removeBackslash(indexColumnName.uid().getText());
+      columnKeyOption.columnName = Utils.removeBackQuote(indexColumnName.uid().getText());
       columnKeyOption.seqInIndex = String.valueOf(seqInIndex);
 
       if (indexColumnName.decimalLiteral() != null) {
@@ -273,7 +287,7 @@ public class TableListener extends MariaDBParserBaseListener {
     var tmpUniqueKey = new TmpKey();
     tmpUniqueKeyList.add(tmpUniqueKey);
 
-    tmpUniqueKey.constraintName = Utils.removeBackslash(
+    tmpUniqueKey.constraintName = Utils.removeBackQuote(
         uniqueKeyTableConstraintContext.index.getText());
     tmpUniqueKey.keyName = tmpUniqueKey.constraintName;
 
@@ -299,7 +313,7 @@ public class TableListener extends MariaDBParserBaseListener {
       var columnKeyOption = new ColumnKeyOption();
       tmpUniqueKey.columnKeyOptionList.add(columnKeyOption);
 
-      columnKeyOption.columnName = Utils.removeBackslash(indexColumnName.uid().getText());
+      columnKeyOption.columnName = Utils.removeBackQuote(indexColumnName.uid().getText());
       columnKeyOption.seqInIndex = String.valueOf(seqInIndex);
 
       if (indexColumnName.decimalLiteral() != null) {
@@ -317,6 +331,20 @@ public class TableListener extends MariaDBParserBaseListener {
     Log.trace(Json.toJsonString(tmpUniqueKey));
   }
 
+  /**
+   * parse check.
+   *
+   * @param checkTableConstraintContext checkTableConstraintContext
+   */
+  private void parseCheck(CheckTableConstraintContext checkTableConstraintContext) {
+    var tmpCheck = new TmpCheck();
+    tmpCheckList.add(tmpCheck);
+
+    tmpCheck.constraintName = Utils.removeBackQuote(checkTableConstraintContext.uid().getText());
+    tmpCheck.expression = checkTableConstraintContext.expression().getText();
+    Log.trace(Json.toJsonString(tmpCheck));
+  }
+
   @Override
   public void enterIndexDeclaration(IndexDeclarationContext ctx) {
     var definition = ctx.indexColumnDefinition();
@@ -324,7 +352,7 @@ public class TableListener extends MariaDBParserBaseListener {
       var tmpKey = new TmpKey();
       tmpKeyList.add(tmpKey);
 
-      tmpKey.constraintName = Utils.removeBackslash(simpleIndexDeclarationContext.uid().getText());
+      tmpKey.constraintName = Utils.removeBackQuote(simpleIndexDeclarationContext.uid().getText());
       tmpKey.keyName = tmpKey.constraintName;
 
       for (var opt : simpleIndexDeclarationContext.indexOption()) {
@@ -349,7 +377,7 @@ public class TableListener extends MariaDBParserBaseListener {
         var columnKeyOption = new ColumnKeyOption();
         tmpKey.columnKeyOptionList.add(columnKeyOption);
 
-        columnKeyOption.columnName = Utils.removeBackslash(indexColumnName.uid().getText());
+        columnKeyOption.columnName = Utils.removeBackQuote(indexColumnName.uid().getText());
         columnKeyOption.seqInIndex = String.valueOf(seqInIndex);
 
         if (indexColumnName.decimalLiteral() != null) {

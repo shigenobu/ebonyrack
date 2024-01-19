@@ -29,7 +29,7 @@ public class SequenceListener extends MariaDBParserBaseListener {
 
   @Override
   public void enterCreateSequence(CreateSequenceContext ctx) {
-    tmpSequence.sequenceName = Utils.removeBackslash(ctx.fullId().getText());
+    tmpSequence.sequenceName = Utils.removeBackQuote(ctx.fullId().getText());
 
     for (var s : ctx.sequenceSpec()) {
       for (int i = 0; i < s.getChildCount(); i++) {

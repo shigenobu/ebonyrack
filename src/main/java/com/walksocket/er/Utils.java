@@ -145,12 +145,12 @@ public class Utils {
   }
 
   /**
-   * remove backslash.
+   * remove back quote.
    *
    * @param src string
-   * @return backslash removed string
+   * @return back quote removed string
    */
-  public static String removeBackslash(String src) {
+  public static String removeBackQuote(String src) {
     if (src == null) {
       return "";
     }

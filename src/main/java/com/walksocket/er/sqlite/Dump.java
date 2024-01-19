@@ -38,6 +38,7 @@ import com.walksocket.er.sqlite.entity.DbTablePrimaryKey;
 import com.walksocket.er.sqlite.entity.DbTablePrimaryKeyColumn;
 import com.walksocket.er.sqlite.entity.DbTableUniqueKey;
 import com.walksocket.er.sqlite.entity.DbTableUniqueKeyColumn;
+import com.walksocket.er.sqlite.tmp.TmpCheck;
 import com.walksocket.er.sqlite.tmp.TmpColumn;
 import com.walksocket.er.sqlite.tmp.TmpKey;
 import com.walksocket.er.sqlite.tmp.TmpSequence;
@@ -292,8 +293,9 @@ public class Dump {
         var tmpPrimaryKey = new TmpKey();
         var tmpUniqueKeyList = new ArrayList<TmpKey>();
         var tmpKeyList = new ArrayList<TmpKey>();
+        var tmpCheckList = new ArrayList<TmpCheck>();
         var listener = new TableListener(tmpTable, tmpColumnList, tmpPrimaryKey, tmpUniqueKeyList,
-            tmpKeyList);
+            tmpKeyList, tmpCheckList);
         ParseTreeWalker.DEFAULT.walk(listener, parser.root());
 
         if (createdTableNames.contains(tmpTable.tableName)) {
@@ -535,6 +537,20 @@ public class Dump {
             seqInIndex++;
           }
           seqKey++;
+        }
+
+        // check
+        var seqCheck = 1;
+        for (var tmpCheck : tmpCheckList) {
+          // DbTableCheck
+          var dbTableCheck = new DbTableCheck();
+          dbTableCheck.tableId = dbTable.tableId;
+          dbTableCheck.seq = seqCheck;
+          dbTableCheck.constraintName = tmpCheck.constraintName;
+          dbTableCheck.expression = tmpCheck.expression;
+          con.executeInsert(dbTableCheck);
+
+          seqCheck++;
         }
       }
 
