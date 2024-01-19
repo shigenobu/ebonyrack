@@ -38,6 +38,8 @@ import com.walksocket.er.sqlite.tmp.TmpPartition;
 import com.walksocket.er.sqlite.tmp.TmpTable;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 
 /**
  * TableListener.
@@ -408,9 +410,30 @@ public class TableListener extends MariaDBParserBaseListener {
 
   @Override
   public void enterPartitionDefinitions(PartitionDefinitionsContext ctx) {
-    tmpPartition.expression = ctx.children.stream()
-        .map(c -> c.getText())
-        .collect(Collectors.joining(" "));
+    var builder = new StringBuilder();
+    for (int i = 0; i < ctx.getChildCount(); i++) {
+      var c = ctx.getChild(i);
+      parseRecursive(c, builder);
+    }
+    tmpPartition.expression = builder.toString();
     Log.trace(Json.toJsonString(tmpPartition));
+  }
+
+  /**
+   * parse recursive.
+   *
+   * @param parseTree parseTree
+   * @param builder   builder
+   */
+  private static void parseRecursive(ParseTree parseTree, StringBuilder builder) {
+    if (!(parseTree instanceof TerminalNodeImpl)) {
+      for (int i = 0; i < parseTree.getChildCount(); i++) {
+        var c = parseTree.getChild(i);
+        parseRecursive(c, builder);
+      }
+      return;
+    }
+    builder.append(" ");
+    builder.append(parseTree.getText());
   }
 }
