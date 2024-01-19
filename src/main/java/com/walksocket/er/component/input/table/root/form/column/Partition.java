@@ -93,6 +93,7 @@ public class Partition extends JPanel {
 
     var panel3 = new JPanel();
     add(panel3);
+    textAreaExpression.setEditable(false);
     panel3.add(new JScrollPane(textAreaExpression));
 
     // set
