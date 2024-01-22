@@ -3,6 +3,7 @@ package com.walksocket.er;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Env {
 
@@ -67,16 +68,20 @@ public class Env {
     if (!f.exists()) {
       f.mkdir();
 
-      var sampleFileName = "Sample.java.vm";
-      var sampleFile = new File(f, sampleFileName);
-      if (!sampleFile.exists()) {
-        try {
-          var stream = App.class.getClassLoader()
-              .getResourceAsStream(String.format("template/%s", sampleFileName));
-          var data = com.walksocket.er.File.readString(stream);
-          com.walksocket.er.File.writeString(new FileOutputStream(sampleFile), data);
-        } catch (IOException e) {
-          Log.error(e);
+      var sampleFileNameList = new ArrayList<String>();
+      sampleFileNameList.add("Sample.txt.vm");
+      sampleFileNameList.add("Sample.java.vm");
+      for (var sampleFileName : sampleFileNameList) {
+        var sampleFile = new File(f, sampleFileName);
+        if (!sampleFile.exists()) {
+          try {
+            var stream = App.class.getClassLoader()
+                .getResourceAsStream(String.format("template/%s", sampleFileName));
+            var data = com.walksocket.er.File.readString(stream);
+            com.walksocket.er.File.writeString(new FileOutputStream(sampleFile), data);
+          } catch (IOException e) {
+            Log.error(e);
+          }
         }
       }
     }

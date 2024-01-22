@@ -2,6 +2,7 @@ package com.walksocket.er.parts;
 
 import com.walksocket.er.Log;
 import com.walksocket.er.Utils;
+import com.walksocket.er.Value;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -9,7 +10,7 @@ import java.util.regex.Pattern;
 /**
  * ColumnKeyOption.
  */
-public class ColumnKeyOption {
+public class ColumnKeyOption implements Value {
 
   /**
    * create column key option list.

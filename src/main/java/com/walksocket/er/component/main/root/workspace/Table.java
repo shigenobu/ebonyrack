@@ -721,7 +721,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
       // class
       var menuItemClass = new JMenuItem("Show table class");
       menuItemClass.addActionListener(actionEvent -> {
-        var showTableClass = new ShowTableClass();
+        var showTableClass = new ShowTableClass(ctxTable);
         showTableClass.setModal(true);
         showTableClass.setVisible(true);
       });

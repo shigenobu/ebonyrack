@@ -1,0 +1,35 @@
+#macro(toCamelCase $value)
+    #set($newValue = "")
+    #foreach($str in $value.split("_"))
+        #set($str = "${str.substring(0, 1).toUpperCase()}${str.substring(1).toLowerCase()}")
+        #set($newValue = "${newValue}${str}")
+    #end
+${newValue}#end
+#macro(lcfirst $value)
+    #set($newValue = "")
+    #foreach($str in $value.split("_"))
+        #set($str = "${str.substring(0, 1).toUpperCase()}${str.substring(1).toLowerCase()}")
+        #set($newValue = "${newValue}${str}")
+    #end
+    #set($newValue = "${newValue.substring(0, 1).toLowerCase()}${newValue.substring(1)}")
+${newValue}#end
+#macro(getType $value)
+    #set($type = "Object")
+    #if($value.contains("long"))
+        #set($type = "long")
+    #elseif($value.contains("int"))
+        #set($type = "int")
+    #elseif($value.contains("char") || $value.contains("text"))
+        #set($type = "String")
+    #elseif($value.contains("binary") || $value.contains("blob"))
+        #set($type = "byte[]")
+    #end
+${type}#end
+package XXX;
+
+public class #toCamelCase($tmpTable.tableName)
+{
+    #foreach($tmpColumn in $tmpColumnList)
+    public #getType($tmpColumn.columnType) #lcfirst($tmpColumn.columnName);
+    #end
+}

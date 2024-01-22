@@ -1,6 +1,7 @@
 package com.walksocket.er.parts;
 
 import com.walksocket.er.Log;
+import com.walksocket.er.Value;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -8,7 +9,7 @@ import java.util.regex.Pattern;
 /**
  * ColumnForeignKeyOption.
  */
-public class ColumnForeignKeyOption {
+public class ColumnForeignKeyOption implements Value {
 
   /**
    * create column foreign key option list.

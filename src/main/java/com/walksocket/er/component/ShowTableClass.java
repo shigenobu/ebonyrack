@@ -5,6 +5,7 @@ import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Size.Screen;
 import com.walksocket.er.component.show.tableclass.Root;
 import com.walksocket.er.custom.ErDialog;
+import com.walksocket.er.sqlite.context.CtxTable;
 import java.awt.Dimension;
 import java.awt.Point;
 import javax.swing.WindowConstants;
@@ -16,8 +17,10 @@ public class ShowTableClass extends ErDialog {
 
   /**
    * Constructor.
+   *
+   * @param ctxTable ctxTable
    */
-  public ShowTableClass() {
+  public ShowTableClass(CtxTable ctxTable) {
     super();
 
     // pos
@@ -34,7 +37,7 @@ public class ShowTableClass extends ErDialog {
     // load
     var container = getContentPane();
     container.removeAll();
-    container.add(new Root());
+    container.add(new Root(ctxTable));
     container.revalidate();
     container.repaint();
   }
