@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
 
 /**
  * ErTemplate.
@@ -56,6 +57,18 @@ public class ErTemplate {
    * @param path     template path
    */
   public ErTemplate(String basePath, String path) {
+    this(basePath, path, ErTemplateHandler.class);
+  }
+
+  /**
+   * constructor for file loader with handler class.
+   *
+   * @param basePath     base path of template
+   * @param path         template path
+   * @param handlerClass handlerClass
+   */
+  public ErTemplate(String basePath, String path,
+      Class<? extends ReferenceInsertionEventHandler> handlerClass) {
     this.path = path;
 
     Properties prop = new Properties();
@@ -68,7 +81,7 @@ public class ErTemplate {
     prop.setProperty("runtime.log.logsystem.class",
         "org.apache.velocity.runtime.log.NullLogSystem");
     prop.setProperty("event_handler.reference_insertion.class",
-        ErTemplateHandler.class.getName());
+        handlerClass.getName());
     engine.init(prop);
   }
 

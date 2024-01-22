@@ -8,6 +8,7 @@ import com.walksocket.er.custom.ErUnderlineBorder;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.context.CtxTable;
 import com.walksocket.er.template.ErTemplate;
+import com.walksocket.er.template.ErTemplateNoEscapeHandler;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -36,9 +37,9 @@ public class Form extends JPanel {
   private final JComboBox comboBoxTemplate = new JComboBox();
 
   /**
-   * button open.
+   * button edit.
    */
-  private final JButton buttonOpen = new JButton("Open");
+  private final JButton buttonEdit = new JButton("Edit");
 
   /**
    * button generate.
@@ -75,7 +76,7 @@ public class Form extends JPanel {
     });
     panel1.add(comboBoxTemplate);
 
-    buttonOpen.addActionListener(actionEvent -> {
+    buttonEdit.addActionListener(actionEvent -> {
       var fileName = Utils.getString(comboBoxTemplate);
       if (Utils.isNullOrEmpty(fileName)) {
         return;
@@ -92,7 +93,7 @@ public class Form extends JPanel {
         }
       }
     });
-    panel1.add(buttonOpen);
+    panel1.add(buttonEdit);
 
     // panel - button
     var panel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -108,7 +109,8 @@ public class Form extends JPanel {
       var f = new File(Env.getTemplateDir(), fileName);
       Log.trace(f.getAbsolutePath());
 
-      var template = new ErTemplate(Env.getTemplateDir(), f.getName());
+      var template = new ErTemplate(Env.getTemplateDir(), f.getName(),
+          ErTemplateNoEscapeHandler.class);
       Bucket.getInstance().assignTableVars(ctxTable, template);
       textAreaClass.setText(template.render());
     });
