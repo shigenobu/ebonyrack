@@ -232,6 +232,9 @@ public class Dump {
         var listener = new SequenceListener(tmpSequence);
         ParseTreeWalker.DEFAULT.walk(listener, parser.root());
 
+        if (Utils.isNullOrEmpty(tmpSequence.sequenceName)) {
+          continue;
+        }
         if (createdSequenceNames.contains(tmpSequence.sequenceName)) {
           continue;
         }
@@ -240,9 +243,6 @@ public class Dump {
         var dbSequence = new DbSequence();
         dbSequence.sequenceId = Utils.randomString();
         dbSequence.sequenceName = tmpSequence.sequenceName;
-        if (Utils.isNullOrEmpty(dbSequence.sequenceName)) {
-          continue;
-        }
         if (!Utils.isNullOrEmpty(tmpSequence.startValue)) {
           dbSequence.startValue = tmpSequence.startValue;
         }
@@ -303,6 +303,9 @@ public class Dump {
             tmpKeyList, tmpCheckList, tmpPartition);
         ParseTreeWalker.DEFAULT.walk(listener, parser.root());
 
+        if (Utils.isNullOrEmpty(tmpTable.tableName)) {
+          continue;
+        }
         if (createdTableNames.contains(tmpTable.tableName)) {
           continue;
         }
@@ -311,9 +314,6 @@ public class Dump {
         var dbTable = new DbTable();
         dbTable.tableId = Utils.randomString();
         dbTable.tableName = tmpTable.tableName;
-        if (Utils.isNullOrEmpty(tmpTable.tableName)) {
-          continue;
-        }
         if (!Utils.isNullOrEmpty(tmpTable.tableComment)) {
           dbTable.tableComment = tmpTable.tableComment;
         }
