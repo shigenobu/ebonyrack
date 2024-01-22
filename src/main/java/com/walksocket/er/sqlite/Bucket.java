@@ -15,6 +15,11 @@ import com.walksocket.er.sqlite.context.CtxSequence;
 import com.walksocket.er.sqlite.context.CtxTable;
 import com.walksocket.er.sqlite.entity.DbDefault;
 import com.walksocket.er.sqlite.entity.DbDictColumnType;
+import com.walksocket.er.sqlite.entity.DbTable;
+import com.walksocket.er.sqlite.entity.DbTableForeignKey;
+import com.walksocket.er.sqlite.tmp.TmpForeignKey;
+import com.walksocket.er.sqlite.tmp.TmpKey;
+import com.walksocket.er.template.ErTemplate;
 import java.io.File;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -23,6 +28,7 @@ import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -631,5 +637,129 @@ public class Bucket {
       }
     }
     return builder.toString();
+  }
+
+  /**
+   * assign table vars.
+   *
+   * @param ctxTable ctxTable
+   * @param template template
+   */
+  public void assignTableVars(CtxTable ctxTable, ErTemplate template) {
+    var dbTableList = Bucket.getInstance().getBucketTable().ctxTableList.stream()
+        .map(c -> c.dbTable)
+        .collect(Collectors.toList());
+
+    var dbDictColumnTypeList = Bucket.getInstance().getBucketDict().dbDictColumnTypeList;
+    var dbDictColumnList = Bucket.getInstance().getBucketDict().dbDictColumnList;
+    var dbDictGroupList = Bucket.getInstance().getBucketDict().dbDictGroupList;
+    var dbDictGroupColumnList = Bucket.getInstance().getBucketDict().dbDictGroupColumnList;
+
+    var dbTableForeignKeyList = new ArrayList<DbTableForeignKey>();
+    for (var tmpCtxTable : Bucket.getInstance().getBucketTable().ctxTableList) {
+      for (var ctxInnerForeignKey : tmpCtxTable.ctxInnerForeignKeyList) {
+        dbTableForeignKeyList.add(ctxInnerForeignKey.dbTableForeignKey);
+      }
+    }
+
+    // table
+    template.assign("tmpTable", Tmp.createTmpTable(ctxTable.dbTable));
+
+    // column
+    var tmpColumnList = Tmp.createTmpColumnList(
+        ctxTable.dbTableColumnList,
+        dbDictColumnTypeList,
+        dbDictColumnList
+    );
+    if (ctxTable.dbTableGroup != null) {
+      // group column
+      tmpColumnList.addAll(Tmp.createTmpGroupColumnList(
+          ctxTable.dbTableGroup,
+          dbDictColumnTypeList,
+          dbDictColumnList,
+          dbDictGroupList,
+          dbDictGroupColumnList
+      ));
+    }
+    template.assign("tmpColumnList", tmpColumnList);
+
+    // primary
+    TmpKey tmpPrimaryKey = null;
+    if (ctxTable.ctxInnerPrimaryKey.dbTablePrimaryKey != null) {
+      tmpPrimaryKey = Tmp.createTmpKey(
+          ctxTable.ctxInnerPrimaryKey.dbTablePrimaryKey,
+          ctxTable.ctxInnerPrimaryKey.dbTablePrimaryKeyColumnList,
+          dbDictColumnList);
+    }
+    template.assign("tmpPrimaryKey", tmpPrimaryKey);
+
+    // unique
+    List<TmpKey> tmpUniqueKeyList = new ArrayList<>();
+    for (var t : ctxTable.ctxInnerUniqueKeyList) {
+      tmpUniqueKeyList.add(Tmp.createTmpKey(
+          t.dbTableUniqueKey,
+          t.dbTableUniqueKeyColumnList,
+          dbDictColumnList));
+    }
+    template.assign("tmpUniqueKeyList", tmpUniqueKeyList);
+
+    // key
+    List<TmpKey> tmpKeyList = new ArrayList<>();
+    for (var t : ctxTable.ctxInnerKeyList) {
+      tmpKeyList.add(Tmp.createTmpKey(
+          t.dbTableKey,
+          t.dbTableKeyColumnList,
+          dbDictColumnList));
+    }
+    template.assign("tmpKeyList", tmpKeyList);
+
+    // foreign key
+    List<TmpForeignKey> tmpForeignKeyList = new ArrayList<>();
+    for (var t : ctxTable.ctxInnerForeignKeyList) {
+      tmpForeignKeyList.add(Tmp.createTmpForeignKey(
+          t.dbTableForeignKey,
+          t.dbTableForeignKeyColumnList,
+          dbTableList,
+          dbDictColumnList));
+    }
+    template.assign("tmpForeignKeyList", tmpForeignKeyList);
+
+    // referenced tables
+    var referencedDbTableList = new ArrayList<DbTable>();
+    var referenceDbTableForeignKeyList = dbTableForeignKeyList.stream()
+        .filter(d -> d.referenceTableId.equals(ctxTable.dbTable.tableId))
+        .collect(Collectors.toList());
+    for (var referenceDbTableForeignKey : referenceDbTableForeignKeyList) {
+      var referencedDbTable = dbTableList.stream()
+          .filter(d -> d.tableId.equals(referenceDbTableForeignKey.tableId))
+          .findFirst()
+          .get();
+      referencedDbTableList.add(referencedDbTable);
+    }
+    template.assign("referencedDbTableList", referencedDbTableList);
+
+    // ddl
+    var builder = new StringBuilder();
+    builder.append(Bucket.getInstance().getTableDdl(ctxTable));
+    var fkDdl = Bucket.getInstance().getForeignKeyDdl(ctxTable);
+    if (!Utils.isNullOrEmpty(fkDdl)) {
+      builder.append("\n");
+      builder.append(fkDdl);
+    }
+    template.assign("ddl", builder.toString());
+  }
+
+  /**
+   * assign sequence vars.
+   *
+   * @param ctxSequence ctxSequence
+   * @param template    template
+   */
+  public void assignSequenceVars(CtxSequence ctxSequence, ErTemplate template) {
+    // sequence
+    template.assign("tmpSequence", Tmp.createTmpSequence(ctxSequence.dbSequence));
+
+    // ddl
+    template.assign("ddl", Bucket.getInstance().getSequenceDdl(ctxSequence));
   }
 }

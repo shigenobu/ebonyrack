@@ -1,11 +1,12 @@
 package com.walksocket.er.sqlite.tmp;
 
+import com.walksocket.er.Value;
 import com.walksocket.er.sqlite.Tmp;
 
 /**
  * TmpSequence.
  */
-public class TmpSequence implements Tmp {
+public class TmpSequence implements Tmp, Value {
 
   /**
    * sequenceName

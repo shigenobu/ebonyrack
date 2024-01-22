@@ -7,31 +7,31 @@
       <tbody>
       <tr>
         <td class="headline">Sequence name</td>
-        <td>${ctxSequence.dbSequence.sequenceName}</td>
+        <td>${tmpSequence.sequenceName}</td>
       </tr>
       <tr>
         <td class="headline">Start value</td>
-        <td>${ctxSequence.dbSequence.startValue}</td>
+        <td>${tmpSequence.startValue}</td>
       </tr>
       <tr>
         <td class="headline">Minimum value</td>
-        <td>${ctxSequence.dbSequence.minimumValue}</td>
+        <td>${tmpSequence.minimumValue}</td>
       </tr>
       <tr>
         <td class="headline">Maximum value</td>
-        <td>${ctxSequence.dbSequence.maximumValue}</td>
+        <td>${tmpSequence.maximumValue}</td>
       </tr>
       <tr>
         <td class="headline">Increment value</td>
-        <td>${ctxSequence.dbSequence.incrementValue}</td>
+        <td>${tmpSequence.incrementValue}</td>
       </tr>
       <tr>
         <td class="headline">Cache size</td>
-        <td>${ctxSequence.dbSequence.cacheSize}</td>
+        <td>${tmpSequence.cacheSize}</td>
       </tr>
       <tr>
         <td class="headline">Cycle</td>
-        <td>${ctxSequence.dbSequence.cycle}</td>
+        <td>${tmpSequence.cycle}</td>
       </tr>
       </tbody>
     </table>

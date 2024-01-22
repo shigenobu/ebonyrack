@@ -1,6 +1,8 @@
 package com.walksocket.er;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class Env {
 
@@ -53,5 +55,31 @@ public class Env {
    */
   public static String getHome() {
     return home;
+  }
+
+  /**
+   * get template dir.
+   *
+   * @return template dir
+   */
+  public static String getTemplateDir() {
+    var f = new File(getHome(), "template");
+    if (!f.exists()) {
+      f.mkdir();
+
+      var sampleFileName = "Sample.java.vm";
+      var sampleFile = new File(f, sampleFileName);
+      if (!sampleFile.exists()) {
+        try {
+          var stream = App.class.getClassLoader()
+              .getResourceAsStream(String.format("template/%s", sampleFileName));
+          var data = com.walksocket.er.File.readString(stream);
+          com.walksocket.er.File.writeString(new FileOutputStream(sampleFile), data);
+        } catch (IOException e) {
+          Log.error(e);
+        }
+      }
+    }
+    return f.getAbsolutePath();
   }
 }

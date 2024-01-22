@@ -7,21 +7,21 @@
       <tbody>
       <tr>
         <td class="headline">Table name</td>
-        <td>${ctxTable.dbTable.tableName}</td>
+        <td>${tmpTable.tableName}</td>
         <td class="headline">Table comment</td>
-        <td>${ctxTable.dbTable.tableComment}</td>
+        <td>${tmpTable.tableComment}</td>
         <td class="headline">Engine</td>
-        <td>${ctxTable.dbTable.engine}</td>
+        <td>${tmpTable.engine}</td>
         <td class="headline">Charset</td>
-        <td>${ctxTable.dbTable.charsetValue}</td>
+        <td>${tmpTable.charsetValue}</td>
         <td class="headline">Collate</td>
-        <td>${ctxTable.dbTable.collateValue}</td>
+        <td>${tmpTable.collateValue}</td>
       </tr>
       <tr>
         <td class="headline">Auto increment</td>
-        <td>${ctxTable.dbTable.autoIncrementValue}</td>
+        <td>${tmpTable.autoIncrementValue}</td>
         <td class="headline">Option</td>
-        <td colspan="7">${ctxTable.dbTable.option}</td>
+        <td colspan="7">${tmpTable.option}</td>
       </tr>
       </tbody>
     </table>
@@ -71,25 +71,6 @@
                     #end
                 #end
             </td>
-          </tr>
-          #end
-          #foreach($tmpColumn in $tmpGroupColumnList)
-          <tr class="key">
-              #if($tmpPrimaryKey && $tmpPrimaryKey.getColumnNames().contains($tmpColumn.columnName))
-                <td>PK</td>
-              #else
-                <td></td>
-              #end
-            <td>${tmpColumn.columnName}</td>
-            <td>${tmpColumn.columnComment}</td>
-            <td>${tmpColumn.columnType}</td>
-            <td>${tmpColumn.notNullValue}</td>
-            <td>${tmpColumn.charsetValue}</td>
-            <td>${tmpColumn.collateValue}</td>
-            <td>${tmpColumn.defaultValue}</td>
-            <td>${tmpColumn.onUpdate}</td>
-            <td>${tmpColumn.autoIncrementDefinition}</td>
-            <td>${tmpColumn.option}</td>
           </tr>
           #end
       </tbody>

@@ -18,12 +18,6 @@ import com.walksocket.er.custom.ErDialogWaiting;
 import com.walksocket.er.custom.ErLinkLabel;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.Connection;
-import com.walksocket.er.sqlite.Tmp;
-import com.walksocket.er.sqlite.entity.DbTable;
-import com.walksocket.er.sqlite.entity.DbTableForeignKey;
-import com.walksocket.er.sqlite.tmp.TmpColumn;
-import com.walksocket.er.sqlite.tmp.TmpForeignKey;
-import com.walksocket.er.sqlite.tmp.TmpKey;
 import com.walksocket.er.template.ErTemplate;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -483,18 +477,6 @@ public class Main extends JFrame {
         .map(c -> c.dbNote)
         .collect(Collectors.toList());
 
-    var dbDictColumnTypeList = Bucket.getInstance().getBucketDict().dbDictColumnTypeList;
-    var dbDictColumnList = Bucket.getInstance().getBucketDict().dbDictColumnList;
-    var dbDictGroupList = Bucket.getInstance().getBucketDict().dbDictGroupList;
-    var dbDictGroupColumnList = Bucket.getInstance().getBucketDict().dbDictGroupColumnList;
-
-    var dbTableForeignKeyList = new ArrayList<DbTableForeignKey>();
-    for (var ctxTable : Bucket.getInstance().getBucketTable().ctxTableList) {
-      for (var ctxInnerForeignKey : ctxTable.ctxInnerForeignKeyList) {
-        dbTableForeignKeyList.add(ctxInnerForeignKey.dbTableForeignKey);
-      }
-    }
-
     var connectorsNoteToTableList = workspace.getOrderedPositionedConnectorsNoteToTableList();
     var connectorsNoteToSequenceList = workspace.getOrderedPositionedConnectorsNoteToSequenceList();
 
@@ -505,94 +487,19 @@ public class Main extends JFrame {
       var template = getTemplate("html/parts/table.vm");
       template.assign("table", table);
 
-      // table, note
+      // table list, note list
       template.assign("dbTableList", dbTableList);
       template.assign("dbNoteList", dbNoteList);
 
+      // table
       // column
-      template.assign("tmpColumnList", Tmp.createTmpColumnList(
-          table.getCtxTable().dbTableColumnList,
-          dbDictColumnTypeList,
-          dbDictColumnList
-      ));
-
-      // group column
-      List<TmpColumn> tmpGroupColumnList = new ArrayList<>();
-      if (table.getCtxTable().dbTableGroup != null) {
-        tmpGroupColumnList = Tmp.createTmpGroupColumnList(
-            table.getCtxTable().dbTableGroup,
-            dbDictColumnTypeList,
-            dbDictColumnList,
-            dbDictGroupList,
-            dbDictGroupColumnList
-        );
-      }
-      template.assign("tmpGroupColumnList", tmpGroupColumnList);
-
-      // primary
-      TmpKey tmpPrimaryKey = null;
-      if (table.getCtxTable().ctxInnerPrimaryKey.dbTablePrimaryKey != null) {
-        tmpPrimaryKey = Tmp.createTmpKey(
-            table.getCtxTable().ctxInnerPrimaryKey.dbTablePrimaryKey,
-            table.getCtxTable().ctxInnerPrimaryKey.dbTablePrimaryKeyColumnList,
-            dbDictColumnList);
-      }
-      template.assign("tmpPrimaryKey", tmpPrimaryKey);
-
-      // unique
-      List<TmpKey> tmpUniqueKeyList = new ArrayList<>();
-      for (var t : table.getCtxTable().ctxInnerUniqueKeyList) {
-        tmpUniqueKeyList.add(Tmp.createTmpKey(
-            t.dbTableUniqueKey,
-            t.dbTableUniqueKeyColumnList,
-            dbDictColumnList));
-      }
-      template.assign("tmpUniqueKeyList", tmpUniqueKeyList);
-
+      // primary key
+      // unique key
       // key
-      List<TmpKey> tmpKeyList = new ArrayList<>();
-      for (var t : table.getCtxTable().ctxInnerKeyList) {
-        tmpKeyList.add(Tmp.createTmpKey(
-            t.dbTableKey,
-            t.dbTableKeyColumnList,
-            dbDictColumnList));
-      }
-      template.assign("tmpKeyList", tmpKeyList);
-
       // foreign key
-      List<TmpForeignKey> tmpForeignKeyList = new ArrayList<>();
-      for (var t : table.getCtxTable().ctxInnerForeignKeyList) {
-        tmpForeignKeyList.add(Tmp.createTmpForeignKey(
-            t.dbTableForeignKey,
-            t.dbTableForeignKeyColumnList,
-            dbTableList,
-            dbDictColumnList));
-      }
-      template.assign("tmpForeignKeyList", tmpForeignKeyList);
-
       // referenced tables
-      var referencedDbTableList = new ArrayList<DbTable>();
-      var referenceDbTableForeignKeyList = dbTableForeignKeyList.stream()
-          .filter(d -> d.referenceTableId.equals(table.getCtxTable().dbTable.tableId))
-          .collect(Collectors.toList());
-      for (var referenceDbTableForeignKey : referenceDbTableForeignKeyList) {
-        var referencedDbTable = dbTableList.stream()
-            .filter(d -> d.tableId.equals(referenceDbTableForeignKey.tableId))
-            .findFirst()
-            .get();
-        referencedDbTableList.add(referencedDbTable);
-      }
-      template.assign("referencedDbTableList", referencedDbTableList);
-
       // ddl
-      var builder = new StringBuilder();
-      builder.append(Bucket.getInstance().getTableDdl(table.getCtxTable()));
-      var fkDdl = Bucket.getInstance().getForeignKeyDdl(table.getCtxTable());
-      if (!Utils.isNullOrEmpty(fkDdl)) {
-        builder.append("\n");
-        builder.append(fkDdl);
-      }
-      template.assign("ddl", builder.toString());
+      Bucket.getInstance().assignTableVars(table.getCtxTable(), template);
 
       // notes
       var relatedNotes = connectorsNoteToTableList.stream()
@@ -613,11 +520,12 @@ public class Main extends JFrame {
       var template = getTemplate("html/parts/sequence.vm");
       template.assign("sequence", sequence);
 
-      // note
+      // note list
       template.assign("dbNoteList", dbNoteList);
 
+      // sequence
       // ddl
-      template.assign("ddl", Bucket.getInstance().getSequenceDdl(sequence.getCtxSequence()));
+      Bucket.getInstance().assignSequenceVars(sequence.getCtxSequence(), template);
 
       // notes
       var relatedNotes = connectorsNoteToSequenceList.stream()

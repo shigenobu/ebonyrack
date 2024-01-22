@@ -6,6 +6,7 @@ import com.walksocket.er.Log;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.InputTable;
 import com.walksocket.er.component.ShowDdl;
+import com.walksocket.er.component.ShowTableClass;
 import com.walksocket.er.component.main.root.Workspace;
 import com.walksocket.er.custom.ErColorChooser;
 import com.walksocket.er.custom.ErConnector;
@@ -716,6 +717,15 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
         showDdl.setVisible(true);
       });
       add(menuItemDdl);
+
+      // class
+      var menuItemClass = new JMenuItem("Show table class");
+      menuItemClass.addActionListener(actionEvent -> {
+        var showTableClass = new ShowTableClass();
+        showTableClass.setModal(true);
+        showTableClass.setVisible(true);
+      });
+      add(menuItemClass);
 
       // remove
       var menuItemRemove = new JMenuItem("Remove table");

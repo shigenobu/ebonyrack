@@ -1,12 +1,13 @@
 package com.walksocket.er.sqlite.tmp;
 
 import com.walksocket.er.Utils;
+import com.walksocket.er.Value;
 import com.walksocket.er.sqlite.Tmp;
 
 /**
  * TmpCheck.
  */
-public class TmpCheck implements Tmp {
+public class TmpCheck implements Tmp, Value {
 
   /**
    * constraintName.
