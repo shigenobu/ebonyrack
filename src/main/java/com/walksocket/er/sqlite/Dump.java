@@ -240,6 +240,9 @@ public class Dump {
         var dbSequence = new DbSequence();
         dbSequence.sequenceId = Utils.randomString();
         dbSequence.sequenceName = tmpSequence.sequenceName;
+        if (Utils.isNullOrEmpty(dbSequence.sequenceName)) {
+          continue;
+        }
         if (!Utils.isNullOrEmpty(tmpSequence.startValue)) {
           dbSequence.startValue = tmpSequence.startValue;
         }
@@ -308,6 +311,9 @@ public class Dump {
         var dbTable = new DbTable();
         dbTable.tableId = Utils.randomString();
         dbTable.tableName = tmpTable.tableName;
+        if (Utils.isNullOrEmpty(tmpTable.tableName)) {
+          continue;
+        }
         if (!Utils.isNullOrEmpty(tmpTable.tableComment)) {
           dbTable.tableComment = tmpTable.tableComment;
         }
