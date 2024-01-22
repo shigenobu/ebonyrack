@@ -53,7 +53,7 @@ public class ErTemplateUtils {
       if (c == '_') {
         sb.append((i + 1) < snake.length() ? Character.toUpperCase(snake.charAt(++i)) : "");
       } else {
-        sb.append(sb.length() == 0 ? Character.toUpperCase(c) : Character.toLowerCase(c));
+        sb.append(Character.toLowerCase(c));
       }
     }
     return sb.toString();
