@@ -49,8 +49,7 @@
       </tr>
       </thead>
       <tbody>
-          #foreach($note in $relatedNotes)
-              #set($ctxNote = $note.getCtxNote())
+          #foreach($ctxNote in $relatedCtxNoteList)
           <tr>
             <td><a href="javascript:void(0)"
                    onclick="let aid = 'note-${ctxNote.dbNote.noteId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${ctxNote.dbNote.subject}</a>

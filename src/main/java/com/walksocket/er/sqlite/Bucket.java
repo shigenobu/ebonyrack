@@ -750,6 +750,18 @@ public class Bucket {
       builder.append(fkDdl);
     }
     template.assign("ddl", builder.toString());
+
+    // note
+    var relatedNoteIdList = getBucketConnector().dbNoteConnectorTableList.stream()
+        .filter(c -> c.tableId.equals(ctxTable.dbTable.tableId))
+        .map(c -> c.noteId)
+        .collect(Collectors.toList());
+    var relatedCtxNoteList = getBucketNote().ctxNoteList.stream()
+        .filter(n -> relatedNoteIdList.contains(n.dbNote.noteId))
+        .sorted(
+            Comparator.comparing(n -> String.format("%s-%s", n.dbNote.subject, n.dbNote.body)))
+        .collect(Collectors.toList());
+    template.assign("relatedCtxNoteList", relatedCtxNoteList);
   }
 
   /**
@@ -765,6 +777,18 @@ public class Bucket {
 
     // ddl
     template.assign("ddl", Bucket.getInstance().getSequenceDdl(ctxSequence));
+
+    // note
+    var relatedNoteIdList = getBucketConnector().dbNoteConnectorSequenceList.stream()
+        .filter(c -> c.sequenceId.equals(ctxSequence.dbSequence.sequenceId))
+        .map(c -> c.noteId)
+        .collect(Collectors.toList());
+    var relatedCtxNoteList = getBucketNote().ctxNoteList.stream()
+        .filter(n -> relatedNoteIdList.contains(n.dbNote.noteId))
+        .sorted(
+            Comparator.comparing(n -> String.format("%s-%s", n.dbNote.subject, n.dbNote.body)))
+        .collect(Collectors.toList());
+    template.assign("relatedCtxNoteList", relatedCtxNoteList);
   }
 
   /**

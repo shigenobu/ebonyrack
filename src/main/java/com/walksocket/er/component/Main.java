@@ -475,10 +475,6 @@ public class Main extends JFrame {
     ImageIO.write(captureImage, "png", os);
     var imageData = Base64.getEncoder().encodeToString(os.toByteArray());
 
-    // connector
-    var connectorsNoteToTableList = workspace.getOrderedPositionedConnectorsNoteToTableList();
-    var connectorsNoteToSequenceList = workspace.getOrderedPositionedConnectorsNoteToSequenceList();
-
     // tables
     var dialogTableList = new ArrayList<String>();
     var tables = workspace.getOrderedPositionedTables();
@@ -493,15 +489,8 @@ public class Main extends JFrame {
       // foreign key
       // referenced tables
       // ddl
-      Bucket.getInstance().assignTableVars(table.getCtxTable(), template);
-
       // notes
-      var relatedNotes = connectorsNoteToTableList.stream()
-          .filter(c -> c.getEndpoint(Table.class) == table)
-          .map(c -> c.getEndpoint(Note.class))
-          .sorted(Comparator.comparing(Note::getNameForSort))
-          .collect(Collectors.toList());
-      template.assign("relatedNotes", relatedNotes);
+      Bucket.getInstance().assignTableVars(table.getCtxTable(), template);
 
       // render
       var data = template.render();
@@ -516,15 +505,8 @@ public class Main extends JFrame {
 
       // sequence
       // ddl
-      Bucket.getInstance().assignSequenceVars(sequence.getCtxSequence(), template);
-
       // notes
-      var relatedNotes = connectorsNoteToSequenceList.stream()
-          .filter(c -> c.getEndpoint(Sequence.class) == sequence)
-          .map(c -> c.getEndpoint(Note.class))
-          .sorted(Comparator.comparing(Note::getNameForSort))
-          .collect(Collectors.toList());
-      template.assign("relatedNotes", relatedNotes);
+      Bucket.getInstance().assignSequenceVars(sequence.getCtxSequence(), template);
 
       // render
       var data = template.render();
@@ -532,6 +514,9 @@ public class Main extends JFrame {
     }
 
     // notes
+    var connectorsNoteToTableList = workspace.getOrderedPositionedConnectorsNoteToTableList();
+    var connectorsNoteToSequenceList = workspace.getOrderedPositionedConnectorsNoteToSequenceList();
+
     var dialogNoteList = new ArrayList<String>();
     var notes = workspace.getOrderedPositionedNotes();
     for (var note : notes) {

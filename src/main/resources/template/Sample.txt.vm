@@ -1,102 +1,123 @@
--- table
-\$tmpTable
-  tableName: ${tmpTable.tableName}
-  tableComment: ${tmpTable.tableComment}
-  engine: ${tmpTable.engine}
-  charsetValue: ${tmpTable.charsetValue}
-  collateValue: ${tmpTable.collateValue}
-  autoIncrementValue: ${tmpTable.autoIncrementValue}
-  option: ${tmpTable.option}
+====================
+table \$tmpTable
+====================
+    tableName: ${tmpTable.tableName}
+    tableComment: ${tmpTable.tableComment}
+    engine: ${tmpTable.engine}
+    charsetValue: ${tmpTable.charsetValue}
+    collateValue: ${tmpTable.collateValue}
+    autoIncrementValue: ${tmpTable.autoIncrementValue}
+    option: ${tmpTable.option}
 
--- primary key
-\$tmpPrimaryKey
+====================
+primary key \$tmpPrimaryKey
+====================
 #if($tmpPrimaryKey)
-  constraintName: ${tmpPrimaryKey.constraintName}
-  keyName: ${tmpPrimaryKey.keyName}
-  columnKeyOptionList:
-  #foreach($columnKeyOption in $tmpPrimaryKey.columnKeyOptionList)
-    columnName: ${columnKeyOption.columnName}, length: ${columnKeyOption.length}, seqInIndex: ${columnKeyOption.seqInIndex}, collation: ${columnKeyOption.collation}
-  #end
-  indexComment: ${tmpPrimaryKey.indexComment}
-  indexType: ${tmpPrimaryKey.indexType}
+    constraintName: ${tmpPrimaryKey.constraintName}
+    keyName: ${tmpPrimaryKey.keyName}
+    columnKeyOptionList:
+    #foreach($columnKeyOption in $tmpPrimaryKey.columnKeyOptionList)
+        columnName: ${columnKeyOption.columnName}, length: ${columnKeyOption.length}, seqInIndex: ${columnKeyOption.seqInIndex}, collation: ${columnKeyOption.collation}
+    #end
+    indexComment: ${tmpPrimaryKey.indexComment}
+    indexType: ${tmpPrimaryKey.indexType}
 #end
 
--- unique key
-\$tmpUniqueKeyList
+====================
+unique key \$tmpUniqueKeyList
+====================
 #set($i = 1)
 #foreach($tmpUniqueKey in $tmpUniqueKeyList)
-  ${i} ----------
-  constraintName: ${tmpUniqueKey.constraintName}
-  keyName: ${tmpUniqueKey.keyName}
-  columnKeyOptionList:
+    ${i} ----------
+    constraintName: ${tmpUniqueKey.constraintName}
+    keyName: ${tmpUniqueKey.keyName}
+    columnKeyOptionList:
     #foreach($columnKeyOption in $tmpUniqueKey.columnKeyOptionList)
-      columnName: ${columnKeyOption.columnName}, length: ${columnKeyOption.length}, seqInIndex: ${columnKeyOption.seqInIndex}, collation: ${columnKeyOption.collation}
+        columnName: ${columnKeyOption.columnName}, length: ${columnKeyOption.length}, seqInIndex: ${columnKeyOption.seqInIndex}, collation: ${columnKeyOption.collation}
     #end
-  indexComment: ${tmpUniqueKey.indexComment}
-  indexType: ${tmpUniqueKey.indexType}
-  #set($i = $i + 1)
+    indexComment: ${tmpUniqueKey.indexComment}
+    indexType: ${tmpUniqueKey.indexType}
+    #set($i = $i + 1)
 #end
 
--- key
-\$tmpKeyList
+====================
+key \$tmpKeyList
+====================
 #set($i = 1)
 #foreach($tmpKeyList in $tmpKeyList)
-  ${i} ----------
-  constraintName: ${tmpKeyList.constraintName}
-  keyName: ${tmpKeyList.keyName}
-  columnKeyOptionList:
+    ${i} ----------
+    constraintName: ${tmpKeyList.constraintName}
+    keyName: ${tmpKeyList.keyName}
+    columnKeyOptionList:
     #foreach($columnKeyOption in $tmpKeyList.columnKeyOptionList)
-      columnName: ${columnKeyOption.columnName}, length: ${columnKeyOption.length}, seqInIndex: ${columnKeyOption.seqInIndex}, collation: ${columnKeyOption.collation}
+        columnName: ${columnKeyOption.columnName}, length: ${columnKeyOption.length}, seqInIndex: ${columnKeyOption.seqInIndex}, collation: ${columnKeyOption.collation}
     #end
-  indexComment: ${tmpKeyList.indexComment}
-  indexType: ${tmpKeyList.indexType}
-  #set($i = $i + 1)
+    indexComment: ${tmpKeyList.indexComment}
+    indexType: ${tmpKeyList.indexType}
+    #set($i = $i + 1)
 #end
 
--- foreign key
-\$tmpForeignKeyList
+====================
+foreign key \$tmpForeignKeyList
+====================
 #set($i = 1)
 #foreach($tmpForeignKey in $tmpForeignKeyList)
-  ${i} ----------
-  constraintName: ${tmpForeignKey.constraintName}
-  keyName: ${tmpForeignKey.keyName}
-  columnForeignKeyOptionList:
+    ${i} ----------
+    constraintName: ${tmpForeignKey.constraintName}
+    keyName: ${tmpForeignKey.keyName}
+    columnForeignKeyOptionList:
     #foreach($columnForeignKeyOption in $tmpForeignKey.columnForeignKeyOptionList)
-      columnName: ${columnForeignKeyOption.columnName}, seqInIndex: ${columnForeignKeyOption.seqInIndex}
+        columnName: ${columnForeignKeyOption.columnName}, seqInIndex: ${columnForeignKeyOption.seqInIndex}
     #end
-  referenceTableName: ${tmpForeignKey.referenceTableName}
-  referenceColumnForeignKeyOptionList:
+    referenceTableName: ${tmpForeignKey.referenceTableName}
+    referenceColumnForeignKeyOptionList:
     #foreach($referenceColumnForeignKeyOption in $tmpForeignKey.referenceColumnForeignKeyOptionList)
-      columnName: ${referenceColumnForeignKeyOption.columnName}, seqInIndex: ${referenceColumnForeignKeyOption.seqInIndex}
+        columnName: ${referenceColumnForeignKeyOption.columnName}, seqInIndex: ${referenceColumnForeignKeyOption.seqInIndex}
     #end
-  onUpdate: ${tmpForeignKey.onUpdate}
-  onDelete: ${tmpForeignKey.onDelete}
-  relationship: ${tmpForeignKey.relationship}
-  #set($i = $i + 1)
+    onUpdate: ${tmpForeignKey.onUpdate}
+    onDelete: ${tmpForeignKey.onDelete}
+    relationship: ${tmpForeignKey.relationship}
+    #set($i = $i + 1)
 #end
 
--- column
-\$tmpColumnList
+====================
+column \$tmpColumnList
+====================
 #set($i = 1)
 #foreach($tmpColumn in $tmpColumnList)
-  ${i} ----------
-  columnName: ${tmpColumn.columnName}
-  columnComment: ${tmpColumn.columnComment}
-  columnType: ${tmpColumn.columnType}
-  notNullValue: ${tmpColumn.notNullValue}
-  charsetValue: ${tmpColumn.charsetValue}
-  collateValue: ${tmpColumn.collateValue}
-  defaultValue: ${tmpColumn.defaultValue}
-  onUpdate: ${tmpColumn.onUpdate}
-  autoIncrementDefinition: ${tmpColumn.autoIncrementDefinition}
-  option: ${tmpColumn.option}
-  #set($i = $i + 1)
+    ${i} ----------
+    columnName: ${tmpColumn.columnName}
+    columnComment: ${tmpColumn.columnComment}
+    columnType: ${tmpColumn.columnType}
+    notNullValue: ${tmpColumn.notNullValue}
+    charsetValue: ${tmpColumn.charsetValue}
+    collateValue: ${tmpColumn.collateValue}
+    defaultValue: ${tmpColumn.defaultValue}
+    onUpdate: ${tmpColumn.onUpdate}
+    autoIncrementDefinition: ${tmpColumn.autoIncrementDefinition}
+    option: ${tmpColumn.option}
+    #set($i = $i + 1)
 #end
 
--- ddl
+====================
+ddl \$ddl
+====================
 ${ddl}
 
-== << embedded >>
+====================
+note \$relatedCtxNoteList
+====================
+#set($i = 1)
+#foreach($ctxNote in $relatedCtxNoteList)
+    ${i} ----------
+    subject: ${ctxNote.dbNote.subject}
+    body: ${ctxNote.dbNote.body}
+    #set($i = $i + 1)
+#end
+
+====================
+<<< embedded function >>>
+====================
 #set($value1 = "t_test")
 #set($value2 = "TTest")
 #set($value3 = "test")
