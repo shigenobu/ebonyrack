@@ -96,6 +96,18 @@ public class ErTemplate {
   }
 
   /**
+   * get assigned var.
+   *
+   * @param key key
+   * @param cls class
+   * @param <T> type
+   * @return value
+   */
+  public <T> T getAssigned(String key, Class<T> cls) {
+    return (T) context.get(key);
+  }
+
+  /**
    * clear assigned vars.
    */
   public void clearValues() {

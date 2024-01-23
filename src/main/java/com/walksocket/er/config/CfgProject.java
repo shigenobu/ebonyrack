@@ -46,6 +46,11 @@ public class CfgProject {
   public String lastReadFromPath;
 
   /**
+   * last table class save dir.
+   */
+  public String lastTableClassSaveDir;
+
+  /**
    * pos.
    */
   public CfgProjectPos pos = new CfgProjectPos();

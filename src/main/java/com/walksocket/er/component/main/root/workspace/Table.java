@@ -641,11 +641,6 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
   }
 
   @Override
-  public String getNameForSort() {
-    return toString();
-  }
-
-  @Override
   public void strengthening(List<String> data, Color color) {
     for (var c : panelColumnInner.getComponents()) {
       if (c instanceof JPanel && data.contains(c.getName())) {

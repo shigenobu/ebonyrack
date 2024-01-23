@@ -11,6 +11,7 @@ import com.walksocket.er.sqlite.bucket.BucketDict;
 import com.walksocket.er.sqlite.bucket.BucketNote;
 import com.walksocket.er.sqlite.bucket.BucketSequence;
 import com.walksocket.er.sqlite.bucket.BucketTable;
+import com.walksocket.er.sqlite.context.CtxNote;
 import com.walksocket.er.sqlite.context.CtxSequence;
 import com.walksocket.er.sqlite.context.CtxTable;
 import com.walksocket.er.sqlite.entity.DbDefault;
@@ -663,6 +664,7 @@ public class Bucket {
     }
 
     // table
+    template.assign("ctxTable", ctxTable);
     template.assign("tmpTable", Tmp.createTmpTable(ctxTable.dbTable));
 
     // column
@@ -757,9 +759,21 @@ public class Bucket {
    */
   public void assignSequenceVars(CtxSequence ctxSequence, ErTemplate template) {
     // sequence
+    template.assign("ctxSequence", ctxSequence);
     template.assign("tmpSequence", Tmp.createTmpSequence(ctxSequence.dbSequence));
 
     // ddl
     template.assign("ddl", Bucket.getInstance().getSequenceDdl(ctxSequence));
+  }
+
+  /**
+   * assign note vars.
+   *
+   * @param ctxNote  ctxNote
+   * @param template template
+   */
+  public void assignNoteVars(CtxNote ctxNote, ErTemplate template) {
+    // note
+    template.assign("ctxNote", ctxNote);
   }
 }

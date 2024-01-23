@@ -32,6 +32,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -304,6 +305,13 @@ public class Main extends JFrame {
       }
     });
     menuFile.add(menuItemExportHtml);
+    var menuItemExportTableClass = new JMenuItem("Export table class");
+    menuItemExportTableClass.addActionListener(actionEvent -> {
+      var exportTableClass = new ExportTableClass(main, cfgProject);
+      exportTableClass.setModal(true);
+      exportTableClass.setVisible(true);
+    });
+    menuFile.add(menuItemExportTableClass);
     menuBar.add(menuFile);
 
     // menu - Edit
@@ -485,11 +493,9 @@ public class Main extends JFrame {
     var tables = workspace.getOrderedPositionedTables();
     for (var table : tables) {
       var template = getTemplate("html/parts/table.vm");
-      template.assign("table", table);
 
       // table list, note list
       template.assign("dbTableList", dbTableList);
-      template.assign("dbNoteList", dbNoteList);
 
       // table
       // column
@@ -505,6 +511,7 @@ public class Main extends JFrame {
       var relatedNotes = connectorsNoteToTableList.stream()
           .filter(c -> c.getEndpoint(Table.class) == table)
           .map(c -> c.getEndpoint(Note.class))
+          .sorted(Comparator.comparing(Note::getNameForSort))
           .collect(Collectors.toList());
       template.assign("relatedNotes", relatedNotes);
 
@@ -518,10 +525,6 @@ public class Main extends JFrame {
     var sequences = workspace.getOrderedPositionedSequences();
     for (var sequence : sequences) {
       var template = getTemplate("html/parts/sequence.vm");
-      template.assign("sequence", sequence);
-
-      // note list
-      template.assign("dbNoteList", dbNoteList);
 
       // sequence
       // ddl
@@ -531,6 +534,7 @@ public class Main extends JFrame {
       var relatedNotes = connectorsNoteToSequenceList.stream()
           .filter(c -> c.getEndpoint(Sequence.class) == sequence)
           .map(c -> c.getEndpoint(Note.class))
+          .sorted(Comparator.comparing(Note::getNameForSort))
           .collect(Collectors.toList());
       template.assign("relatedNotes", relatedNotes);
 
@@ -544,22 +548,22 @@ public class Main extends JFrame {
     var notes = workspace.getOrderedPositionedNotes();
     for (var note : notes) {
       var template = getTemplate("html/parts/note.vm");
-      template.assign("note", note);
 
-      // table, sequence
-      template.assign("dbTableList", dbTableList);
-      template.assign("dbSequenceList", dbSequenceList);
+      // note
+      Bucket.getInstance().assignNoteVars(note.getCtxNote(), template);
 
       // related
       var relatedTables = connectorsNoteToTableList.stream()
           .filter(c -> c.getEndpoint(Note.class) == note)
           .map(c -> c.getEndpoint(Table.class))
+          .sorted(Comparator.comparing(Table::getNameForSort))
           .collect(Collectors.toList());
       template.assign("relatedTables", relatedTables);
 
       var relatedSequences = connectorsNoteToSequenceList.stream()
           .filter(c -> c.getEndpoint(Note.class) == note)
           .map(c -> c.getEndpoint(Sequence.class))
+          .sorted(Comparator.comparing(Sequence::getNameForSort))
           .collect(Collectors.toList());
       template.assign("relatedSequences", relatedSequences);
 

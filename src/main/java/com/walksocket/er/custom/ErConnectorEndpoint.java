@@ -170,4 +170,13 @@ public abstract class ErConnectorEndpoint extends ErMover {
   public String getCoords() {
     return String.format("%s,%s,%s,%s", getX(), getY(), getX() + getWidth(), getY() + getHeight());
   }
+
+  /**
+   * get name for sort.
+   *
+   * @return name for sort
+   */
+  public String getNameForSort() {
+    return toString();
+  }
 }
