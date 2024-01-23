@@ -1,18 +1,27 @@
 package com.walksocket.er.component.export.tableclass;
 
 import com.walksocket.er.Config;
+import com.walksocket.er.Env;
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogSmall;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.ExportTableClass;
-import com.walksocket.er.component.export.ddl.root.Form;
+import com.walksocket.er.component.export.tableclass.root.Form;
 import com.walksocket.er.config.CfgProject;
 import com.walksocket.er.custom.ErLinkLabel;
+import com.walksocket.er.sqlite.Bucket;
+import com.walksocket.er.sqlite.tmp.TmpTableClass;
+import com.walksocket.er.template.ErTemplate;
+import com.walksocket.er.template.ErTemplateNoEscapeHandler;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URI;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -74,8 +83,10 @@ public class Root extends JPanel {
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         var result = chooser.showSaveDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
+          var tmpTableClass = form.getResult().getTmpList().get(0);
+
           var f = chooser.getSelectedFile();
-          saveTableClass(f);
+          saveTableClass(f, tmpTableClass);
           cfgProject.lastTableClassSaveDir = f.getAbsolutePath();
           Config.save();
 
@@ -96,6 +107,38 @@ public class Root extends JPanel {
     panel.add(buttonOk);
   }
 
-  private void saveTableClass(File dir) {
+  /**
+   * save table class.
+   *
+   * @param dir           dir
+   * @param tmpTableClass tmpTableClass
+   * @throws IOException
+   */
+  private void saveTableClass(File dir, TmpTableClass tmpTableClass) throws IOException {
+    for (var ctxTable : Bucket.getInstance().getBucketTable().ctxTableList
+        .stream()
+        .sorted(Comparator.comparing(t -> t.dbTable.tableName))
+        .collect(Collectors.toList())) {
+      var actionCommand = tmpTableClass.filterTableActionCommand;
+      var filterValue = tmpTableClass.filterTableValue;
+      if (actionCommand.equals(TmpTableClass.FILTER_CONTAINS)
+          && !ctxTable.dbTable.tableName.contains(filterValue)) {
+        continue;
+      } else if (actionCommand.equals(TmpTableClass.FILTER_START_WITH)
+          && !ctxTable.dbTable.tableName.startsWith(filterValue)) {
+        continue;
+      } else if (actionCommand.equals(TmpTableClass.FILTER_END_WITH)
+          && !ctxTable.dbTable.tableName.endsWith(filterValue)) {
+        continue;
+      }
+
+      var template = new ErTemplate(Env.getTemplateDir(), tmpTableClass.templateValue,
+          ErTemplateNoEscapeHandler.class);
+      Bucket.getInstance().assignTableVars(ctxTable, template);
+      var data = template.render();
+
+      var f = new File(dir, tmpTableClass.getFinalFileName(ctxTable.dbTable.tableName));
+      com.walksocket.er.File.writeString(new FileOutputStream(f), data);
+    }
   }
 }
