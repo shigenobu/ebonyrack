@@ -650,6 +650,7 @@ public class Bucket {
     var dbTableList = Bucket.getInstance().getBucketTable().ctxTableList.stream()
         .map(c -> c.dbTable)
         .collect(Collectors.toList());
+    template.assign("dbTableList", dbTableList);
 
     var dbDictColumnTypeList = Bucket.getInstance().getBucketDict().dbDictColumnTypeList;
     var dbDictColumnList = Bucket.getInstance().getBucketDict().dbDictColumnList;

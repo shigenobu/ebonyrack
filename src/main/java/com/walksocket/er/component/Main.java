@@ -475,16 +475,7 @@ public class Main extends JFrame {
     ImageIO.write(captureImage, "png", os);
     var imageData = Base64.getEncoder().encodeToString(os.toByteArray());
 
-    var dbTableList = Bucket.getInstance().getBucketTable().ctxTableList.stream()
-        .map(c -> c.dbTable)
-        .collect(Collectors.toList());
-    var dbSequenceList = Bucket.getInstance().getBucketSequence().ctxSequenceList.stream()
-        .map(c -> c.dbSequence)
-        .collect(Collectors.toList());
-    var dbNoteList = Bucket.getInstance().getBucketNote().ctxNoteList.stream()
-        .map(c -> c.dbNote)
-        .collect(Collectors.toList());
-
+    // connector
     var connectorsNoteToTableList = workspace.getOrderedPositionedConnectorsNoteToTableList();
     var connectorsNoteToSequenceList = workspace.getOrderedPositionedConnectorsNoteToSequenceList();
 
@@ -493,9 +484,6 @@ public class Main extends JFrame {
     var tables = workspace.getOrderedPositionedTables();
     for (var table : tables) {
       var template = getTemplate("html/parts/table.vm");
-
-      // table list, note list
-      template.assign("dbTableList", dbTableList);
 
       // table
       // column
