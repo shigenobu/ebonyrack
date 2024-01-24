@@ -584,10 +584,24 @@ public class Main extends JFrame {
     return new ErTemplate(path);
   }
 
+  /**
+   * set copied.
+   *
+   * @param copy copy
+   * @param cls class
+   * @param <T> type
+   */
   public <T extends Copiable> void setCopied(Copiable copy, Class<T> cls) {
     copiedData.put(cls, copy);
   }
 
+  /**
+   * get copied.
+   *
+   * @param cls class
+   * @return copy
+   * @param <T> type
+   */
   public <T extends Copiable> T getCopied(Class<T> cls) {
     if (!copiedData.containsKey(cls)) {
       return null;

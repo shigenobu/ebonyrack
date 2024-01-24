@@ -299,9 +299,11 @@ public class TableListener extends MariaDBParserBaseListener {
     var tmpUniqueKey = new TmpKey();
     tmpUniqueKeyList.add(tmpUniqueKey);
 
-    tmpUniqueKey.constraintName = Utils.removeBackQuote(
-        uniqueKeyTableConstraintContext.index.getText());
-    tmpUniqueKey.keyName = tmpUniqueKey.constraintName;
+    if (uniqueKeyTableConstraintContext.index != null) {
+      tmpUniqueKey.constraintName = Utils.removeBackQuote(
+          uniqueKeyTableConstraintContext.index.getText());
+      tmpUniqueKey.keyName = tmpUniqueKey.constraintName;
+    }
 
     for (var opt : uniqueKeyTableConstraintContext.indexOption()) {
       if (opt.STRING_LITERAL() != null) {
@@ -340,6 +342,15 @@ public class TableListener extends MariaDBParserBaseListener {
 
       seqInIndex++;
     }
+
+    if (Utils.isNullOrEmpty(tmpUniqueKey.constraintName) && tmpUniqueKey.columnKeyOptionList.size() > 0) {
+      var constraintName = tmpUniqueKey.columnKeyOptionList.stream()
+          .map(c -> c.columnName)
+          .collect(Collectors.joining("_"));
+      tmpUniqueKey.constraintName = constraintName;
+      tmpUniqueKey.keyName = tmpUniqueKey.constraintName;
+    }
+
     Log.trace(Json.toJsonString(tmpUniqueKey));
   }
 
@@ -364,8 +375,10 @@ public class TableListener extends MariaDBParserBaseListener {
       var tmpKey = new TmpKey();
       tmpKeyList.add(tmpKey);
 
-      tmpKey.constraintName = Utils.removeBackQuote(simpleIndexDeclarationContext.uid().getText());
-      tmpKey.keyName = tmpKey.constraintName;
+      if (simpleIndexDeclarationContext.uid() != null) {
+        tmpKey.constraintName = Utils.removeBackQuote(simpleIndexDeclarationContext.uid().getText());
+        tmpKey.keyName = tmpKey.constraintName;
+      }
 
       for (var opt : simpleIndexDeclarationContext.indexOption()) {
         if (opt.STRING_LITERAL() != null) {
@@ -404,6 +417,15 @@ public class TableListener extends MariaDBParserBaseListener {
 
         seqInIndex++;
       }
+
+      if (Utils.isNullOrEmpty(tmpKey.constraintName) && tmpKey.columnKeyOptionList.size() > 0) {
+        var constraintName = tmpKey.columnKeyOptionList.stream()
+            .map(c -> c.columnName)
+            .collect(Collectors.joining("_"));
+        tmpKey.constraintName = constraintName;
+        tmpKey.keyName = tmpKey.constraintName;
+      }
+
       Log.trace(Json.toJsonString(tmpKey));
     }
   }
