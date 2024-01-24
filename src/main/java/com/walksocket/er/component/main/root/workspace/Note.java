@@ -650,6 +650,14 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
       });
       add(menuItemColor);
 
+      // copy
+      var menuItemCopy = new JMenuItem("Copy note");
+      menuItemCopy.addActionListener(actionEvent -> {
+        workspace.getRoot().getMain().setCopied(ctxNote, CtxNote.class);
+      });
+      addSeparator();
+      add(menuItemCopy);
+
       // remove
       var menuItemRemove = new JMenuItem("Remove note");
       menuItemRemove.addActionListener(actionEvent -> {

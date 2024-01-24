@@ -111,6 +111,16 @@ public class BucketNote {
   }
 
   /**
+   * register for copy.
+   *
+   * @param ctxNote ctxNote
+   * @throws Exception
+   */
+  public void registerForCopy(CtxNote ctxNote) throws Exception {
+    register(ctxNote);
+  }
+
+  /**
    * save.
    *
    * @param ctxNote ctxNote

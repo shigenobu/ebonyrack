@@ -969,6 +969,7 @@ public class Workspace extends ErConnectorPositioned {
           // add
           var sequence = new Sequence(workspace, ctxSequence);
           workspace.addSequence(sequence);
+
         } catch (Exception e) {
           Log.error(e);
           JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
@@ -1067,12 +1068,43 @@ public class Workspace extends ErConnectorPositioned {
           // add
           var sequence = new Sequence(workspace, copiedCtxSequence);
           workspace.addSequence(sequence);
+
         } catch (Exception e) {
           Log.error(e);
           JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
         }
       });
       add(menuItemPasteSequence);
+
+      // paste note
+      var menuItemPasteNote = new JMenuItem("Paste note");
+      var copiedCtxNote = getRoot().getMain().getCopied(CtxNote.class);
+      if (copiedCtxNote == null) {
+        menuItemPasteNote.setEnabled(false);
+      }
+      menuItemPasteNote.addActionListener(actionEvent -> {
+        if (positionedNotes.size() > Note.MAX_POSITIONED) {
+          JOptionPane.showMessageDialog(workspace, "No more create note.");
+          return;
+        }
+
+        try {
+          // register for copy
+          copiedCtxNote.dbNoteOption.posX = x;
+          copiedCtxNote.dbNoteOption.posY = y;
+
+          Bucket.getInstance().getBucketNote().registerForCopy(copiedCtxNote);
+
+          // add
+          var note = new Note(workspace, copiedCtxNote);
+          workspace.addNote(note);
+
+        } catch (Exception e) {
+          Log.error(e);
+          JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
+        }
+      });
+      add(menuItemPasteNote);
     }
   }
 }
