@@ -85,7 +85,7 @@ public class Form extends JPanel {
   /**
    * text field file prefix converter.
    */
-  private final JTextField textFieldFilePrefixConverter = new JTextField(10);
+  private final JTextField textFieldFilePrefixConverter = new JTextField(4);
 
   /**
    * combo box file name converter.
@@ -96,7 +96,7 @@ public class Form extends JPanel {
   /**
    * text field file suffix converter.
    */
-  private final JTextField textFieldFileSuffixConverter = new JTextField(10);
+  private final JTextField textFieldFileSuffixConverter = new JTextField(4);
 
   /**
    * text field file extension converter.
@@ -126,6 +126,10 @@ public class Form extends JPanel {
         new Dimension(DialogSmall.WIDTH / 5 * 3, DialogSmall.HEIGHT / 10));
     panel1.add(panel1innerRight);
 
+    var emptyPanel1 = new JPanel();
+    emptyPanel1.setPreferredSize(new Dimension(DialogSmall.WIDTH / 5 * 3, DialogSmall.HEIGHT / 50));
+    panel1innerRight.add(emptyPanel1);
+
     var templateDir = new File(Env.getTemplateDir());
     for (var file : templateDir.listFiles()) {
       if (file.getName().endsWith(".vm")) {
@@ -151,7 +155,7 @@ public class Form extends JPanel {
     panel2.add(panel2innerLeft);
 
     labelTable.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 4, DialogSmall.HEIGHT / 10));
+        new Dimension(DialogSmall.WIDTH / 5, DialogSmall.HEIGHT / 10));
     panel2innerLeft.add(labelTable);
 
     var panel2innerRight = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -160,7 +164,7 @@ public class Form extends JPanel {
     panel2.add(panel2innerRight);
 
     labelFilterTable.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 5 * 3, labelFilterTable.getFont().getSize() * 2));
+        new Dimension(DialogSmall.WIDTH / 5 * 3, DialogSmall.HEIGHT / 10));
     panel2innerRight.add(labelFilterTable);
 
     radioButtonTableFilterNone.addItemListener(itemEvent -> {
@@ -190,7 +194,7 @@ public class Form extends JPanel {
     panel2innerRight.add(emptyPanel2);
 
     labelConvertFileName.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 5 * 3, labelConvertFileName.getFont().getSize() * 2));
+        new Dimension(DialogSmall.WIDTH / 5 * 3, DialogSmall.HEIGHT / 10));
     panel2innerRight.add(labelConvertFileName);
 
     panel2innerRight.add(textFieldFilePrefixConverter);

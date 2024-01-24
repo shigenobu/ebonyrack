@@ -1,5 +1,6 @@
 package com.walksocket.er.component.show.tableclass.root;
 
+import com.walksocket.er.Const;
 import com.walksocket.er.Env;
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogMedium;
@@ -20,6 +21,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -30,6 +32,11 @@ import javax.swing.text.JTextComponent;
  * Form.
  */
 public class Form extends JPanel {
+
+  /**
+   * label template.
+   */
+  private final JLabel labelTemplate = new JLabel("Template:");
 
   /**
    * combo box template.
@@ -61,6 +68,8 @@ public class Form extends JPanel {
     var panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
     panel1.setPreferredSize(new Dimension(DialogMedium.WIDTH - 20, DialogMedium.HEIGHT / 16));
     add(panel1);
+
+    panel1.add(labelTemplate);
 
     var templateDir = new File(Env.getTemplateDir());
     for (var file : templateDir.listFiles()) {
@@ -101,6 +110,11 @@ public class Form extends JPanel {
     add(panel2);
     buttonGenerate.addActionListener(actionEvent -> {
       textAreaClass.setText("");
+
+      if (ctxTable.dbTable == null || ctxTable.dbTable.tableName.startsWith(
+          Const.NEW_TABLE_PREFIX)) {
+        return;
+      }
 
       var fileName = Utils.getString(comboBoxTemplate);
       if (Utils.isNullOrEmpty(fileName)) {

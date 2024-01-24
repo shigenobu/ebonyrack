@@ -1,6 +1,7 @@
 package com.walksocket.er.component.export.tableclass;
 
 import com.walksocket.er.Config;
+import com.walksocket.er.Const;
 import com.walksocket.er.Env;
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogSmall;
@@ -73,6 +74,11 @@ public class Root extends JPanel {
     add(panel);
     buttonOk.addActionListener(actionEvent -> {
       try {
+        var tmpTableClass = form.getResult().getTmpList().get(0);
+        if (Utils.isNullOrEmpty(tmpTableClass.templateValue)) {
+          return;
+        }
+
         // chooser
         var dir = new File(System.getProperty("user.home"));
         var lastTableClassSaveDir = cfgProject.lastTableClassSaveDir;
@@ -83,8 +89,6 @@ public class Root extends JPanel {
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         var result = chooser.showSaveDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
-          var tmpTableClass = form.getResult().getTmpList().get(0);
-
           var f = chooser.getSelectedFile();
           saveTableClass(f, tmpTableClass);
           cfgProject.lastTableClassSaveDir = f.getAbsolutePath();
@@ -129,6 +133,11 @@ public class Root extends JPanel {
         continue;
       } else if (actionCommand.equals(TmpTableClass.FILTER_END_WITH)
           && !ctxTable.dbTable.tableName.endsWith(filterValue)) {
+        continue;
+      }
+
+      if (ctxTable.dbTable == null || ctxTable.dbTable.tableName.startsWith(
+          Const.NEW_TABLE_PREFIX)) {
         continue;
       }
 

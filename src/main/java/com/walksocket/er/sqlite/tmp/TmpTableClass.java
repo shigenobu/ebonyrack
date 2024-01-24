@@ -31,24 +31,29 @@ public class TmpTableClass implements Tmp {
   public static final String FILTER_END_WITH = "End with";
 
   /**
+   * file name converter raw.
+   */
+  public static final String FILE_NAME_CONVERTER_RAW = "raw";
+
+  /**
    * file name converter ucfirst camel.
    */
-  public static final String FILE_NAME_CONVERTER_UCFIRST_CAMEL = "${TableName}";
+  public static final String FILE_NAME_CONVERTER_UCFIRST_CAMEL = "ucFistCamelCase - ${TableName}";
 
   /**
    * file name converter ucfirst snake.
    */
-  public static final String FILE_NAME_CONVERTER_UCFIRST_SNAKE = "${Table_name}";
+  public static final String FILE_NAME_CONVERTER_UCFIRST_SNAKE = "ucFistSnakeCase - ${Table_name}";
 
   /**
    * file name converter lcfirst camel.
    */
-  public static final String FILE_NAME_CONVERTER_LCFIRST_CAMEL = "${tableName}";
+  public static final String FILE_NAME_CONVERTER_LCFIRST_CAMEL = "lcFistCamelCase - ${tableName}";
 
   /**
    * file name converter lcfirst snake.
    */
-  public static final String FILE_NAME_CONVERTER_LCFIRST_SNAKE = "${table_name}";
+  public static final String FILE_NAME_CONVERTER_LCFIRST_SNAKE = "lcFistSnakeCase - ${table_name}";
 
   /**
    * file name converter list.
@@ -56,6 +61,7 @@ public class TmpTableClass implements Tmp {
   public static final List<String> FILE_NAME_CONVERTER_LIST = new ArrayList<>();
 
   static {
+    FILE_NAME_CONVERTER_LIST.add(FILE_NAME_CONVERTER_RAW);
     FILE_NAME_CONVERTER_LIST.add(FILE_NAME_CONVERTER_UCFIRST_CAMEL);
     FILE_NAME_CONVERTER_LIST.add(FILE_NAME_CONVERTER_UCFIRST_SNAKE);
     FILE_NAME_CONVERTER_LIST.add(FILE_NAME_CONVERTER_LCFIRST_CAMEL);
