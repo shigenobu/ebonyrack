@@ -1105,6 +1105,14 @@ public class Workspace extends ErConnectorPositioned {
         }
       });
       add(menuItemPasteNote);
+      addSeparator();
+
+      // import table
+      var menuItemImportTable = new JMenuItem("Import table");
+      menuItemImportTable.addActionListener(actionEvent -> {
+
+      });
+      add(menuItemImportTable);
     }
   }
 }
