@@ -1,5 +1,9 @@
 package com.walksocket.er.sqlite.context;
 
+import com.walksocket.er.Copiable;
+import com.walksocket.er.Date;
+import com.walksocket.er.Json;
+import com.walksocket.er.Utils;
 import com.walksocket.er.Value;
 import com.walksocket.er.sqlite.context.inner.CtxInnerForeignKey;
 import com.walksocket.er.sqlite.context.inner.CtxInnerKey;
@@ -17,7 +21,7 @@ import java.util.List;
 /**
  * CtxTable.
  */
-public class CtxTable implements Value {
+public class CtxTable implements Value, Copiable<CtxTable> {
 
   /**
    * dbTable.
@@ -68,4 +72,72 @@ public class CtxTable implements Value {
    * dbTableCheckList.
    */
   public List<DbTableCheck> dbTableCheckList = new ArrayList<>();
+
+  @Override
+  public CtxTable copy() {
+    var newTableId = Utils.randomString();
+    var newCtxTable = Json.copy(this, CtxTable.class);
+
+    // DbTable
+    newCtxTable.dbTable.tableId = newTableId;
+    newCtxTable.dbTable.tableName = String.format("CopyOf_%s_%s",
+        newCtxTable.dbTable.tableName,
+        Date.timestamp());
+
+    // DbTableOption
+    newCtxTable.dbTableOption.tableId = newTableId;
+
+    // DbTableGroup
+    if (newCtxTable.dbTableGroup != null) {
+      newCtxTable.dbTableGroup.tableId = newTableId;
+    }
+
+    // List<DbTableColumn>
+    for (var newDbTableColumn : newCtxTable.dbTableColumnList) {
+      newDbTableColumn.tableId = newTableId;
+    }
+
+    // DbTablePartition
+    if (newCtxTable.dbTablePartition != null) {
+      newCtxTable.dbTablePartition.tableId = newTableId;
+    }
+
+    // CtxInnerPrimaryKey
+    if (newCtxTable.ctxInnerPrimaryKey.dbTablePrimaryKey != null) {
+      newCtxTable.ctxInnerPrimaryKey.dbTablePrimaryKey.tableId = newTableId;
+      for (var newDbTablePrimaryKeyColumn : newCtxTable.ctxInnerPrimaryKey.dbTablePrimaryKeyColumnList) {
+        newDbTablePrimaryKeyColumn.tableId = newTableId;
+      }
+    }
+
+    // List<CtxInnerUniqueKey>
+    for (var newCtxInnerUniqueKey : newCtxTable.ctxInnerUniqueKeyList) {
+      if (newCtxInnerUniqueKey.dbTableUniqueKey != null) {
+        newCtxInnerUniqueKey.dbTableUniqueKey.tableId = newTableId;
+        for (var newDbTableUniqueKeyColumn : newCtxInnerUniqueKey.dbTableUniqueKeyColumnList) {
+          newDbTableUniqueKeyColumn.tableId = newTableId;
+        }
+      }
+    }
+
+    // List<CtxInnerKey>
+    for (var newCtxInnerKey : newCtxTable.ctxInnerKeyList) {
+      if (newCtxInnerKey.dbTableKey != null) {
+        newCtxInnerKey.dbTableKey.tableId = newTableId;
+        for (var newDbTableKeyColumn : newCtxInnerKey.dbTableKeyColumnList) {
+          newDbTableKeyColumn.tableId = newTableId;
+        }
+      }
+    }
+
+    // List<CtxInnerForeignKey>
+    newCtxTable.ctxInnerForeignKeyList = new ArrayList<>();
+
+    // List<DbTableCheck>
+    for (var newDbTableCheck : newCtxTable.dbTableCheckList) {
+      newDbTableCheck.tableId = newTableId;
+    }
+
+    return newCtxTable;
+  }
 }

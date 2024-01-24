@@ -3,6 +3,7 @@ package com.walksocket.er.component;
 import com.walksocket.er.App;
 import com.walksocket.er.Config;
 import com.walksocket.er.Const;
+import com.walksocket.er.Copiable;
 import com.walksocket.er.Date;
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.Screen;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -51,6 +53,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * Main.
  */
 public class Main extends JFrame {
+
+  /**
+   * copied data.
+   */
+  private final HashMap<Class, Copiable> copiedData = new HashMap<>();
 
   /**
    * draw lock.
@@ -575,5 +582,16 @@ public class Main extends JFrame {
       return new ErTemplate(basePath, path);
     }
     return new ErTemplate(path);
+  }
+
+  public <T extends Copiable> void setCopied(Copiable copy, Class<T> cls) {
+    copiedData.put(cls, copy);
+  }
+
+  public <T extends Copiable> T getCopied(Class<T> cls) {
+    if (!copiedData.containsKey(cls)) {
+      return null;
+    }
+    return (T) copiedData.get(cls).copy();
   }
 }

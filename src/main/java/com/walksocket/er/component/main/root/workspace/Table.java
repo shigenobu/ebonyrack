@@ -722,6 +722,14 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
       });
       add(menuItemClass);
 
+      // copy
+      var menuItemCopy = new JMenuItem("Copy table");
+      menuItemCopy.addActionListener(actionEvent -> {
+        workspace.getRoot().getMain().setCopied(ctxTable, CtxTable.class);
+      });
+      addSeparator();
+      add(menuItemCopy);
+
       // remove
       var menuItemRemove = new JMenuItem("Remove table");
       menuItemRemove.addActionListener(actionEvent -> {

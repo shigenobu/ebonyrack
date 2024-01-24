@@ -1013,6 +1013,37 @@ public class Workspace extends ErConnectorPositioned {
         }
       });
       add(menuItemNewNote);
+      addSeparator();
+
+      // paste table
+      var menuItemPasteTable = new JMenuItem("Paste table");
+      var copiedCtxTable = getRoot().getMain().getCopied(CtxTable.class);
+      if (copiedCtxTable == null) {
+        menuItemPasteTable.setEnabled(false);
+      }
+      menuItemPasteTable.addActionListener(actionEvent -> {
+        // check
+        if (positionedTables.size() > Table.MAX_POSITIONED) {
+          JOptionPane.showMessageDialog(workspace, "No more create table.");
+          return;
+        }
+
+        try {
+          // register for copy
+          copiedCtxTable.dbTableOption.posX = x;
+          copiedCtxTable.dbTableOption.posY = y;
+          Bucket.getInstance().getBucketTable().registerForCopy(copiedCtxTable);
+
+          // add
+          var table = new Table(workspace, copiedCtxTable);
+          workspace.addTable(table);
+
+        } catch (Exception e) {
+          Log.error(e);
+          JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
+        }
+      });
+      add(menuItemPasteTable);
     }
   }
 }

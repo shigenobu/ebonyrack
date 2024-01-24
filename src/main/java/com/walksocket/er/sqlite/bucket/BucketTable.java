@@ -346,6 +346,83 @@ public class BucketTable {
   }
 
   /**
+   * register for copy.
+   *
+   * @param ctxTable ctxTable
+   * @throws Exception
+   */
+  public void registerForCopy(CtxTable ctxTable) throws Exception {
+    try {
+      // database
+      con.begin();
+      con.executeInsert(ctxTable.dbTable);
+      con.executeInsert(ctxTable.dbTableOption);
+
+      // DbTableGroup
+      if (ctxTable.dbTableGroup != null) {
+        con.executeInsert(ctxTable.dbTableGroup);
+      }
+
+      // List<DbTableColumn>
+      for (var dbTableColumn : ctxTable.dbTableColumnList) {
+        con.executeInsert(dbTableColumn);
+      }
+
+      // DbTablePartition
+      if (ctxTable.dbTablePartition != null) {
+        con.executeInsert(ctxTable.dbTablePartition);
+      }
+
+      // CtxInnerPrimaryKey
+      if (ctxTable.ctxInnerPrimaryKey.dbTablePrimaryKey != null) {
+        con.executeInsert(ctxTable.ctxInnerPrimaryKey.dbTablePrimaryKey);
+        for (var dbTablePrimaryKeyColumn : ctxTable.ctxInnerPrimaryKey.dbTablePrimaryKeyColumnList) {
+          con.executeInsert(dbTablePrimaryKeyColumn);
+        }
+      }
+
+      // List<CtxInnerUniqueKey>
+      for (var ctxInnerUniqueKey : ctxTable.ctxInnerUniqueKeyList) {
+        if (ctxInnerUniqueKey.dbTableUniqueKey != null) {
+          con.executeInsert(ctxInnerUniqueKey.dbTableUniqueKey);
+          for (var dbTableUniqueKeyColumn : ctxInnerUniqueKey.dbTableUniqueKeyColumnList) {
+            con.executeInsert(dbTableUniqueKeyColumn);
+          }
+        }
+      }
+
+      // List<CtxInnerKey>
+      for (var ctxInnerKey : ctxTable.ctxInnerKeyList) {
+        if (ctxInnerKey.dbTableKey != null) {
+          con.executeInsert(ctxInnerKey.dbTableKey);
+          for (var dbTableKeyColumn : ctxInnerKey.dbTableKeyColumnList) {
+            con.executeInsert(dbTableKeyColumn);
+          }
+        }
+      }
+
+      // List<CtxInnerForeignKey>
+      // not copy
+
+      // List<DbTableCheck>
+      for (var dbTableCheck : ctxTable.dbTableCheckList) {
+        con.executeInsert(dbTableCheck);
+      }
+
+      con.commit();
+
+      // memory
+      ctxTableList.add(ctxTable);
+
+    } catch (Exception e) {
+      con.rollback();
+      Log.error(e);
+
+      throw e;
+    }
+  }
+
+  /**
    * save.
    *
    * @param ctxTable          ctxTable

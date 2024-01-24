@@ -40,6 +40,10 @@ public class Json {
    * @return binding object
    */
   public static <T> T toObject(String json, Class<T> cls) {
+    if (json == null) {
+      return null;
+    }
+
     try {
       return gson.fromJson(json, cls);
     } catch (Exception e) {
@@ -55,6 +59,10 @@ public class Json {
    * @return json string
    */
   public static String toJsonString(Object src) {
+    if (src == null) {
+      return null;
+    }
+
     try {
       return gson.toJson(src);
     } catch (Exception e) {
@@ -70,8 +78,34 @@ public class Json {
    * @return json string
    */
   public static String toJsonStringFriendly(Object src) {
+    if (src == null) {
+      return null;
+    }
+
     try {
       return gsonPretty.toJson(src);
+    } catch (Exception e) {
+      Log.error(e);
+    }
+    return null;
+  }
+
+  /**
+   * copy.
+   *
+   * @param src src
+   * @param cls class
+   * @param <T> type
+   * @return obj
+   */
+  public static <T> T copy(T src, Class<T> cls) {
+    if (src == null) {
+      return null;
+    }
+
+    try {
+      var json = toJsonString(src);
+      return toObject(json, cls);
     } catch (Exception e) {
       Log.error(e);
     }
