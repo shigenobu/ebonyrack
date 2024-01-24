@@ -1113,6 +1113,13 @@ public class Workspace extends ErConnectorPositioned {
 
       });
       add(menuItemImportTable);
+
+      // import sequence
+      var menuItemImportSequence = new JMenuItem("Import sequence");
+      menuItemImportSequence.addActionListener(actionEvent -> {
+
+      });
+      add(menuItemImportSequence);
     }
   }
 }
