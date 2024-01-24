@@ -588,8 +588,8 @@ public class Main extends JFrame {
    * set copied.
    *
    * @param copy copy
-   * @param cls class
-   * @param <T> type
+   * @param cls  class
+   * @param <T>  type
    */
   public <T extends Copiable> void setCopied(Copiable copy, Class<T> cls) {
     copiedData.put(cls, copy);
@@ -599,8 +599,8 @@ public class Main extends JFrame {
    * get copied.
    *
    * @param cls class
-   * @return copy
    * @param <T> type
+   * @return copy
    */
   public <T extends Copiable> T getCopied(Class<T> cls) {
     if (!copiedData.containsKey(cls)) {

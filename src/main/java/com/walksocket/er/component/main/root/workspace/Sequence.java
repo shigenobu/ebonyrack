@@ -299,6 +299,14 @@ public class Sequence extends ErConnectorEndpoint {
       });
       add(menuItemDdl);
 
+      // copy
+      var menuItemCopy = new JMenuItem("Copy sequence");
+      menuItemCopy.addActionListener(actionEvent -> {
+        workspace.getRoot().getMain().setCopied(ctxSequence, CtxSequence.class);
+      });
+      addSeparator();
+      add(menuItemCopy);
+
       // remove
       var menuItemRemove = new JMenuItem("Remove sequence");
       menuItemRemove.addActionListener(actionEvent -> {

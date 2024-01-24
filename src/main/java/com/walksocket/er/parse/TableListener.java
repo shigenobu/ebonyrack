@@ -343,7 +343,8 @@ public class TableListener extends MariaDBParserBaseListener {
       seqInIndex++;
     }
 
-    if (Utils.isNullOrEmpty(tmpUniqueKey.constraintName) && tmpUniqueKey.columnKeyOptionList.size() > 0) {
+    if (Utils.isNullOrEmpty(tmpUniqueKey.constraintName)
+        && tmpUniqueKey.columnKeyOptionList.size() > 0) {
       var constraintName = tmpUniqueKey.columnKeyOptionList.stream()
           .map(c -> c.columnName)
           .collect(Collectors.joining("_"));
@@ -376,7 +377,8 @@ public class TableListener extends MariaDBParserBaseListener {
       tmpKeyList.add(tmpKey);
 
       if (simpleIndexDeclarationContext.uid() != null) {
-        tmpKey.constraintName = Utils.removeBackQuote(simpleIndexDeclarationContext.uid().getText());
+        tmpKey.constraintName = Utils.removeBackQuote(
+            simpleIndexDeclarationContext.uid().getText());
         tmpKey.keyName = tmpKey.constraintName;
       }
 

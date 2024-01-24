@@ -112,6 +112,16 @@ public class BucketSequence {
   }
 
   /**
+   * register for copy.
+   *
+   * @param ctxSequence ctxSequence
+   * @throws Exception
+   */
+  public void registerForCopy(CtxSequence ctxSequence) throws Exception {
+    register(ctxSequence);
+  }
+
+  /**
    * save.
    *
    * @param ctxSequence ctxSequence

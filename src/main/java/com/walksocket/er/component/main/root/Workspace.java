@@ -1044,6 +1044,35 @@ public class Workspace extends ErConnectorPositioned {
         }
       });
       add(menuItemPasteTable);
+
+      // paste sequence
+      var menuItemPasteSequence = new JMenuItem("Paste sequence");
+      var copiedCtxSequence = getRoot().getMain().getCopied(CtxSequence.class);
+      if (copiedCtxSequence == null) {
+        menuItemPasteSequence.setEnabled(false);
+      }
+      menuItemPasteSequence.addActionListener(actionEvent -> {
+        if (positionedSequences.size() > Sequence.MAX_POSITIONED) {
+          JOptionPane.showMessageDialog(workspace, "No more create sequence.");
+          return;
+        }
+
+        try {
+          // register for copy
+          copiedCtxSequence.dbSequenceOption.posX = x;
+          copiedCtxSequence.dbSequenceOption.posY = y;
+
+          Bucket.getInstance().getBucketSequence().registerForCopy(copiedCtxSequence);
+
+          // add
+          var sequence = new Sequence(workspace, copiedCtxSequence);
+          workspace.addSequence(sequence);
+        } catch (Exception e) {
+          Log.error(e);
+          JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
+        }
+      });
+      add(menuItemPasteSequence);
     }
   }
 }
