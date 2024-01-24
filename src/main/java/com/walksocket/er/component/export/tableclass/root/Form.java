@@ -132,7 +132,7 @@ public class Form extends JPanel {
 
     var templateDir = new File(Env.getTemplateDir());
     for (var file : templateDir.listFiles()) {
-      if (file.getName().endsWith(".vm")) {
+      if (file.getName().endsWith(".vm") && !file.getName().startsWith("__")) {
         comboBoxTemplate.addItem(file.getName());
       }
     }

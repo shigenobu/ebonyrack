@@ -71,6 +71,7 @@ public class Env {
       var sampleFileNameList = new ArrayList<String>();
       sampleFileNameList.add("Sample.txt.vm");
       sampleFileNameList.add("Sample.java.vm");
+      sampleFileNameList.add("__SampleMacro.vm");
       for (var sampleFileName : sampleFileNameList) {
         var sampleFile = new File(f, sampleFileName);
         if (!sampleFile.exists()) {

@@ -1,15 +1,4 @@
-#macro(getType $value)
-    #set($type = "Object")
-    #if($value.contains("long"))
-        #set($type = "long")
-    #elseif($value.contains("int"))
-        #set($type = "int")
-    #elseif($value.contains("char") || $value.contains("text"))
-        #set($type = "String")
-    #elseif($value.contains("binary") || $value.contains("blob"))
-        #set($type = "byte[]")
-    #end
-${type}#end
+#parse("__SampleMacro.vm")
 package XXX;
 
 #set($className = $ErTemplateUtils.toCamelCase($tmpTable.tableName))
