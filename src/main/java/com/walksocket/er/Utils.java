@@ -123,6 +123,20 @@ public class Utils {
   }
 
   /**
+   * to int.
+   *
+   * @param src string
+   * @return int
+   */
+  public static int toInt(String src) {
+    try {
+      return Integer.parseInt(src);
+    } catch (NumberFormatException e) {
+    }
+    return 0;
+  }
+
+  /**
    * get random string.
    *
    * @return random string

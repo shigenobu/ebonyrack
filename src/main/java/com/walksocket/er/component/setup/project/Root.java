@@ -2,6 +2,7 @@ package com.walksocket.er.component.setup.project;
 
 import com.walksocket.er.Config;
 import com.walksocket.er.Date;
+import com.walksocket.er.Pos;
 import com.walksocket.er.Size.DialogSmall;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.SetupProject;
@@ -99,6 +100,10 @@ public class Root extends JPanel {
     }
     if (Utils.isNullOrEmpty(cfgProject.dbPath)) {
       JOptionPane.showMessageDialog(this, "Required 'Db path'.");
+      return false;
+    }
+    if (cfgProject.miniSize < 0 || cfgProject.miniSize > Pos.MAX) {
+      JOptionPane.showMessageDialog(this, String.format("Between 0 and %s 'Mini size'.", Pos.MAX));
       return false;
     }
     if (isNew

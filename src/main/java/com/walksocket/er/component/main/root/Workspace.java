@@ -75,6 +75,11 @@ public class Workspace extends ErConnectorPositioned {
   private final Root root;
 
   /**
+   * cfj project.
+   */
+  private final CfgProject cfgProject;
+
+  /**
    * side.
    */
   private Side side;
@@ -118,6 +123,7 @@ public class Workspace extends ErConnectorPositioned {
   public Workspace(Root root, CfgProject cfgProject) {
     super();
     this.root = root;
+    this.cfgProject = cfgProject;
 
     // layout
     setLayout(null);
@@ -824,7 +830,18 @@ public class Workspace extends ErConnectorPositioned {
       }
     }
 
-    return new Dimension(maxWidth, maxHeight);
+    if (cfgProject.miniSize > 0) {
+      if (cfgProject.miniSize > maxWidth) {
+        maxWidth = cfgProject.miniSize;
+      }
+      if (cfgProject.miniSize > maxHeight) {
+        maxHeight = cfgProject.miniSize;
+      }
+    }
+
+    var d = new Dimension(maxWidth, maxHeight);
+    getRoot().getMain().changeTitle(d);
+    return d;
   }
 
 

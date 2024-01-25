@@ -16,6 +16,11 @@ public class CfgProject {
   public String dbPath;
 
   /**
+   * mini size.
+   */
+  public int miniSize;
+
+  /**
    * last opened.
    */
   public int lastOpened;

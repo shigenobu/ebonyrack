@@ -2,6 +2,7 @@ package com.walksocket.er.component.setup.project.root;
 
 import com.walksocket.er.Env;
 import com.walksocket.er.Log;
+import com.walksocket.er.Pos;
 import com.walksocket.er.Size.DialogSmall;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.setup.project.Root;
@@ -56,6 +57,17 @@ public class Form extends JPanel {
    * text field db path.
    */
   private final JTextField textFieldDbPath = new JTextField(30);
+
+  /**
+   * label mini size.
+   */
+  private final JLabel labelMiniSize = new JLabel(String.format("Mini size (0 - %s, 0 is auto):",
+      Pos.MAX));
+
+  /**
+   * text field mini size.
+   */
+  private final JTextField textFieldMiniSize = new JTextField(10);
 
   /**
    * Constructor.
@@ -123,6 +135,16 @@ public class Form extends JPanel {
     });
     textFieldDbPath.setText(cfgProject.dbPath);
     panel2.add(textFieldDbPath);
+
+    // panel - mini size
+    var panel3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    panel3.setPreferredSize(new Dimension(DialogSmall.WIDTH - 20, DialogSmall.HEIGHT / 10));
+    add(panel3);
+    labelMiniSize.setPreferredSize(
+        new Dimension(DialogSmall.WIDTH / 4, DialogSmall.HEIGHT / 10));
+    panel3.add(labelMiniSize);
+    textFieldMiniSize.setText(String.valueOf(cfgProject.miniSize));
+    panel3.add(textFieldMiniSize);
   }
 
   /**
@@ -131,5 +153,6 @@ public class Form extends JPanel {
   public void packCfgProject() {
     cfgProject.name = Utils.getString(textFieldName);
     cfgProject.dbPath = Utils.getString(textFieldDbPath);
+    cfgProject.miniSize = Utils.toInt(Utils.getString(textFieldMiniSize));
   }
 }

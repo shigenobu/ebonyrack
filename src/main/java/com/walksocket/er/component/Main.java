@@ -56,6 +56,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class Main extends JFrame {
 
   /**
+   * title.
+   */
+  private String title;
+
+  /**
    * copied data.
    */
   private final HashMap<Class, Copiable> copiedData = new HashMap<>();
@@ -128,7 +133,8 @@ public class Main extends JFrame {
       w = cfgProject.pos.width;
       h = cfgProject.pos.height;
     }
-    setTitle(String.format("%s - main%s", Const.TITLE, readonlyStr));
+    title = String.format("%s - main%s", Const.TITLE, readonlyStr);
+    setTitle(title);
     setLocation(new Point(x, y));
     setSize(new Dimension(w, h));
     setMinimumSize(new Dimension(WindowMain.WIDTH, WindowMain.HEIGHT));
@@ -583,6 +589,15 @@ public class Main extends JFrame {
       return new ErTemplate(basePath, path);
     }
     return new ErTemplate(path);
+  }
+
+  /**
+   * change title.
+   *
+   * @param d dimension
+   */
+  public void changeTitle(Dimension d) {
+    setTitle(String.format("%s (%sx%s)", title, d.width, d.height));
   }
 
   /**

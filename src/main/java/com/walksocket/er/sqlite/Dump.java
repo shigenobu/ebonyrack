@@ -142,7 +142,8 @@ public class Dump {
 
       con.begin();
 
-      Map<String, ?> data = Json.toObject(FileUtils.readString(new FileInputStream(path)), Map.class);
+      Map<String, ?> data = Json.toObject(FileUtils.readString(new FileInputStream(path)),
+          Map.class);
       for (var entry : data.entrySet()) {
         var clsName = entry.getKey();
         var cls = classes.stream()
