@@ -44,14 +44,29 @@ public class ImportTable {
   private final Connection con;
 
   /**
-   * created table names.
-   */
-  private final List<String> createdTableNames = new ArrayList<>();
-
-  /**
    * seq.
    */
   private int seq;
+
+  /**
+   * new table names.
+   */
+  private final List<String> newTableNames = new ArrayList<>();
+
+  /**
+   * new db dict column type list.
+   */
+  private final List<DbDictColumnType> newDbDictColumnTypeList = new ArrayList<>();
+
+  /**
+   * new db dict column list.
+   */
+  private final List<DbDictColumn> newDbDictColumnList = new ArrayList<>();
+
+  /**
+   * new db dict partition list.
+   */
+  private final List<DbDictPartition> newDbDictPartitionList = new ArrayList<>();
 
   /**
    * Constructor.
@@ -79,7 +94,7 @@ public class ImportTable {
    * @throws SQLException
    */
   public CtxTable createTableAndGet(String ddl) throws SQLException {
-    if (createdTableNames.size() > Table.MAX_POSITIONED) {
+    if (newTableNames.size() > Table.MAX_POSITIONED) {
       return null;
     }
 
@@ -103,7 +118,7 @@ public class ImportTable {
     if (Utils.isNullOrEmpty(tmpTable.tableName)) {
       return null;
     }
-    if (createdTableNames.contains(tmpTable.tableName)) {
+    if (newTableNames.contains(tmpTable.tableName)) {
       return null;
     }
 
@@ -136,7 +151,7 @@ public class ImportTable {
       dbTable.option = tmpTable.option;
     }
     con.executeInsert(dbTable);
-    createdTableNames.add(dbTable.tableName);
+    newTableNames.add(dbTable.tableName);
     ctxTable.dbTable = dbTable;
 
     // column
@@ -158,9 +173,7 @@ public class ImportTable {
         con.executeInsert(dbDictColumnType);
         seq++;
 
-        if (Bucket.initiated()) {
-          Bucket.getInstance().getBucketDict().dbDictColumnTypeList.add(dbDictColumnType);
-        }
+        newDbDictColumnTypeList.add(dbDictColumnType);
       }
 
       // DbDictColumn
@@ -201,9 +214,7 @@ public class ImportTable {
         dbDictColumn.dictColumnId = Utils.randomString();
         con.executeInsert(dbDictColumn);
 
-        if (Bucket.initiated()) {
-          Bucket.getInstance().getBucketDict().dbDictColumnList.add(dbDictColumn);
-        }
+        newDbDictColumnList.add(dbDictColumn);
       }
       createdDbDictColumnList.add(dbDictColumn);
 
@@ -233,9 +244,7 @@ public class ImportTable {
         dbDictPartition.expression = tmpPartition.expression;
         con.executeInsert(dbDictPartition);
 
-        if (Bucket.initiated()) {
-          Bucket.getInstance().getBucketDict().dbDictPartitionList.add(dbDictPartition);
-        }
+        newDbDictPartitionList.add(dbDictPartition);
       }
 
       // DbTablePartition
@@ -402,5 +411,32 @@ public class ImportTable {
     }
 
     return ctxTable;
+  }
+
+  /**
+   * get new db dict column type list.
+   *
+   * @return new db dict column type list
+   */
+  public List<DbDictColumnType> getNewDbDictColumnTypeList() {
+    return newDbDictColumnTypeList;
+  }
+
+  /**
+   * get new db dict column list.
+   *
+   * @return new db dict column list
+   */
+  public List<DbDictColumn> getNewDbDictColumnList() {
+    return newDbDictColumnList;
+  }
+
+  /**
+   * get new db dict partition list.
+   *
+   * @return new db dict partition list
+   */
+  public List<DbDictPartition> getNewDbDictPartitionList() {
+    return newDbDictPartitionList;
   }
 }

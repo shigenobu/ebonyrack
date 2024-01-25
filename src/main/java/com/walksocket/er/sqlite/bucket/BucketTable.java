@@ -1288,6 +1288,14 @@ public class BucketTable {
         throw new Exception("Fault to import table.");
       }
 
+      // dict
+      Bucket.getInstance().getBucketDict().dbDictColumnTypeList.addAll(
+          importTable.getNewDbDictColumnTypeList());
+      Bucket.getInstance().getBucketDict().dbDictColumnList.addAll(
+          importTable.getNewDbDictColumnList());
+      Bucket.getInstance().getBucketDict().dbDictPartitionList.addAll(
+          importTable.getNewDbDictPartitionList());
+
       // DbTableOption
       var dbTableOption = new DbTableOption();
       dbTableOption.tableId = ctxTable.dbTable.tableId;

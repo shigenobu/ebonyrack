@@ -151,15 +151,6 @@ public class Bucket {
   }
 
   /**
-   * initiated.
-   *
-   * @return if initiated, true
-   */
-  public static boolean initiated() {
-    return bucket != null;
-  }
-
-  /**
    * release.
    */
   public static void release() {
