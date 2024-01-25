@@ -7,6 +7,7 @@ import com.walksocket.er.definition.NotNull;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.Connection;
 import com.walksocket.er.sqlite.Entity;
+import com.walksocket.er.sqlite.ImportTable;
 import com.walksocket.er.sqlite.context.CtxTable;
 import com.walksocket.er.sqlite.context.inner.CtxInnerForeignKey;
 import com.walksocket.er.sqlite.context.inner.CtxInnerKey;
@@ -32,6 +33,7 @@ import com.walksocket.er.sqlite.tmp.TmpColumn;
 import com.walksocket.er.sqlite.tmp.TmpForeignKey;
 import com.walksocket.er.sqlite.tmp.TmpKey;
 import com.walksocket.er.sqlite.tmp.TmpTable;
+import java.awt.Point;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -1259,6 +1261,47 @@ public class BucketTable {
       con.begin();
       con.executeUpdate(ctxTable.dbTableOption);
       con.commit();
+    } catch (Exception e) {
+      con.rollback();
+      Log.error(e);
+
+      throw e;
+    }
+  }
+
+  /**
+   * import from ddl.
+   *
+   * @param ddl   ddl
+   * @param point point
+   * @return ctx
+   * @throws Exception
+   */
+  public CtxTable importFromDdl(String ddl, Point point) throws Exception {
+    try {
+      // database
+      con.begin();
+
+      var importTable = new ImportTable(con);
+      var ctxTable = importTable.createTableAndGet(ddl);
+      if (ctxTable == null) {
+        throw new Exception("Fault to import table.");
+      }
+
+      // DbTableOption
+      var dbTableOption = new DbTableOption();
+      dbTableOption.tableId = ctxTable.dbTable.tableId;
+      dbTableOption.posX = point.x;
+      dbTableOption.posY = point.y;
+      con.executeInsert(dbTableOption);
+      ctxTable.dbTableOption = dbTableOption;
+      con.commit();
+
+      // memory
+      ctxTableList.add(ctxTable);
+
+      return ctxTable;
+
     } catch (Exception e) {
       con.rollback();
       Log.error(e);

@@ -7,6 +7,7 @@ import com.walksocket.er.Log;
 import com.walksocket.er.Pos;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.ImportSequence;
+import com.walksocket.er.component.ImportTable;
 import com.walksocket.er.component.main.Root;
 import com.walksocket.er.component.main.root.workspace.Note;
 import com.walksocket.er.component.main.root.workspace.Sequence;
@@ -1127,7 +1128,14 @@ public class Workspace extends ErConnectorPositioned {
       // import table
       var menuItemImportTable = new JMenuItem("Import table");
       menuItemImportTable.addActionListener(actionEvent -> {
+        if (positionedSequences.size() > Table.MAX_POSITIONED) {
+          JOptionPane.showMessageDialog(workspace, "No more create table.");
+          return;
+        }
 
+        var importTable = new ImportTable(workspace, new Point(x, y));
+        importTable.setModal(true);
+        importTable.setVisible(true);
       });
       add(menuItemImportTable);
 
@@ -1145,6 +1153,31 @@ public class Workspace extends ErConnectorPositioned {
       });
       add(menuItemImportSequence);
     }
+  }
+
+  /**
+   * complete table ddl.
+   *
+   * @param ddl   ddl
+   * @param point point
+   * @return if success
+   */
+  public boolean completeTableDdl(String ddl, Point point) {
+    try {
+      var newCtxTable = Bucket.getInstance().getBucketTable().importFromDdl(ddl, point);
+
+      // add
+      var table = new Table(this, newCtxTable);
+      addTable(table);
+
+      return true;
+
+    } catch (Exception e) {
+      Log.error(e);
+      JOptionPane.showMessageDialog(getRoot(), e.getMessage());
+    }
+
+    return false;
   }
 
   /**

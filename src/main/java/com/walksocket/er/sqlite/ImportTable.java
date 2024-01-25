@@ -157,6 +157,10 @@ public class ImportTable {
         dbDictColumnType.columnType = tmpColumn.columnType;
         con.executeInsert(dbDictColumnType);
         seq++;
+
+        if (Bucket.initiated()) {
+          Bucket.getInstance().getBucketDict().dbDictColumnTypeList.add(dbDictColumnType);
+        }
       }
 
       // DbDictColumn
@@ -196,6 +200,10 @@ public class ImportTable {
       } else {
         dbDictColumn.dictColumnId = Utils.randomString();
         con.executeInsert(dbDictColumn);
+
+        if (Bucket.initiated()) {
+          Bucket.getInstance().getBucketDict().dbDictColumnList.add(dbDictColumn);
+        }
       }
       createdDbDictColumnList.add(dbDictColumn);
 
@@ -224,6 +232,10 @@ public class ImportTable {
         dbDictPartition.partitionName = tmpPartition.getExpressionHash();
         dbDictPartition.expression = tmpPartition.expression;
         con.executeInsert(dbDictPartition);
+
+        if (Bucket.initiated()) {
+          Bucket.getInstance().getBucketDict().dbDictPartitionList.add(dbDictPartition);
+        }
       }
 
       // DbTablePartition
