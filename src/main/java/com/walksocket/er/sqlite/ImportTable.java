@@ -2,7 +2,6 @@ package com.walksocket.er.sqlite;
 
 import com.walksocket.antlr4.MariaDBLexer;
 import com.walksocket.antlr4.MariaDBParser;
-import com.walksocket.er.Log;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.main.root.workspace.Table;
 import com.walksocket.er.parse.TableListener;

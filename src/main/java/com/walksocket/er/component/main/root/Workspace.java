@@ -6,6 +6,7 @@ import com.walksocket.er.Date;
 import com.walksocket.er.Log;
 import com.walksocket.er.Pos;
 import com.walksocket.er.Utils;
+import com.walksocket.er.component.ImportSequence;
 import com.walksocket.er.component.main.Root;
 import com.walksocket.er.component.main.root.workspace.Note;
 import com.walksocket.er.component.main.root.workspace.Sequence;
@@ -29,6 +30,7 @@ import com.walksocket.er.sqlite.entity.DbTableOption;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.TexturePaint;
 import java.awt.event.MouseAdapter;
@@ -1132,9 +1134,41 @@ public class Workspace extends ErConnectorPositioned {
       // import sequence
       var menuItemImportSequence = new JMenuItem("Import sequence");
       menuItemImportSequence.addActionListener(actionEvent -> {
+        if (positionedSequences.size() > Sequence.MAX_POSITIONED) {
+          JOptionPane.showMessageDialog(workspace, "No more create sequence.");
+          return;
+        }
 
+        var importSequence = new ImportSequence(workspace, new Point(x, y));
+        importSequence.setModal(true);
+        importSequence.setVisible(true);
       });
       add(menuItemImportSequence);
     }
+  }
+
+  /**
+   * complete sequence ddl.
+   *
+   * @param ddl   ddl
+   * @param point point
+   * @return if success
+   */
+  public boolean completeSequenceDdl(String ddl, Point point) {
+    try {
+      var newCtxSequence = Bucket.getInstance().getBucketSequence().importFromDdl(ddl, point);
+
+      // add
+      var sequence = new Sequence(this, newCtxSequence);
+      addSequence(sequence);
+
+      return true;
+
+    } catch (Exception e) {
+      Log.error(e);
+      JOptionPane.showMessageDialog(getRoot(), e.getMessage());
+    }
+
+    return false;
   }
 }

@@ -4,10 +4,12 @@ import com.walksocket.er.Log;
 import com.walksocket.er.Pos;
 import com.walksocket.er.sqlite.Connection;
 import com.walksocket.er.sqlite.Entity;
+import com.walksocket.er.sqlite.ImportSequence;
 import com.walksocket.er.sqlite.context.CtxSequence;
 import com.walksocket.er.sqlite.entity.DbSequence;
 import com.walksocket.er.sqlite.entity.DbSequenceOption;
 import com.walksocket.er.sqlite.tmp.TmpSequence;
+import java.awt.Point;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -193,6 +195,47 @@ public class BucketSequence {
       con.begin();
       con.executeUpdate(ctxSequence.dbSequenceOption);
       con.commit();
+    } catch (Exception e) {
+      con.rollback();
+      Log.error(e);
+
+      throw e;
+    }
+  }
+
+  /**
+   * import from ddl.
+   *
+   * @param ddl   ddl
+   * @param point point
+   * @return ctx
+   * @throws Exception
+   */
+  public CtxSequence importFromDdl(String ddl, Point point) throws Exception {
+    try {
+      // database
+      con.begin();
+
+      var importSequence = new ImportSequence(con);
+      var ctxSequence = importSequence.createSequenceAndGet(ddl);
+      if (ctxSequence == null) {
+        throw new Exception("Fault to import sequence.");
+      }
+
+      // DbSequenceOption
+      var dbSequenceOption = new DbSequenceOption();
+      dbSequenceOption.sequenceId = ctxSequence.dbSequence.sequenceId;
+      dbSequenceOption.posX = point.x;
+      dbSequenceOption.posY = point.y;
+      con.executeInsert(dbSequenceOption);
+      ctxSequence.dbSequenceOption = dbSequenceOption;
+      con.commit();
+
+      // memory
+      ctxSequenceList.add(ctxSequence);
+
+      return ctxSequence;
+
     } catch (Exception e) {
       con.rollback();
       Log.error(e);
