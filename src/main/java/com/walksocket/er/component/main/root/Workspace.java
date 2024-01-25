@@ -6,8 +6,8 @@ import com.walksocket.er.Date;
 import com.walksocket.er.Log;
 import com.walksocket.er.Pos;
 import com.walksocket.er.Utils;
-import com.walksocket.er.component.ImportSequence;
-import com.walksocket.er.component.ImportTable;
+import com.walksocket.er.component.ImpSequence;
+import com.walksocket.er.component.ImpTable;
 import com.walksocket.er.component.main.Root;
 import com.walksocket.er.component.main.root.workspace.Note;
 import com.walksocket.er.component.main.root.workspace.Sequence;
@@ -1128,14 +1128,14 @@ public class Workspace extends ErConnectorPositioned {
       // import table
       var menuItemImportTable = new JMenuItem("Import table");
       menuItemImportTable.addActionListener(actionEvent -> {
-        if (positionedSequences.size() > Table.MAX_POSITIONED) {
+        if (positionedTables.size() > Table.MAX_POSITIONED) {
           JOptionPane.showMessageDialog(workspace, "No more create table.");
           return;
         }
 
-        var importTable = new ImportTable(workspace, new Point(x, y));
-        importTable.setModal(true);
-        importTable.setVisible(true);
+        var impTable = new ImpTable(workspace, new Point(x, y));
+        impTable.setModal(true);
+        impTable.setVisible(true);
       });
       add(menuItemImportTable);
 
@@ -1147,9 +1147,9 @@ public class Workspace extends ErConnectorPositioned {
           return;
         }
 
-        var importSequence = new ImportSequence(workspace, new Point(x, y));
-        importSequence.setModal(true);
-        importSequence.setVisible(true);
+        var impSequence = new ImpSequence(workspace, new Point(x, y));
+        impSequence.setModal(true);
+        impSequence.setVisible(true);
       });
       add(menuItemImportSequence);
     }

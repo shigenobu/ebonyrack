@@ -1,7 +1,7 @@
 package com.walksocket.er.component.imp.sequence;
 
 import com.walksocket.er.Size.DialogSmall;
-import com.walksocket.er.component.ImportSequence;
+import com.walksocket.er.component.ImpSequence;
 import com.walksocket.er.component.imp.sequence.root.Form;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -22,9 +22,9 @@ public class Root extends JPanel {
   /**
    * Constructor.
    *
-   * @param importSequence importSequence
+   * @param impSequence impSequence
    */
-  public Root(ImportSequence importSequence) {
+  public Root(ImpSequence impSequence) {
     // layout
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -41,7 +41,7 @@ public class Root extends JPanel {
     add(panel);
     buttonImport.addActionListener(actionEvent -> {
       var ddl = form.getDdl();
-      importSequence.complete(ddl);
+      impSequence.complete(ddl);
     });
     panel.add(buttonImport);
   }

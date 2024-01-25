@@ -78,8 +78,8 @@ public class Env {
           try {
             var stream = App.class.getClassLoader()
                 .getResourceAsStream(String.format("template/%s", sampleFileName));
-            var data = com.walksocket.er.File.readString(stream);
-            com.walksocket.er.File.writeString(new FileOutputStream(sampleFile), data);
+            var data = FileUtils.readString(stream);
+            FileUtils.writeString(new FileOutputStream(sampleFile), data);
           } catch (IOException e) {
             Log.error(e);
           }

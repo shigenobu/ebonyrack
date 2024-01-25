@@ -18,7 +18,7 @@ public class Word {
   static {
     try (var stream = App.class.getClassLoader()
         .getResourceAsStream("database/reserved.txt")) {
-      var lines = File.readString(stream).split("\n");
+      var lines = FileUtils.readString(stream).split("\n");
       for (var w : lines) {
         w = w.trim();
         if (Utils.isNullOrEmpty(w)) {

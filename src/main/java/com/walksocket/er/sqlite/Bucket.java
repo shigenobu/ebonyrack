@@ -2,6 +2,7 @@ package com.walksocket.er.sqlite;
 
 import com.walksocket.er.App;
 import com.walksocket.er.Const;
+import com.walksocket.er.FileUtils;
 import com.walksocket.er.Log;
 import com.walksocket.er.Utils;
 import com.walksocket.er.definition.DataType;
@@ -59,7 +60,7 @@ public class Bucket {
         .getResourceAsStream("database/create.sql")) {
       // ----------
       // load create sql
-      for (var ddl : com.walksocket.er.File.readString(stream).split(";")) {
+      for (var ddl : FileUtils.readString(stream).split(";")) {
         var builder = new StringBuilder();
         for (var line : ddl.split("\n")) {
           line = line.trim();

@@ -5,6 +5,7 @@ import com.walksocket.er.Config;
 import com.walksocket.er.Const;
 import com.walksocket.er.Copiable;
 import com.walksocket.er.Date;
+import com.walksocket.er.FileUtils;
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.Screen;
 import com.walksocket.er.Size.WindowMain;
@@ -279,7 +280,7 @@ public class Main extends JFrame {
             var html = createHtml(workspace);
 
             var f = new File(finalFileName);
-            com.walksocket.er.File.writeString(new FileOutputStream(f), html);
+            FileUtils.writeString(new FileOutputStream(f), html);
 
             cfgProject.lastHtmlSavePath = f.getAbsolutePath();
             Config.save();
@@ -456,7 +457,7 @@ public class Main extends JFrame {
     for (var cssName : cssNames) {
       try (var stream = App.class.getClassLoader()
           .getResourceAsStream(String.format("html/css/%s.css", cssName))) {
-        var data = com.walksocket.er.File.readString(stream);
+        var data = FileUtils.readString(stream);
         cssList.add(data);
       } catch (IOException e) {
         Log.error(e);
@@ -469,7 +470,7 @@ public class Main extends JFrame {
     for (var jsName : jsNames) {
       try (var stream = App.class.getClassLoader()
           .getResourceAsStream(String.format("html/js/%s.js", jsName))) {
-        var data = com.walksocket.er.File.readString(stream);
+        var data = FileUtils.readString(stream);
         jsList.add(data);
       } catch (IOException e) {
         Log.error(e);

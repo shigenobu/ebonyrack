@@ -10,9 +10,9 @@ import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
 
 /**
- * File.
+ * FileUtils.
  */
-public class File {
+public class FileUtils {
 
   /**
    * read string from input stream.
@@ -65,6 +65,6 @@ public class File {
   /**
    * Constructor.
    */
-  private File() {
+  private FileUtils() {
   }
 }

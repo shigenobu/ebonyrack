@@ -3,6 +3,7 @@ package com.walksocket.er.component.export.tableclass;
 import com.walksocket.er.Config;
 import com.walksocket.er.Const;
 import com.walksocket.er.Env;
+import com.walksocket.er.FileUtils;
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogSmall;
 import com.walksocket.er.Utils;
@@ -147,7 +148,7 @@ public class Root extends JPanel {
       var data = template.render();
 
       var f = new File(dir, tmpTableClass.getFinalFileName(ctxTable.dbTable.tableName));
-      com.walksocket.er.File.writeString(new FileOutputStream(f), data);
+      FileUtils.writeString(new FileOutputStream(f), data);
     }
   }
 }

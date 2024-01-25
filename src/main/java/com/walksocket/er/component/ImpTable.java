@@ -11,9 +11,9 @@ import java.awt.Point;
 import javax.swing.WindowConstants;
 
 /**
- * ImportTable.
+ * ImpTable.
  */
-public class ImportTable extends ErDialog {
+public class ImpTable extends ErDialog {
 
   /**
    * workspace.
@@ -31,7 +31,7 @@ public class ImportTable extends ErDialog {
    * @param workspace workspace
    * @param point     point
    */
-  public ImportTable(Workspace workspace, Point point) {
+  public ImpTable(Workspace workspace, Point point) {
     super();
 
     this.workspace = workspace;

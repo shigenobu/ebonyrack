@@ -11,9 +11,9 @@ import java.awt.Point;
 import javax.swing.WindowConstants;
 
 /**
- * ImportSequence.
+ * ImpSequence.
  */
-public class ImportSequence extends ErDialog {
+public class ImpSequence extends ErDialog {
 
   /**
    * workspace.
@@ -31,7 +31,7 @@ public class ImportSequence extends ErDialog {
    * @param workspace workspace
    * @param point     point
    */
-  public ImportSequence(Workspace workspace, Point point) {
+  public ImpSequence(Workspace workspace, Point point) {
     super();
 
     this.workspace = workspace;

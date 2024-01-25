@@ -30,7 +30,7 @@ public class Config {
     }
 
     try (var stream = new FileInputStream(file)) {
-      var json = com.walksocket.er.File.readString(stream);
+      var json = FileUtils.readString(stream);
       instance = Json.toObject(json, Config.class);
     } catch (FileNotFoundException e) {
       Log.error(e);
@@ -53,7 +53,7 @@ public class Config {
    */
   public static void save() {
     try (var stream = new FileOutputStream(file)) {
-      com.walksocket.er.File.writeString(stream, Json.toJsonStringFriendly(instance));
+      FileUtils.writeString(stream, Json.toJsonStringFriendly(instance));
     } catch (FileNotFoundException e) {
       Log.error(e);
     } catch (IOException e) {

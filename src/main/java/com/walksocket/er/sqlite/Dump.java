@@ -1,7 +1,7 @@
 package com.walksocket.er.sqlite;
 
 import com.google.gson.internal.LinkedTreeMap;
-import com.walksocket.er.File;
+import com.walksocket.er.FileUtils;
 import com.walksocket.er.Json;
 import com.walksocket.er.Log;
 import com.walksocket.er.config.CfgProject;
@@ -115,7 +115,7 @@ public class Dump {
           data.get(cls.getSimpleName()).add(instance);
         }
       }
-      File.writeString(new FileOutputStream(path), Json.toJsonStringFriendly(data));
+      FileUtils.writeString(new FileOutputStream(path), Json.toJsonStringFriendly(data));
       return true;
     } catch (Exception e) {
       Log.error(e);
@@ -142,7 +142,7 @@ public class Dump {
 
       con.begin();
 
-      Map<String, ?> data = Json.toObject(File.readString(new FileInputStream(path)), Map.class);
+      Map<String, ?> data = Json.toObject(FileUtils.readString(new FileInputStream(path)), Map.class);
       for (var entry : data.entrySet()) {
         var clsName = entry.getKey();
         var cls = classes.stream()

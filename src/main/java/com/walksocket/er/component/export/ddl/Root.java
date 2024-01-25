@@ -1,6 +1,7 @@
 package com.walksocket.er.component.export.ddl;
 
 import com.walksocket.er.Config;
+import com.walksocket.er.FileUtils;
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogSmall;
 import com.walksocket.er.Utils;
@@ -95,7 +96,7 @@ public class Root extends JPanel {
           // ddl
           var ddl = getDdl(form.getResult().getTmpList().get(0));
           var f = new File(fileName);
-          com.walksocket.er.File.writeString(new FileOutputStream(f), ddl);
+          FileUtils.writeString(new FileOutputStream(f), ddl);
 
           cfgProject.lastDdlSavePath = f.getAbsolutePath();
           Config.save();

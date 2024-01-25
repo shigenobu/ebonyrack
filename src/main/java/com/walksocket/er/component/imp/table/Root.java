@@ -1,7 +1,7 @@
 package com.walksocket.er.component.imp.table;
 
 import com.walksocket.er.Size.DialogSmall;
-import com.walksocket.er.component.ImportTable;
+import com.walksocket.er.component.ImpTable;
 import com.walksocket.er.component.imp.table.root.Form;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -22,9 +22,9 @@ public class Root extends JPanel {
   /**
    * Constructor.
    *
-   * @param importTable importTable
+   * @param impTable impTable
    */
-  public Root(ImportTable importTable) {
+  public Root(ImpTable impTable) {
     // layout
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -41,7 +41,7 @@ public class Root extends JPanel {
     add(panel);
     buttonImport.addActionListener(actionEvent -> {
       var ddl = form.getDdl();
-      importTable.complete(ddl);
+      impTable.complete(ddl);
     });
     panel.add(buttonImport);
   }
