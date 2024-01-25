@@ -1018,14 +1018,19 @@ public class Workspace extends ErConnectorPositioned {
 
       // paste table
       var menuItemPasteTable = new JMenuItem("Paste table");
-      var copiedCtxTable = getRoot().getMain().getCopied(CtxTable.class);
-      if (copiedCtxTable == null) {
+      if (!getRoot().getMain().existCopied(CtxTable.class)) {
         menuItemPasteTable.setEnabled(false);
       }
       menuItemPasteTable.addActionListener(actionEvent -> {
         // check
         if (positionedTables.size() > Table.MAX_POSITIONED) {
           JOptionPane.showMessageDialog(workspace, "No more create table.");
+          return;
+        }
+
+        var copiedCtxTable = getRoot().getMain().getCopied(CtxTable.class);
+        if (copiedCtxTable == null) {
+          JOptionPane.showMessageDialog(workspace, "No copied table.");
           return;
         }
 
@@ -1048,13 +1053,18 @@ public class Workspace extends ErConnectorPositioned {
 
       // paste sequence
       var menuItemPasteSequence = new JMenuItem("Paste sequence");
-      var copiedCtxSequence = getRoot().getMain().getCopied(CtxSequence.class);
-      if (copiedCtxSequence == null) {
+      if (!getRoot().getMain().existCopied(CtxSequence.class)) {
         menuItemPasteSequence.setEnabled(false);
       }
       menuItemPasteSequence.addActionListener(actionEvent -> {
         if (positionedSequences.size() > Sequence.MAX_POSITIONED) {
           JOptionPane.showMessageDialog(workspace, "No more create sequence.");
+          return;
+        }
+
+        var copiedCtxSequence = getRoot().getMain().getCopied(CtxSequence.class);
+        if (copiedCtxSequence == null) {
+          JOptionPane.showMessageDialog(workspace, "No copied sequence.");
           return;
         }
 
@@ -1078,13 +1088,18 @@ public class Workspace extends ErConnectorPositioned {
 
       // paste note
       var menuItemPasteNote = new JMenuItem("Paste note");
-      var copiedCtxNote = getRoot().getMain().getCopied(CtxNote.class);
-      if (copiedCtxNote == null) {
+      if (!getRoot().getMain().existCopied(CtxNote.class)) {
         menuItemPasteNote.setEnabled(false);
       }
       menuItemPasteNote.addActionListener(actionEvent -> {
         if (positionedNotes.size() > Note.MAX_POSITIONED) {
           JOptionPane.showMessageDialog(workspace, "No more create note.");
+          return;
+        }
+
+        var copiedCtxNote = getRoot().getMain().getCopied(CtxNote.class);
+        if (copiedCtxNote == null) {
+          JOptionPane.showMessageDialog(workspace, "No copied note.");
           return;
         }
 

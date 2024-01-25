@@ -608,4 +608,15 @@ public class Main extends JFrame {
     }
     return (T) copiedData.get(cls).copy();
   }
+
+  /**
+   * exist copied.
+   *
+   * @param cls cls
+   * @return if exists, true
+   * @param <T> type
+   */
+  public <T extends Copiable> boolean existCopied(Class<T> cls) {
+    return copiedData.containsKey(cls);
+  }
 }
