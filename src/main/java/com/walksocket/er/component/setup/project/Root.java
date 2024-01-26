@@ -33,14 +33,9 @@ public class Root extends JPanel {
   private final Form form;
 
   /**
-   * button save.
+   * button ok.
    */
-  private final JButton buttonSave = new JButton("Save");
-
-  /**
-   * button save and close.
-   */
-  private final JButton buttonSaveAndClose = new JButton("Save and close");
+  private final JButton buttonOk = new JButton("Ok");
 
   /**
    * is new.
@@ -75,16 +70,12 @@ public class Root extends JPanel {
     panel.setPreferredSize(new Dimension(DialogSmall.WIDTH - 20, DialogSmall.HEIGHT / 10));
     panel.setAlignmentX(Component.LEFT_ALIGNMENT);
     add(panel);
-    buttonSave.addActionListener(actionEvent -> {
-      save();
-    });
-    panel.add(buttonSave);
-    buttonSaveAndClose.addActionListener(actionEvent -> {
+    buttonOk.addActionListener(actionEvent -> {
       if (save()) {
         setupProject.dispose();
       }
     });
-    panel.add(buttonSaveAndClose);
+    panel.add(buttonOk);
   }
 
   /**

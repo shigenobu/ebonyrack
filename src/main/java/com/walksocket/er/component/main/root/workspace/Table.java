@@ -619,6 +619,15 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
   }
 
   @Override
+  protected void movingContinuing(int x, int y) {
+    // position
+    setLocation(x, y);
+
+    // redraw connector
+    redrawAllConnectors();
+  }
+
+  @Override
   protected void movingComplete(int x, int y) {
     try {
       // save

@@ -374,7 +374,7 @@ public class Main extends JFrame {
       protected Void doInBackground() throws Exception {
         while (true) {
           try {
-            Thread.sleep(100);
+            Thread.sleep(200);
             publish();
           } catch (InterruptedException e) {
           }

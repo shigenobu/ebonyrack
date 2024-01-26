@@ -72,6 +72,11 @@ public class ViewFrame extends ErMover {
   }
 
   @Override
+  protected void movingContinuing(int x, int y) {
+    movingComplete(x, y);
+  }
+
+  @Override
   protected void movingComplete(int x, int y) {
     var sp = (JScrollPane) workspace.getParent().getParent();
     sp.getHorizontalScrollBar().setValue((int) ((double) x / scaleRatio));

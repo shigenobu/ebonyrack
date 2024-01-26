@@ -1,5 +1,6 @@
 package com.walksocket.er.custom;
 
+import com.walksocket.er.Date;
 import com.walksocket.er.Pos;
 import com.walksocket.er.Utils;
 import java.awt.MouseInfo;
@@ -23,6 +24,11 @@ public abstract class ErMover extends JPanel {
    * ny.
    */
   private int ny;
+
+  /**
+   * start timestamp millis.
+   */
+  private long startTimestampMillis;
 
   /**
    * moving init point.
@@ -79,11 +85,11 @@ public abstract class ErMover extends JPanel {
         return;
       }
 
-      setLocation(nx, ny);
+      movingContinuing(nx, ny);
       this.nx = nx;
       this.ny = ny;
     };
-    movingTimer = new Timer(50, movingListener);
+    movingTimer = new Timer(100, movingListener);
     movingTimer.setRepeats(true);
   }
 
@@ -96,6 +102,7 @@ public abstract class ErMover extends JPanel {
     this.movingInitPoint = movingInitPoint;
 
     movingTimer.start();
+    startTimestampMillis = Date.timestampMillis();
   }
 
   /**
@@ -104,9 +111,22 @@ public abstract class ErMover extends JPanel {
   protected void movingEnd() {
     movingTimer.stop();
 
+    var nowMills = Date.timestampMillis();
+    if (nowMills - startTimestampMillis < 500) {
+      return;
+    }
+
     // complete
     movingComplete(nx, ny);
   }
+
+  /**
+   * moving continuing.
+   *
+   * @param x x
+   * @param y y
+   */
+  protected abstract void movingContinuing(int x, int y);
 
   /**
    * moving complete.
