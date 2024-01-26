@@ -15,6 +15,16 @@ import javax.swing.Timer;
 public abstract class ErMover extends JPanel {
 
   /**
+   * nx.
+   */
+  private int nx;
+
+  /**
+   * ny.
+   */
+  private int ny;
+
+  /**
    * moving init point.
    */
   private Point movingInitPoint;
@@ -69,8 +79,9 @@ public abstract class ErMover extends JPanel {
         return;
       }
 
-      // complete
-      movingComplete(nx, ny);
+      setLocation(nx, ny);
+      this.nx = nx;
+      this.ny = ny;
     };
     movingTimer = new Timer(50, movingListener);
     movingTimer.setRepeats(true);
@@ -92,6 +103,9 @@ public abstract class ErMover extends JPanel {
    */
   protected void movingEnd() {
     movingTimer.stop();
+
+    // complete
+    movingComplete(nx, ny);
   }
 
   /**
