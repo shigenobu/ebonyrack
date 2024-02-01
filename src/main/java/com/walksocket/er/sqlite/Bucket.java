@@ -94,7 +94,7 @@ public class Bucket {
         StandardOpenOption.WRITE);
     lock = lockChannel.tryLock();
     if (lock == null) {
-      throw new Exception("Already locked.");
+      throw new Exception("Already locked at project.");
     }
 
     // ----------

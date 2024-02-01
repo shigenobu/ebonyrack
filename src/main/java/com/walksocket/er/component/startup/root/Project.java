@@ -53,6 +53,17 @@ public class Project extends JPanel {
   public Project(Root root) {
     this.root = root;
 
+    // lock
+    try {
+      Config.lock();
+    } catch (IOException e) {
+      if (JOptionPane.showConfirmDialog(this, "Now locking, exit application ?")
+          == JOptionPane.OK_OPTION) {
+        System.exit(1);
+      }
+      return;
+    }
+
     // panel - new button
     var panel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
     panel1.setPreferredSize(new Dimension(WindowStartup.WIDTH - 20, WindowStartup.HEIGHT / 15));

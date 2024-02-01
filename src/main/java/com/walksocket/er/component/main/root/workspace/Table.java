@@ -364,6 +364,8 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
    * redraw.
    */
   public void redraw() {
+    var table = this;
+
     labelTableName.setText("(T) " + ctxTable.dbTable.getShowTableName());
     var w = labelTableName.getFontMetrics(labelTableName.getFont())
         .stringWidth(labelTableName.getText());
@@ -430,6 +432,19 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
         p.setPreferredSize(new Dimension(w - 10, ph));
         p.setBackground(Color.WHITE);
         p.setToolTipText(dbDictColumn.getTipText(dbDictColumnType));
+        p.addMouseListener(new MouseAdapter() {
+          @Override
+          public void mousePressed(MouseEvent e) {
+            // focus
+            table.requestFocusInWindow();
+          }
+
+          @Override
+          public void mouseReleased(MouseEvent e) {
+            // focus
+            table.requestFocusInWindow();
+          }
+        });
         panelColumnInner.add(p);
 
         // pk, uk, k

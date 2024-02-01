@@ -6,6 +6,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +27,16 @@ public class Config {
    */
   private static final File file = new File(Env.getHome(), "config.json");
 
+  /**
+   * file lock.
+   */
+  private static final File fileLock = new File(Env.getHome(), "config.json.lock");
+
+  /**
+   * lock.
+   */
+  private static FileLock lock;
+
   static {
     if (!file.exists()) {
       save();
@@ -36,6 +49,24 @@ public class Config {
       Log.error(e);
     } catch (IOException e) {
       Log.error(e);
+    }
+  }
+
+  /**
+   * lock.
+   *
+   * @throws IOException
+   */
+  public static void lock() throws IOException {
+    if (lock != null) {
+      lock.release();
+    }
+
+    var lockChannel = FileChannel.open(fileLock.toPath(), StandardOpenOption.CREATE,
+        StandardOpenOption.WRITE);
+    lock = lockChannel.tryLock();
+    if (lock == null) {
+      throw new IOException("Already locked at config.");
     }
   }
 
