@@ -44,22 +44,29 @@
     </nav>
   </header>
   <section>
-    <img usemap="#components" id="image" src="data:image/png;base64,${imageData}"/>
-    <map name="components">
+    <svg xmlns="http://www.w3.org/2000/svg" width="${imageWidth}" height="${imageHeight}">
+      <image href="data:image/png;base64,${imageData}" width="${imageWidth}"
+             height="${imageHeight}"/>
         #foreach($table in $tables)
             #set($ctxTable = $table.getCtxTable())
-          <area id="table-${ctxTable.dbTable.tableId}" shape="rect" coords="${table.getCoords()}"/>
+          <rect id="table-${ctxTable.dbTable.tableId}" x="${table.getX()}" y="${table.getY()}"
+                width="${table.getWidth()}" height="${table.getHeight()}" fill="red"
+                fill-opacity="0" stroke="red" stroke-opacity="0"/>
         #end
         #foreach($sequence in $sequences)
             #set($ctxSequence = $sequence.getCtxSequence())
-          <area id="sequence-${ctxSequence.dbSequence.sequenceId}" shape="rect"
-                coords="${sequence.getCoords()}"/>
+          <rect id="sequence-${ctxSequence.dbSequence.sequenceId}" x="${sequence.getX()}"
+                y="${sequence.getY()}" width="${sequence.getWidth()}"
+                height="${sequence.getHeight()}" fill="red" fill-opacity="0" stroke="red"
+                stroke-opacity="0"/>
         #end
         #foreach($note in $notes)
             #set($ctxNote = $note.getCtxNote())
-          <area id="note-${ctxNote.dbNote.noteId}" shape="rect" coords="${note.getCoords()}"/>
+          <rect id="note-${ctxNote.dbNote.noteId}" x="${note.getX()}" y="${note.getY()}"
+                width="${note.getWidth()}" height="${note.getHeight()}" fill="red" fill-opacity="0"
+                stroke="red" stroke-opacity="0"/>
         #end
-    </map>
+    </svg>
   </section>
     #foreach($dialog in $dialogTableList)
         ${ErTemplateUtils.nonEscape($dialog)}

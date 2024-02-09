@@ -1,6 +1,8 @@
-var es = document.querySelectorAll("area");
+var es = document.querySelectorAll("rect");
 for (let i = 0; i < es.length; i++) {
   es[i].addEventListener('click', (e) => {
+    highlight(e.target);
+
     var id = "dialog-" + e.target.id;
     var d = document.getElementById(id);
     d.addEventListener('click', (ee) => ee.stopPropagation());
@@ -36,4 +38,13 @@ function openOtherDialog(aid, said) {
 
   var sd = document.getElementById(said);
   sd.close();
+}
+
+function highlight(dom) {
+  for (let j = 0; j < es.length; j++) {
+    es[j].setAttribute("fill-opacity", "0");
+    es[j].setAttribute("stroke-opacity", "0");
+  }
+  dom.setAttribute("fill-opacity", "0.2");
+  dom.setAttribute("stroke-opacity", "1");
 }

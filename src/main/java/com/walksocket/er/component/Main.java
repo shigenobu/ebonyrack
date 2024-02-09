@@ -488,6 +488,8 @@ public class Main extends JFrame {
     var os = new ByteArrayOutputStream();
     ImageIO.write(captureImage, "png", os);
     var imageData = Base64.getEncoder().encodeToString(os.toByteArray());
+    var imageWidth = captureImage.getWidth();
+    var imageHeight = captureImage.getHeight();
 
     // tables
     var dialogTableList = new ArrayList<String>();
@@ -566,6 +568,8 @@ public class Main extends JFrame {
     mainTemplate.assign("cssList", cssList);
     mainTemplate.assign("jsList", jsList);
     mainTemplate.assign("imageData", imageData);
+    mainTemplate.assign("imageWidth", imageWidth);
+    mainTemplate.assign("imageHeight", imageHeight);
     mainTemplate.assign("tables", tables);
     mainTemplate.assign("sequences", sequences);
     mainTemplate.assign("notes", notes);
