@@ -17,4 +17,3 @@
 - [（section15）テーブルの外部キーの自己相関](./section.ja/section15.md)
 - [（section16）ワークスペースの領域とアウトライン](./section.ja/section16.md)
 - [（section17）テーブルの外部キーの多重度表示](./section.ja/section17.md)
-- [（section18）HTMLでの表示](./section.ja/section18.md)

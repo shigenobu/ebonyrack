@@ -30,6 +30,10 @@ Entity relationship creation tool for MariaDB.
 |--logPath=|{your value}| Path to logging file, if 'STDOUT' or 'STDERR' was set, logging there. |
 |--addSeconds=|{your value}| Default 0, it means 'UTC'.                                            |
 
+### Manual
+
+* [Japanese](./manual/manual.ja.md)
+
 ### Dependencies
 
 * Font: [Mplus1-Regular](https://mplusfonts.github.io/)
