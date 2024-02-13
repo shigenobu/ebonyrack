@@ -23,7 +23,7 @@ ER図を作成し、DDLやクラスファイルなどを簡単に生成するこ
 [（section03）シーケンスの作成](./section.ja/section03.md)  
 [（section04）ノートの作成](./section.ja/section04.md)  
 [（section05）テーブルのキー作成](./section.ja/section05.md)  
-[（section06）テーブルの色変更](./section.ja/section06.md)
+[（section06）テーブルの色変更](./section.ja/section06.md)  
 [（section07）テーブルの外部キーの作成](./section.ja/section07.md)  
 [（section08）DDL表示](./section.ja/section08.md)  
 [（section09）クラス生成](./section.ja/section09.md)  
