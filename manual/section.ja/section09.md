@@ -33,6 +33,6 @@ Apache Velocityを使っているため、その文法に沿って情報が出�
 
 ---
 
-[（section10）Fileメニュー](section10.md)
+[（section10）開始画面](section10.md)
 
 [一覧に戻る](../manual.ja.md)

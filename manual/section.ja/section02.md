@@ -16,7 +16,7 @@
 
 「Table name」は、いわゆる物理名で、テーブルの名前を入力します。  
 「Table comment」は、いわゆる論理名で、テーブルのコメントを入力します。  
-「Engin」「Charset」「Collate」は、`<Default>` にしておくことで、全体設定が適用されます。  
+「Engine」「Charset」「Collate」は、`<Default>` にしておくことで、全体設定が適用されます。  
 個別に変更する場合は、入力もしくは選択してください。  
 「Auto increment」は、初期値となります。  
 「Option」はテーブル構築時のオプションとなります。
