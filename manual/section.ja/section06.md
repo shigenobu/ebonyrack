@@ -1,6 +1,6 @@
 ### （section06）テーブルの色変更
 
-テーブルオブジェクトの薄赤色の部分を右クリックして、「Choose table color」を押下します。  
+テーブルオブジェクトのヘッダーを右クリックして、「Choose table color」を押下します。  
 
 ![](../image/09_Main_02_Color.png)
 

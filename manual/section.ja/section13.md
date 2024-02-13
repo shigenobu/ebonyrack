@@ -10,12 +10,14 @@
 ![](../image/21_Main_03_DictColums.png)
 ![](../image/21_Main_04_DictColums.png)
 
+「Used」が空になっているのが新規に登録した2つのカラムとなります。  
+
 「Edit dict groups」から、2つのカラムを1つのグループに登録します。  
 
 ![](../image/21_Main_05_DictGroups.png)
 ![](../image/21_Main_06_DictGroups.png)
 
-登録したカラムグループをテーブルに登録します。  
+登録したカラムグループをテーブルに紐付けします。  
 
 ![](../image/22_Table_01.png)
 
@@ -24,7 +26,7 @@
 
 ![](../image/23_Main_01.png)
 
-異なるテーブルにも、同じカラムグループを登録します。  
+異なるテーブルにも、同じカラムグループを紐付けします。  
 
 ![](../image/23_Main_02.png)
 
