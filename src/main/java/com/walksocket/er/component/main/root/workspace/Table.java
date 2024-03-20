@@ -704,6 +704,16 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
      * @param y     y
      */
     public PopupMenu(Table table, int x, int y) {
+      // Edit
+      var menuItemEdit = new JMenuItem("Edit table");
+      menuItemEdit.addActionListener(actionEvent -> {
+        var inputTable = new InputTable(table);
+        inputTable.setModal(true);
+        inputTable.setVisible(true);
+      });
+      add(menuItemEdit);
+      addSeparator();
+
       // color
       var menuItemColor = new JMenuItem("Choose table color");
       menuItemColor.addActionListener(actionEvent -> {
@@ -720,6 +730,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
         }
       });
       add(menuItemColor);
+      addSeparator();
 
       // ddl
       var menuItemDdl = new JMenuItem("Show table ddl");

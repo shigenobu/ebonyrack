@@ -282,6 +282,16 @@ public class Sequence extends ErConnectorEndpoint {
      * @param y        y
      */
     public PopupMenu(Sequence sequence, int x, int y) {
+      // Edit
+      var menuItemEdit = new JMenuItem("Edit sequence");
+      menuItemEdit.addActionListener(actionEvent -> {
+        var inputSequence = new InputSequence(sequence);
+        inputSequence.setModal(true);
+        inputSequence.setVisible(true);
+      });
+      add(menuItemEdit);
+      addSeparator();
+
       // color
       var menuItemColor = new JMenuItem("Choose sequence color");
       menuItemColor.addActionListener(actionEvent -> {
@@ -298,6 +308,7 @@ public class Sequence extends ErConnectorEndpoint {
         }
       });
       add(menuItemColor);
+      addSeparator();
 
       // ddl
       var menuItemDdl = new JMenuItem("Show sequence ddl");
