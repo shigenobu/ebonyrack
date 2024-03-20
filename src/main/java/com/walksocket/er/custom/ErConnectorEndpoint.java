@@ -179,4 +179,11 @@ public abstract class ErConnectorEndpoint extends ErMover {
   public String getNameForSort() {
     return toString();
   }
+
+  /**
+   * show popup menu.
+   *
+   * @param mouseEvent mouseEvent
+   */
+  public abstract void showPopupMenu(MouseEvent mouseEvent);
 }

@@ -23,6 +23,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 
 /**
  * Sequence.
@@ -153,8 +155,7 @@ public class Sequence extends ErConnectorEndpoint {
       }
 
       private void doPop(MouseEvent e) {
-        var menu = new PopupMenu(sequence, e.getX(), e.getY());
-        menu.show(e.getComponent(), e.getX(), e.getY());
+        showPopupMenu(e);
       }
     });
     add(panelName);
@@ -234,6 +235,12 @@ public class Sequence extends ErConnectorEndpoint {
   }
 
   @Override
+  public void showPopupMenu(MouseEvent mouseEvent) {
+    var menu = new PopupMenu(this);
+    menu.show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
+  }
+
+  @Override
   protected void movingContinuing(int x, int y) {
     // position
     setLocation(x, y);
@@ -278,10 +285,25 @@ public class Sequence extends ErConnectorEndpoint {
      * Constructor.
      *
      * @param sequence sequence
-     * @param x        x
-     * @param y        y
      */
-    public PopupMenu(Sequence sequence, int x, int y) {
+    public PopupMenu(Sequence sequence) {
+      addPopupMenuListener(new PopupMenuListener() {
+        @Override
+        public void popupMenuWillBecomeVisible(PopupMenuEvent popupMenuEvent) {
+          sequence.requestFocusInWindow();
+        }
+
+        @Override
+        public void popupMenuWillBecomeInvisible(PopupMenuEvent popupMenuEvent) {
+          sequence.requestFocusInWindow();
+        }
+
+        @Override
+        public void popupMenuCanceled(PopupMenuEvent popupMenuEvent) {
+          sequence.requestFocusInWindow();
+        }
+      });
+
       // Edit
       var menuItemEdit = new JMenuItem("Edit sequence");
       menuItemEdit.addActionListener(actionEvent -> {

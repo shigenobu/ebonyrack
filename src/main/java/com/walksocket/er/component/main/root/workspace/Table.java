@@ -42,6 +42,8 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 
 /**
  * Table.
@@ -310,8 +312,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
       }
 
       private void doPop(MouseEvent e) {
-        var menu = new PopupMenu(table, e.getX(), e.getY());
-        menu.show(e.getComponent(), e.getX(), e.getY());
+        showPopupMenu(e);
       }
     });
     add(panelTable);
@@ -634,6 +635,12 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
   }
 
   @Override
+  public void showPopupMenu(MouseEvent mouseEvent) {
+    var menu = new PopupMenu(this);
+    menu.show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
+  }
+
+  @Override
   protected void movingContinuing(int x, int y) {
     // position
     setLocation(x, y);
@@ -700,10 +707,25 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
      * Constructor.
      *
      * @param table table
-     * @param x     x
-     * @param y     y
      */
-    public PopupMenu(Table table, int x, int y) {
+    public PopupMenu(Table table) {
+      addPopupMenuListener(new PopupMenuListener() {
+        @Override
+        public void popupMenuWillBecomeVisible(PopupMenuEvent popupMenuEvent) {
+          table.requestFocusInWindow();
+        }
+
+        @Override
+        public void popupMenuWillBecomeInvisible(PopupMenuEvent popupMenuEvent) {
+          table.requestFocusInWindow();
+        }
+
+        @Override
+        public void popupMenuCanceled(PopupMenuEvent popupMenuEvent) {
+          table.requestFocusInWindow();
+        }
+      });
+
       // Edit
       var menuItemEdit = new JMenuItem("Edit table");
       menuItemEdit.addActionListener(actionEvent -> {

@@ -37,6 +37,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.text.JTextComponent;
 
 /**
@@ -251,8 +253,7 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
       }
 
       private void doPop(MouseEvent e) {
-        var menu = new PopupMenu(note, e.getX(), e.getY());
-        menu.show(e.getComponent(), e.getX(), e.getY());
+        showPopupMenu(e);
       }
     });
     add(panelSubject);
@@ -625,6 +626,12 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
   }
 
   @Override
+  public void showPopupMenu(MouseEvent mouseEvent) {
+    var menu = new PopupMenu(this);
+    menu.show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
+  }
+
+  @Override
   public String toString() {
     return ctxNote.dbNote.subject;
   }
@@ -638,10 +645,25 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
      * Constructor.
      *
      * @param note note
-     * @param x    x
-     * @param y    y
      */
-    public PopupMenu(Note note, int x, int y) {
+    public PopupMenu(Note note) {
+      addPopupMenuListener(new PopupMenuListener() {
+        @Override
+        public void popupMenuWillBecomeVisible(PopupMenuEvent popupMenuEvent) {
+          note.requestFocusInWindow();
+        }
+
+        @Override
+        public void popupMenuWillBecomeInvisible(PopupMenuEvent popupMenuEvent) {
+          note.requestFocusInWindow();
+        }
+
+        @Override
+        public void popupMenuCanceled(PopupMenuEvent popupMenuEvent) {
+          note.requestFocusInWindow();
+        }
+      });
+
       // color
       var menuItemColor = new JMenuItem("Choose note color");
       menuItemColor.addActionListener(actionEvent -> {

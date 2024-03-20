@@ -5,6 +5,7 @@ import com.walksocket.er.component.main.root.workspace.Note;
 import com.walksocket.er.component.main.root.workspace.Sequence;
 import com.walksocket.er.component.main.root.workspace.Table;
 import com.walksocket.er.config.CfgProject;
+import com.walksocket.er.custom.ErConnectorEndpoint;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -117,10 +119,11 @@ public class Side extends JPanel {
       @Override
       public void mouseClicked(MouseEvent e) {
         var tree = (JTree) e.getSource();
-        var treePath = tree.getSelectionPath();
+        var treePath = tree.getPathForLocation(e.getX(), e.getY());
         if (treePath == null) {
           return;
         }
+        tree.setSelectionPath(treePath);
 
         var tmpNode = treePath.getLastPathComponent();
         if (tmpNode != null && tmpNode instanceof DefaultMutableTreeNode node) {
@@ -133,6 +136,11 @@ public class Side extends JPanel {
               sp = (JScrollPane) sequence.getWorkspace().getParent().getParent();
             } else if (tmpObject instanceof Note note) {
               sp = (JScrollPane) note.getWorkspace().getParent().getParent();
+            }
+
+            if ((e.isPopupTrigger() || SwingUtilities.isRightMouseButton(e))
+                && tmpObject instanceof ErConnectorEndpoint endpoint) {
+              endpoint.showPopupMenu(e);
             }
 
             if (sp != null) {
