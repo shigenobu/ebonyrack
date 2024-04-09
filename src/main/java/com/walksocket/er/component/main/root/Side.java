@@ -5,7 +5,6 @@ import com.walksocket.er.component.main.root.workspace.Note;
 import com.walksocket.er.component.main.root.workspace.Sequence;
 import com.walksocket.er.component.main.root.workspace.Table;
 import com.walksocket.er.config.CfgProject;
-import com.walksocket.er.custom.ErConnectorEndpoint;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
@@ -118,6 +117,10 @@ public class Side extends JPanel {
     tree.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
+        if (e.isPopupTrigger() || SwingUtilities.isRightMouseButton(e)) {
+          return;
+        }
+
         var tree = (JTree) e.getSource();
         var treePath = tree.getPathForLocation(e.getX(), e.getY());
         if (treePath == null) {
@@ -136,11 +139,6 @@ public class Side extends JPanel {
               sp = (JScrollPane) sequence.getWorkspace().getParent().getParent();
             } else if (tmpObject instanceof Note note) {
               sp = (JScrollPane) note.getWorkspace().getParent().getParent();
-            }
-
-            if ((e.isPopupTrigger() || SwingUtilities.isRightMouseButton(e))
-                && tmpObject instanceof ErConnectorEndpoint endpoint) {
-              endpoint.showPopupMenu(e);
             }
 
             if (sp != null) {
