@@ -1,9 +1,10 @@
 package com.walksocket.er;
 
-import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * Date.
@@ -18,14 +19,14 @@ public class Date {
   /**
    * add seconds for now.
    */
-  private static long addSeconds;
+  private static int addSeconds;
 
   /**
    * init.
    *
    * @param addSeconds add seconds
    */
-  public static void init(long addSeconds) {
+  public static void init(int addSeconds) {
     Date.addSeconds = addSeconds;
   }
 
@@ -35,11 +36,8 @@ public class Date {
    * @return now
    */
   public static String now() {
-    var sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-    sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-    var date = new java.util.Date();
-    date.setTime(date.getTime() + addSeconds * 1000);
-    return sdf.format(date);
+    var dt = OffsetDateTime.now(ZoneOffset.ofTotalSeconds(addSeconds));
+    return dt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"));
   }
 
   /**

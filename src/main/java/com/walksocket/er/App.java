@@ -31,13 +31,13 @@ public class App {
   public static void main(String[] args) throws IOException {
     // check args
     String logPath = null;
-    long addSeconds = 0;
+    int addSeconds = 0;
     for (String arg : args) {
       if (arg.startsWith(ARG_LOG_PATH)) {
         logPath = arg.substring(ARG_LOG_PATH.length());
       }
       if (arg.startsWith(ARG_ADD_SECONDS)) {
-        addSeconds = Long.parseLong(arg.substring(ARG_ADD_SECONDS.length()));
+        addSeconds = Integer.parseInt(arg.substring(ARG_ADD_SECONDS.length()));
       }
     }
 
