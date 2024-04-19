@@ -49,6 +49,11 @@ public class Form extends JPanel {
   private final JButton buttonEdit = new JButton("Edit");
 
   /**
+   * button open.
+   */
+  private final JButton buttonOpen = new JButton("Open");
+
+  /**
    * button generate.
    */
   private final JButton buttonGenerate = new JButton("Generate");
@@ -103,6 +108,20 @@ public class Form extends JPanel {
       }
     });
     panel1.add(buttonEdit);
+
+    buttonOpen.addActionListener(actionEvent -> {
+      if (Desktop.isDesktopSupported()) {
+        var f = new File(Env.getTemplateDir());
+        try {
+          var uri = new URI(String.format("file://%s", f.getAbsolutePath()));
+          Desktop.getDesktop().browse(uri);
+        } catch (IOException | URISyntaxException e) {
+          Log.error(e);
+          JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+      }
+    });
+    panel1.add(buttonOpen);
 
     // panel - button
     var panel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
