@@ -10,13 +10,13 @@ public class TestSql {
 
   private static final String path = "/home/furuta/00-down/11_base.sql";
 
-  @BeforeAll
+//  @BeforeAll
   public static void beforeClass() throws IOException {
     Log.open("STDOUT");
     Env.setDebug();
   }
 
-  @Test
+//  @Test
   public void testParseCreateSequence() throws IOException {
     var ddlList = Dump.parseCreateSequence(path);
     for (var ddl : ddlList) {
@@ -24,7 +24,7 @@ public class TestSql {
     }
   }
 
-  @Test
+//  @Test
   public void testParseCreateTable() throws IOException {
     var ddlList = Dump.parseCreateTable(path);
     for (var ddl : ddlList) {
@@ -32,7 +32,7 @@ public class TestSql {
     }
   }
 
-  @Test
+//  @Test
   public void testParse() throws IOException {
     var cfgProject = new CfgProject();
     cfgProject.dbPath = "test.sqlite3";
