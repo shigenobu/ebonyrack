@@ -2,6 +2,8 @@ package com.walksocket.er.component.input.uniquekey.root;
 
 import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
+import com.walksocket.er.custom.ErHeaderFormatter;
+import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.definition.Collation;
 import com.walksocket.er.definition.DataType;
 import com.walksocket.er.parts.ColumnKeyOption;
@@ -38,17 +40,13 @@ public class Form extends JPanel {
   private static final Map<String, Integer> columnNameWidthMaps = new LinkedHashMap<>();
 
   static {
-    // b -> required
-    // i -> open dialog
-    // u -> with dict
-    // s -> show only
-    columnNameWidthMaps.put("<html><s>Column name</s></html>", 200);
-    columnNameWidthMaps.put("<html><s>Column comment</s></html>", 200);
-    columnNameWidthMaps.put("<html><s>Column type</s></html>", 200);
-    columnNameWidthMaps.put("<html><s>Not null</s></html>", 200);
-    columnNameWidthMaps.put("<html>Length</html>", 100);
-    columnNameWidthMaps.put("<html><b>Seq in index</b></html>", 100);
-    columnNameWidthMaps.put("<html><b>Collation</b></html>", 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Column name", Type.showOnly), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Column comment", Type.showOnly), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Column type", Type.showOnly), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Not null", Type.showOnly), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Length", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Seq in index", Type.required), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Collation", Type.required), 100);
   }
 
   /**
@@ -135,7 +133,7 @@ public class Form extends JPanel {
       }
     }
     var sp = new JScrollPane(table);
-    sp.setPreferredSize(new Dimension(DialogMedium.WIDTH - 40, DialogMedium.HEIGHT / 10 * 8));
+    sp.setPreferredSize(new Dimension(DialogMedium.WIDTH - 40 + 30, DialogMedium.HEIGHT / 10 * 8));
     panel1.add(sp);
 
     // tmp column list, tmpUniqueKey

@@ -5,6 +5,8 @@ import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.UsedDictPartition;
 import com.walksocket.er.component.edit.dict.partitions.Root;
+import com.walksocket.er.custom.ErHeaderFormatter;
+import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.tmp.TmpDictPartition;
 import java.awt.Component;
@@ -88,14 +90,10 @@ public class Form extends JPanel {
   private static final Map<String, Integer> columnNameWidthMaps = new LinkedHashMap<>();
 
   static {
-    // b -> required
-    // i -> open dialog
-    // u -> with dict
-    // s -> show only
-    columnNameWidthMaps.put("<html><s>Dict partition id</s></html>", 200);
-    columnNameWidthMaps.put("<html><s>Partition name</s></html>", 200);
-    columnNameWidthMaps.put("<html><s>Expression</s></html>", 600);
-    columnNameWidthMaps.put("<html><i>Used</i></html>", 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Dict partition id", Type.showOnly), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Partition name", Type.showOnly), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Expression", Type.showOnly), 600);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Used", Type.openDialog), 100);
   }
 
   /**
@@ -298,7 +296,7 @@ public class Form extends JPanel {
       }
     });
     var sp = new JScrollPane(table);
-    sp.setPreferredSize(new Dimension(DialogMedium.WIDTH - 40, DialogMedium.HEIGHT / 10 * 4));
+    sp.setPreferredSize(new Dimension(DialogMedium.WIDTH - 40 + 30, DialogMedium.HEIGHT / 10 * 4));
     panelTable.add(sp);
 
     // load

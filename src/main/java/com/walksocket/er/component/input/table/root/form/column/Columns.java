@@ -3,6 +3,8 @@ package com.walksocket.er.component.input.table.root.form.column;
 import com.walksocket.er.Size.DialogLarge;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.InputColumnName;
+import com.walksocket.er.custom.ErHeaderFormatter;
+import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.custom.ErTableButtons;
 import com.walksocket.er.definition.AutoIncrement;
 import com.walksocket.er.definition.Charset;
@@ -44,20 +46,17 @@ public class Columns extends JPanel {
   private static final Map<String, Integer> columnNameWidthMaps = new LinkedHashMap<>();
 
   static {
-    // b -> required
-    // i -> open dialog
-    // u -> with dict
-    // s -> show only
-    columnNameWidthMaps.put("<html><u><b><i>Column name</i></b></u></html>", 200);
-    columnNameWidthMaps.put("<html><u>Column comment</u></html>", 200);
-    columnNameWidthMaps.put("<html><u><b>Column type</b></u></html>", 200);
-    columnNameWidthMaps.put("<html><u>Not null</u></html>", 200);
-    columnNameWidthMaps.put("<html><u>Charset</u></html>", 100);
-    columnNameWidthMaps.put("<html><u>Collate</u></html>", 100);
-    columnNameWidthMaps.put("<html><u>Default</u></html>", 100);
-    columnNameWidthMaps.put("<html><u>On update</u></html>", 100);
-    columnNameWidthMaps.put("<html><u>Auto increment</u></html>", 100);
-    columnNameWidthMaps.put("<html><u>Option</u></html>", 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Column name", Type.required, Type.openDialog),
+        200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Column comment", Type.ordinal), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Column type", Type.required), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Not null", Type.ordinal), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Charset", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Collate", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Default", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("On update", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Auto increment", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Option", Type.ordinal), 100);
   }
 
   /**

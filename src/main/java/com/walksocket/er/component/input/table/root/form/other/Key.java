@@ -5,6 +5,8 @@ import com.walksocket.er.Utils;
 import com.walksocket.er.Word;
 import com.walksocket.er.component.InputKey;
 import com.walksocket.er.component.input.table.root.form.Other;
+import com.walksocket.er.custom.ErHeaderFormatter;
+import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.custom.ErTableButtons;
 import com.walksocket.er.definition.IndexType;
 import com.walksocket.er.parts.ColumnKeyOption;
@@ -42,14 +44,11 @@ public class Key extends JPanel {
   private static final Map<String, Integer> columnNameWidthMaps = new LinkedHashMap<>();
 
   static {
-    // b -> required
-    // i -> open dialog
-    // u -> with dict
-    // s -> show only
-    columnNameWidthMaps.put("<html>Key name</html>", 200);
-    columnNameWidthMaps.put("<html><b><u><i>Columns and collations</i></u></b></html>", 400);
-    columnNameWidthMaps.put("<html>Index comment</html>", 200);
-    columnNameWidthMaps.put("<html>Index type</html>", 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Key name", Type.ordinal), 200);
+    columnNameWidthMaps.put(
+        ErHeaderFormatter.format("Columns and collations", Type.required, Type.openDialog), 400);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Index comment", Type.ordinal), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Index type", Type.ordinal), 100);
   }
 
   /**

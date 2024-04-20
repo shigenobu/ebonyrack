@@ -2,6 +2,8 @@ package com.walksocket.er.component.input.foreignkey.root;
 
 import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
+import com.walksocket.er.custom.ErHeaderFormatter;
+import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.custom.ErUnderlineBorder;
 import com.walksocket.er.parts.ColumnForeignKeyOption;
 import com.walksocket.er.sqlite.Bucket;
@@ -40,16 +42,12 @@ public class Form extends JPanel {
   private static final Map<String, Integer> columnNameWidthMaps = new LinkedHashMap<>();
 
   static {
-    // b -> required
-    // i -> open dialog
-    // u -> with dict
-    // s -> show only
-    columnNameWidthMaps.put("<html><s>Column name</s></html>", 200);
-    columnNameWidthMaps.put("<html><s>Column comment</s></html>", 200);
-    columnNameWidthMaps.put("<html><s>Column type</s></html>", 200);
-    columnNameWidthMaps.put("<html><s>Not null</s></html>", 200);
-    columnNameWidthMaps.put("<html><s>First key</s></html>", 100);
-    columnNameWidthMaps.put("<html><b>Seq in index</b></html>", 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Column name", Type.showOnly), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Column comment", Type.showOnly), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Column type", Type.showOnly), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Not null", Type.showOnly), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("First key", Type.showOnly), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Seq in index", Type.required), 100);
   }
 
   /**
@@ -171,7 +169,7 @@ public class Form extends JPanel {
       }
     }
     var sp = new JScrollPane(table);
-    sp.setPreferredSize(new Dimension(DialogMedium.WIDTH - 40, DialogMedium.HEIGHT / 10 * 3));
+    sp.setPreferredSize(new Dimension(DialogMedium.WIDTH - 40 + 30, DialogMedium.HEIGHT / 10 * 3));
     panel1.add(sp);
 
     // tmp column list, tmpForeignKey
@@ -271,7 +269,7 @@ public class Form extends JPanel {
     }
     var spReference = new JScrollPane(tableReference);
     spReference.setPreferredSize(
-        new Dimension(DialogMedium.WIDTH - 40, DialogMedium.HEIGHT / 10 * 3));
+        new Dimension(DialogMedium.WIDTH - 40 + 30, DialogMedium.HEIGHT / 10 * 3));
     panel12.add(spReference);
 
     // set

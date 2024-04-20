@@ -1,6 +1,8 @@
 package com.walksocket.er.component.used.dict.columntypes.root;
 
 import com.walksocket.er.Size.DialogUsed;
+import com.walksocket.er.custom.ErHeaderFormatter;
+import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.entity.DbDictColumnType;
 import java.awt.Dimension;
@@ -71,13 +73,9 @@ public class Form extends JPanel {
   private static final Map<String, Integer> columnNameWidthMaps = new LinkedHashMap<>();
 
   static {
-    // b -> required
-    // i -> open dialog
-    // u -> with dict
-    // s -> show only
-    columnNameWidthMaps.put("<html><s>Dict column id</s></html>", 200);
-    columnNameWidthMaps.put("<html><s>Column name</s></html>", 200);
-    columnNameWidthMaps.put("<html><s>Column comment</s></html>", 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Dict column id", Type.showOnly), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Column name", Type.showOnly), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Column comment", Type.showOnly), 200);
   }
 
   /**
@@ -152,7 +150,7 @@ public class Form extends JPanel {
     }
 
     var sp = new JScrollPane(table);
-    sp.setPreferredSize(new Dimension(DialogUsed.WIDTH - 40, DialogUsed.HEIGHT / 10 * 8));
+    sp.setPreferredSize(new Dimension(DialogUsed.WIDTH - 40 + 30, DialogUsed.HEIGHT / 10 * 8));
     panelTable.add(sp);
 
     // load

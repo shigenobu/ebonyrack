@@ -1,6 +1,8 @@
 package com.walksocket.er.component.used.dict.columns.root;
 
 import com.walksocket.er.Size.DialogUsed;
+import com.walksocket.er.custom.ErHeaderFormatter;
+import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.entity.DbDictColumn;
 import java.awt.Dimension;
@@ -141,12 +143,8 @@ public class Form extends JPanel {
   private static final Map<String, Integer> columnNameWidthMapsForGroup = new LinkedHashMap<>();
 
   static {
-    // b -> required
-    // i -> open dialog
-    // u -> with dict
-    // s -> show only
-    columnNameWidthMapsForGroup.put("<html><s>Dict group id</s></html>", 200);
-    columnNameWidthMapsForGroup.put("<html><s>Group name</s></html>", 200);
+    columnNameWidthMapsForGroup.put(ErHeaderFormatter.format("Dict group id", Type.showOnly), 200);
+    columnNameWidthMapsForGroup.put(ErHeaderFormatter.format("Group name", Type.showOnly), 200);
   }
 
   /**
@@ -165,14 +163,11 @@ public class Form extends JPanel {
   private static final Map<String, Integer> columnNameWidthMapsForDbTable = new LinkedHashMap<>();
 
   static {
-    // b -> required
-    // i -> open dialog
-    // u -> with dict
-    // s -> show only
-    columnNameWidthMapsForDbTable.put("<html><s>Table id</s></html>", 200);
-    columnNameWidthMapsForDbTable.put("<html><s>Table name</s></html>", 200);
-    columnNameWidthMapsForDbTable.put("<html><s>Table comment</s></html>", 200);
-    columnNameWidthMapsForDbTable.put("<html><s>At</s></html>", 200);
+    columnNameWidthMapsForDbTable.put(ErHeaderFormatter.format("Table id", Type.showOnly), 200);
+    columnNameWidthMapsForDbTable.put(ErHeaderFormatter.format("Table name", Type.showOnly), 200);
+    columnNameWidthMapsForDbTable.put(ErHeaderFormatter.format("Table comment", Type.showOnly),
+        200);
+    columnNameWidthMapsForDbTable.put(ErHeaderFormatter.format("At", Type.showOnly), 200);
   }
 
   /**
@@ -191,16 +186,16 @@ public class Form extends JPanel {
   private static final Map<String, Integer> columnNameWidthMapsForReference = new LinkedHashMap<>();
 
   static {
-    // b -> required
-    // i -> open dialog
-    // u -> with dict
-    // s -> show only
-    columnNameWidthMapsForReference.put("<html><s>Table id</s></html>", 200);
-    columnNameWidthMapsForReference.put("<html><s>Table name</s></html>", 200);
-    columnNameWidthMapsForReference.put("<html><s>Table comment</s></html>", 200);
-    columnNameWidthMapsForReference.put("<html><s>Reference table id</s></html>", 200);
-    columnNameWidthMapsForReference.put("<html><s>Reference table name</s></html>", 200);
-    columnNameWidthMapsForReference.put("<html><s>Reference table comment</s></html>", 200);
+    columnNameWidthMapsForReference.put(ErHeaderFormatter.format("Table id", Type.showOnly), 200);
+    columnNameWidthMapsForReference.put(ErHeaderFormatter.format("Table name", Type.showOnly), 200);
+    columnNameWidthMapsForReference.put(ErHeaderFormatter.format("Table comment", Type.showOnly),
+        200);
+    columnNameWidthMapsForReference.put(
+        ErHeaderFormatter.format("Reference table id", Type.showOnly), 200);
+    columnNameWidthMapsForReference.put(
+        ErHeaderFormatter.format("Reference table name", Type.showOnly), 200);
+    columnNameWidthMapsForReference.put(
+        ErHeaderFormatter.format("Reference table comment", Type.showOnly), 200);
   }
 
   /**
@@ -329,7 +324,8 @@ public class Form extends JPanel {
     }
 
     var spForGroup = new JScrollPane(tableForGroup);
-    spForGroup.setPreferredSize(new Dimension(DialogUsed.WIDTH - 40, DialogUsed.HEIGHT / 20 * 2));
+    spForGroup.setPreferredSize(
+        new Dimension(DialogUsed.WIDTH - 40 + 30, DialogUsed.HEIGHT / 20 * 2));
     panelTableForGroup.add(spForGroup);
 
     // load for group
@@ -359,7 +355,7 @@ public class Form extends JPanel {
 
     var spForDbTable = new JScrollPane(tableForDbTable);
     spForDbTable.setPreferredSize(
-        new Dimension(DialogUsed.WIDTH - 40, DialogUsed.HEIGHT / 20 * 6));
+        new Dimension(DialogUsed.WIDTH - 40 + 30, DialogUsed.HEIGHT / 20 * 6));
     panelTableForDbTable.add(spForDbTable);
 
     // load for db table
@@ -389,7 +385,7 @@ public class Form extends JPanel {
 
     var spForReference = new JScrollPane(tableForReference);
     spForReference.setPreferredSize(
-        new Dimension(DialogUsed.WIDTH - 40, DialogUsed.HEIGHT / 20 * 5));
+        new Dimension(DialogUsed.WIDTH - 40 + 30, DialogUsed.HEIGHT / 20 * 5));
     panelTableForReference.add(spForReference);
 
     // load for reference

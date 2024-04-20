@@ -3,6 +3,8 @@ package com.walksocket.er.component.input.table.root.form.other;
 import com.walksocket.er.Size.DialogLarge;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.input.table.root.form.Other;
+import com.walksocket.er.custom.ErHeaderFormatter;
+import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.custom.ErTableButtons;
 import com.walksocket.er.sqlite.Tmp;
 import com.walksocket.er.sqlite.TmpResult;
@@ -29,12 +31,8 @@ public class Check extends JPanel {
   private static final Map<String, Integer> columnNameWidthMaps = new LinkedHashMap<>();
 
   static {
-    // b -> required
-    // i -> open dialog
-    // u -> with dict
-    // s -> show only
-    columnNameWidthMaps.put("<html><b>Constraint name</b></html>", 200);
-    columnNameWidthMaps.put("<html><b>Expression</b></html>", 600);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Constraint name", Type.required), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Expression", Type.required), 600);
   }
 
   /**

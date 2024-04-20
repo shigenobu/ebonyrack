@@ -3,6 +3,8 @@ package com.walksocket.er.component.input.columnname.root;
 import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.input.columnname.Root;
+import com.walksocket.er.custom.ErHeaderFormatter;
+import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.tmp.TmpColumn;
 import java.awt.Dimension;
@@ -35,20 +37,16 @@ public class Form extends JPanel {
   private static final Map<String, Integer> columnNameWidthMaps = new LinkedHashMap<>();
 
   static {
-    // b -> required
-    // i -> open dialog
-    // u -> with dict
-    // s -> show only
-    columnNameWidthMaps.put("<html><s>Column name</s></html>", 200);
-    columnNameWidthMaps.put("<html><s>Column comment</s></html>", 200);
-    columnNameWidthMaps.put("<html><s>Column type</s></html>", 200);
-    columnNameWidthMaps.put("<html><s>Not null</s></html>", 200);
-    columnNameWidthMaps.put("<html><s>Charset</s></html>", 100);
-    columnNameWidthMaps.put("<html><s>Collate</s></html>", 100);
-    columnNameWidthMaps.put("<html><s>Default</s></html>", 100);
-    columnNameWidthMaps.put("<html><s>On update</s></html>", 100);
-    columnNameWidthMaps.put("<html><s>Auto increment</s></html>", 100);
-    columnNameWidthMaps.put("<html><s>Option</s></html>", 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Column name", Type.showOnly), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Column comment", Type.showOnly), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Column type", Type.showOnly), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Not null", Type.showOnly), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Charset", Type.showOnly), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Collate", Type.showOnly), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Default", Type.showOnly), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("On update", Type.showOnly), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Auto increment", Type.showOnly), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Option", Type.showOnly), 100);
   }
 
   /**
@@ -149,7 +147,7 @@ public class Form extends JPanel {
       }
     });
     var sp = new JScrollPane(table);
-    sp.setPreferredSize(new Dimension(DialogMedium.WIDTH - 40, DialogMedium.HEIGHT / 10 * 8));
+    sp.setPreferredSize(new Dimension(DialogMedium.WIDTH - 40 + 30, DialogMedium.HEIGHT / 10 * 8));
     panel2.add(sp);
 
     // tmp column for dict

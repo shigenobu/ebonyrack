@@ -6,6 +6,8 @@ import com.walksocket.er.Word;
 import com.walksocket.er.component.InputForeignKey;
 import com.walksocket.er.component.input.table.root.form.Other;
 import com.walksocket.er.custom.ErConnectorStyle;
+import com.walksocket.er.custom.ErHeaderFormatter;
+import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.custom.ErTableButtons;
 import com.walksocket.er.definition.Key;
 import com.walksocket.er.parts.ColumnForeignKeyOption;
@@ -45,18 +47,17 @@ public class ForeignKey extends JPanel {
   private static final Map<String, Integer> columnNameWidthMaps = new LinkedHashMap<>();
 
   static {
-    // b -> required
-    // i -> open dialog
-    // u -> with dict
-    // s -> show only
-    columnNameWidthMaps.put("<html>Constraint name</html>", 200);
-    columnNameWidthMaps.put("<html>Key name</html>", 200);
-    columnNameWidthMaps.put("<html><b><u><i>Columns</i></u></b></html>", 400);
-    columnNameWidthMaps.put("<html><b><u><i>Reference table</i></u></b></html>", 200);
-    columnNameWidthMaps.put("<html><b><u><i>Reference columns</i></u></b></html>", 400);
-    columnNameWidthMaps.put("<html>On update</html>", 100);
-    columnNameWidthMaps.put("<html>On delete</html>", 100);
-    columnNameWidthMaps.put("<html>Relationship</html>", 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Constraint name", Type.ordinal), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Key name", Type.ordinal), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Columns", Type.required, Type.openDialog),
+        400);
+    columnNameWidthMaps.put(
+        ErHeaderFormatter.format("Reference table", Type.required, Type.openDialog), 200);
+    columnNameWidthMaps.put(
+        ErHeaderFormatter.format("Reference columns", Type.required, Type.openDialog), 400);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("On update", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("On delete", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Relationship", Type.ordinal), 200);
   }
 
   /**
