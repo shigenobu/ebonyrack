@@ -3,6 +3,7 @@ package com.walksocket.er.parse;
 import com.walksocket.antlr4.MariaDBParser.AutoIncrementColumnConstraintContext;
 import com.walksocket.antlr4.MariaDBParser.CharSetContext;
 import com.walksocket.antlr4.MariaDBParser.CharsetNameContext;
+import com.walksocket.antlr4.MariaDBParser.CheckColumnConstraintContext;
 import com.walksocket.antlr4.MariaDBParser.CheckTableConstraintContext;
 import com.walksocket.antlr4.MariaDBParser.CollationNameContext;
 import com.walksocket.antlr4.MariaDBParser.CollectionOptionsContext;
@@ -12,12 +13,16 @@ import com.walksocket.antlr4.MariaDBParser.CommentColumnConstraintContext;
 import com.walksocket.antlr4.MariaDBParser.ConstraintDeclarationContext;
 import com.walksocket.antlr4.MariaDBParser.CurrentTimestampContext;
 import com.walksocket.antlr4.MariaDBParser.DefaultColumnConstraintContext;
+import com.walksocket.antlr4.MariaDBParser.GeneratedColumnConstraintContext;
 import com.walksocket.antlr4.MariaDBParser.IndexDeclarationContext;
 import com.walksocket.antlr4.MariaDBParser.LengthOneDimensionContext;
 import com.walksocket.antlr4.MariaDBParser.LengthTwoDimensionContext;
 import com.walksocket.antlr4.MariaDBParser.LengthTwoOptionalDimensionContext;
 import com.walksocket.antlr4.MariaDBParser.NullColumnConstraintContext;
+import com.walksocket.antlr4.MariaDBParser.NullNotnullContext;
 import com.walksocket.antlr4.MariaDBParser.PartitionDefinitionsContext;
+import com.walksocket.antlr4.MariaDBParser.PredicateContext;
+import com.walksocket.antlr4.MariaDBParser.PredicateExpressionContext;
 import com.walksocket.antlr4.MariaDBParser.PrimaryKeyTableConstraintContext;
 import com.walksocket.antlr4.MariaDBParser.SimpleIndexDeclarationContext;
 import com.walksocket.antlr4.MariaDBParser.TableOptionAutoIncrementContext;
@@ -36,6 +41,7 @@ import com.walksocket.er.sqlite.tmp.TmpColumn;
 import com.walksocket.er.sqlite.tmp.TmpKey;
 import com.walksocket.er.sqlite.tmp.TmpPartition;
 import com.walksocket.er.sqlite.tmp.TmpTable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -207,23 +213,28 @@ public class TableListener extends MariaDBParserBaseListener {
     }
     tmpColumn.columnType = dataTypeBuilder.toString();
 
+    var optionList = new ArrayList<String>();
     for (var constraint : columnDeclarationContext.columnDefinition().columnConstraint()) {
+      // column comment
       if (constraint instanceof CommentColumnConstraintContext commentColumnConstraintContext) {
         tmpColumn.columnComment = Utils.removeSingleQuote(
             commentColumnConstraintContext.STRING_LITERAL()
                 .getText());
       }
 
+      // not null
       if (constraint instanceof NullColumnConstraintContext nullColumnConstraintContext) {
         tmpColumn.notNullValue = nullColumnConstraintContext.nullNotnull().children.stream()
             .map(t -> t.getText().toUpperCase())
             .collect(Collectors.joining(" "));
       }
 
+      // default
       if (constraint instanceof DefaultColumnConstraintContext defaultColumnConstraintContext) {
         tmpColumn.defaultValue = defaultColumnConstraintContext.defaultValue().getText();
       }
 
+      // auto increment, onupdate
       if (constraint instanceof AutoIncrementColumnConstraintContext autoIncrementColumnConstraintContext) {
         if (autoIncrementColumnConstraintContext.AUTO_INCREMENT() != null) {
           tmpColumn.autoIncrementDefinition = autoIncrementColumnConstraintContext.AUTO_INCREMENT()
@@ -237,7 +248,64 @@ public class TableListener extends MariaDBParserBaseListener {
           }
         }
       }
+
+      // option
+      if (constraint instanceof GeneratedColumnConstraintContext generatedColumnConstraintContext) {
+        var generatedExpression = "";
+        for (var c : generatedColumnConstraintContext.expression().children) {
+          if (c instanceof PredicateContext predicateContext) {
+            for (var cc : predicateContext.children) {
+              var generatedExpressionList = new ArrayList<String>();
+              for (int i = 0; i < cc.getChildCount(); i++) {
+                generatedExpressionList.add(cc.getChild(i).getText());
+              }
+              generatedExpression = generatedExpressionList.stream()
+                  .collect(Collectors.joining(" "));
+            }
+          }
+        }
+        var generatedType = "";
+        if (generatedColumnConstraintContext.VIRTUAL() != null) {
+          generatedType = generatedColumnConstraintContext.VIRTUAL().getText();
+        } else if (generatedColumnConstraintContext.STORED() != null) {
+          generatedType = generatedColumnConstraintContext.STORED().getText();
+        } else if (generatedColumnConstraintContext.PERSISTENT() != null) {
+          generatedType = generatedColumnConstraintContext.PERSISTENT().getText();
+        }
+        if (!Utils.isNullOrEmpty(generatedExpression) && !Utils.isNullOrEmpty(generatedType)) {
+          optionList.add(
+              String.format("GENERATED ALWAYS AS (%s) %s", generatedExpression, generatedType));
+        }
+      }
+      if (constraint instanceof CheckColumnConstraintContext checkColumnConstraintContext) {
+        var checkExpression = "";
+        for (var c : checkColumnConstraintContext.children) {
+          if (c instanceof PredicateExpressionContext predicateExpressionContext) {
+            for (var cc : predicateExpressionContext.children) {
+              var checkExpressionList = new ArrayList<String>();
+              for (int i = 0; i < cc.getChildCount(); i++) {
+                if (cc.getChild(i) instanceof NullNotnullContext nullNotnullContext) {
+                  checkExpressionList.add(
+                      nullNotnullContext.children.stream().map(t -> t.getText()).collect(
+                          Collectors.joining(" ")));
+                } else {
+                  checkExpressionList.add(cc.getChild(i).getText());
+                }
+              }
+              checkExpression = checkExpressionList.stream()
+                  .collect(Collectors.joining(" "));
+            }
+          }
+        }
+        if (!Utils.isNullOrEmpty(checkExpression)) {
+          optionList.add(String.format("CHECK (%s)", checkExpression));
+        }
+      }
     }
+    if (!Utils.isNullOrEmpty(optionList)) {
+      tmpColumn.option = optionList.stream().collect(Collectors.joining(" "));
+    }
+
     Log.trace(Json.toJsonString(tmpColumn));
   }
 
@@ -365,7 +433,25 @@ public class TableListener extends MariaDBParserBaseListener {
     tmpCheckList.add(tmpCheck);
 
     tmpCheck.constraintName = Utils.removeBackQuote(checkTableConstraintContext.uid().getText());
-    tmpCheck.expression = checkTableConstraintContext.expression().getText();
+    for (var c : checkTableConstraintContext.children) {
+      if (c instanceof PredicateExpressionContext predicateExpressionContext) {
+        for (var cc : predicateExpressionContext.children) {
+          var checkExpressionList = new ArrayList<String>();
+          for (int i = 0; i < cc.getChildCount(); i++) {
+            if (cc.getChild(i) instanceof NullNotnullContext nullNotnullContext) {
+              checkExpressionList.add(
+                  nullNotnullContext.children.stream().map(t -> t.getText()).collect(
+                      Collectors.joining(" ")));
+            } else {
+              checkExpressionList.add(cc.getChild(i).getText());
+            }
+          }
+          tmpCheck.expression = checkExpressionList.stream()
+              .collect(Collectors.joining(" "));
+        }
+      }
+    }
+
     Log.trace(Json.toJsonString(tmpCheck));
   }
 

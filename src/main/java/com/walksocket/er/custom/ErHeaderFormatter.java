@@ -1,6 +1,5 @@
 package com.walksocket.er.custom;
 
-import com.walksocket.er.Log;
 import java.util.Arrays;
 
 /**
@@ -97,7 +96,6 @@ public class ErHeaderFormatter {
       }
     }
     builder.append("</html>");
-    Log.trace(builder.toString());
     return builder.toString();
   }
 }
