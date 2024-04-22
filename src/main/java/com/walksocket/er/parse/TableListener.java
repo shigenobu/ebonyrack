@@ -232,9 +232,27 @@ public class TableListener extends MariaDBParserBaseListener {
       // default
       if (constraint instanceof DefaultColumnConstraintContext defaultColumnConstraintContext) {
         tmpColumn.defaultValue = defaultColumnConstraintContext.defaultValue().getText();
+        var len = defaultColumnConstraintContext.defaultValue().getChildCount();
+        for (int i = 0; i < len; i++) {
+          var c = defaultColumnConstraintContext.defaultValue().getChild(i);
+          if (c.getText().equalsIgnoreCase("ON")) {
+            if (i + 1 < len) {
+              var cNext1 = defaultColumnConstraintContext.defaultValue().getChild(i + 1);
+              if (cNext1.getText().equalsIgnoreCase("UPDATE")) {
+                if (i + 2 < len) {
+                  var cNext2 = defaultColumnConstraintContext.defaultValue().getChild(i + 2);
+                  if (cNext2 instanceof CurrentTimestampContext currentTimestampContext) {
+                    tmpColumn.defaultValue = currentTimestampContext.getText().toUpperCase();
+                    tmpColumn.onUpdate = currentTimestampContext.getText().toUpperCase();
+                  }
+                }
+              }
+            }
+          }
+        }
       }
 
-      // auto increment, onupdate
+      // auto increment, on update
       if (constraint instanceof AutoIncrementColumnConstraintContext autoIncrementColumnConstraintContext) {
         if (autoIncrementColumnConstraintContext.AUTO_INCREMENT() != null) {
           tmpColumn.autoIncrementDefinition = autoIncrementColumnConstraintContext.AUTO_INCREMENT()
