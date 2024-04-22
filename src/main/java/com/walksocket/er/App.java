@@ -115,6 +115,7 @@ public class App {
     d.put("Table.showHorizontalLines", true);
     d.put("Table.showVerticalLines", true);
     d.put("Tree.showDefaultIcons", true);
+    d.put("apple.awt.documentModalSheet", true);
 
     // execute
     SwingUtilities.invokeLater(() -> new Startup());

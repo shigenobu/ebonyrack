@@ -267,11 +267,17 @@ public class Dump {
           processing = true;
         }
         if (processing) {
+          var pos = data.indexOf("--");
+          if (pos >= 0) {
+            data = data.substring(0, pos);
+          }
           builder.append(data);
 
           if (data.endsWith(";")) {
             processing = false;
-            ddlList.add(builder.toString());
+            var ddl = builder.toString();
+            ddlList.add(ddl);
+            Log.trace(ddl);
             builder = new StringBuilder();
           }
         }
@@ -298,11 +304,17 @@ public class Dump {
           processing = true;
         }
         if (processing) {
+          var pos = data.indexOf("--");
+          if (pos >= 0) {
+            data = data.substring(0, pos);
+          }
           builder.append(data);
 
           if (data.endsWith(";")) {
             processing = false;
-            ddlList.add(builder.toString());
+            var ddl = builder.toString();
+            ddlList.add(ddl);
+            Log.trace(ddl);
             builder = new StringBuilder();
           }
         }

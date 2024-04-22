@@ -16,6 +16,8 @@ public abstract class ErDialog extends JDialog {
    * Constructor.
    */
   public ErDialog() {
+    setAlwaysOnTop(true);
+
     // escape
     var escape = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
     getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escape, "ESCAPE");
