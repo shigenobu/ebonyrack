@@ -1,61 +1,63 @@
 #set($dialogId = "dialog-note-${ctxNote.dbNote.noteId}")
 <dialog id="${dialogId}">
-  <div class="detail">
-    <h3>Note:</h3>
-    <table>
-      <tbody>
-      <tr>
-        <td class="headline">Subject</td>
-        <td>${ctxNote.dbNote.subject}</td>
-      </tr>
-      <tr>
-        <td class="headline">Body</td>
-        <td class="unwrap">${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}</td>
-      </tr>
-      </tbody>
-    </table>
+  <div class="container">
+    <div class="detail">
+      <h3>Note:</h3>
+      <table>
+        <tbody>
+        <tr>
+          <td class="headline">Subject</td>
+          <td>${ctxNote.dbNote.subject}</td>
+        </tr>
+        <tr>
+          <td class="headline">Body</td>
+          <td class="unwrap">${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="detail">
+      <h3>Related tables:</h3>
+      <table>
+        <thead>
+        <tr>
+          <th>Table name</th>
+          <th>Table comment</th>
+        </tr>
+        </thead>
+        <tbody>
+            #foreach($table in $relatedTables)
+                #set($ctxTable = $table.getCtxTable())
+            <tr>
+              <td><a href="javascript:void(0)"
+                     onclick="let aid = 'table-${ctxTable.dbTable.tableId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${ctxTable.dbTable.tableName}</a>
+              </td>
+              <td>${ctxTable.dbTable.tableComment}</td>
+            </tr>
+            #end
+        </tbody>
+      </table>
+    </div>
+    <div class="detail-last">
+      <h3>Related sequences:</h3>
+      <table>
+        <thead>
+        <tr>
+          <th>Sequence name</th>
+        </tr>
+        </thead>
+        <tbody>
+            #foreach($sequence in $relatedSequences)
+                #set($ctxSequence = $sequence.getCtxSequence())
+            <tr>
+              <td><a href="javascript:void(0)"
+                     onclick="let aid = 'sequence-${ctxSequence.dbSequence.sequenceId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${ctxSequence.dbSequence.sequenceName}</a>
+              </td>
+            </tr>
+            #end
+        </tbody>
+      </table>
+    </div>
+    <button class="close" id="close-note-${ctxNote.dbNote.noteId}">CLOSE</button>
   </div>
-  <div class="detail">
-    <h3>Related tables:</h3>
-    <table>
-      <thead>
-      <tr>
-        <th>Table name</th>
-        <th>Table comment</th>
-      </tr>
-      </thead>
-      <tbody>
-          #foreach($table in $relatedTables)
-              #set($ctxTable = $table.getCtxTable())
-          <tr>
-            <td><a href="javascript:void(0)"
-                   onclick="let aid = 'table-${ctxTable.dbTable.tableId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${ctxTable.dbTable.tableName}</a>
-            </td>
-            <td>${ctxTable.dbTable.tableComment}</td>
-          </tr>
-          #end
-      </tbody>
-    </table>
-  </div>
-  <div class="detail-last">
-    <h3>Related sequences:</h3>
-    <table>
-      <thead>
-      <tr>
-        <th>Sequence name</th>
-      </tr>
-      </thead>
-      <tbody>
-          #foreach($sequence in $relatedSequences)
-              #set($ctxSequence = $sequence.getCtxSequence())
-          <tr>
-            <td><a href="javascript:void(0)"
-                   onclick="let aid = 'sequence-${ctxSequence.dbSequence.sequenceId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${ctxSequence.dbSequence.sequenceName}</a>
-            </td>
-          </tr>
-          #end
-      </tbody>
-    </table>
-  </div>
-  <button class="close" id="close-note-${ctxNote.dbNote.noteId}">CLOSE</button>
 </dialog>

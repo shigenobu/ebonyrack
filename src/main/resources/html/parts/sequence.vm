@@ -1,64 +1,66 @@
 #set($dialogId = "dialog-sequence-${ctxSequence.dbSequence.sequenceId}")
 <dialog id="${dialogId}">
-  <div class="detail">
-    <h3>Sequence:</h3>
-    <table>
-      <tbody>
-      <tr>
-        <td class="headline">Sequence name</td>
-        <td>${tmpSequence.sequenceName}</td>
-      </tr>
-      <tr>
-        <td class="headline">Start value</td>
-        <td>${tmpSequence.startValue}</td>
-      </tr>
-      <tr>
-        <td class="headline">Minimum value</td>
-        <td>${tmpSequence.minimumValue}</td>
-      </tr>
-      <tr>
-        <td class="headline">Maximum value</td>
-        <td>${tmpSequence.maximumValue}</td>
-      </tr>
-      <tr>
-        <td class="headline">Increment value</td>
-        <td>${tmpSequence.incrementValue}</td>
-      </tr>
-      <tr>
-        <td class="headline">Cache size</td>
-        <td>${tmpSequence.cacheSize}</td>
-      </tr>
-      <tr>
-        <td class="headline">Cycle</td>
-        <td>${tmpSequence.cycle}</td>
-      </tr>
-      </tbody>
-    </table>
+  <div class="container">
+    <div class="detail">
+      <h3>Sequence:</h3>
+      <table>
+        <tbody>
+        <tr>
+          <td class="headline">Sequence name</td>
+          <td>${tmpSequence.sequenceName}</td>
+        </tr>
+        <tr>
+          <td class="headline">Start value</td>
+          <td>${tmpSequence.startValue}</td>
+        </tr>
+        <tr>
+          <td class="headline">Minimum value</td>
+          <td>${tmpSequence.minimumValue}</td>
+        </tr>
+        <tr>
+          <td class="headline">Maximum value</td>
+          <td>${tmpSequence.maximumValue}</td>
+        </tr>
+        <tr>
+          <td class="headline">Increment value</td>
+          <td>${tmpSequence.incrementValue}</td>
+        </tr>
+        <tr>
+          <td class="headline">Cache size</td>
+          <td>${tmpSequence.cacheSize}</td>
+        </tr>
+        <tr>
+          <td class="headline">Cycle</td>
+          <td>${tmpSequence.cycle}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="detail">
+      <h3>Ddl:</h3>
+      <pre>${ddl}</pre>
+    </div>
+    <div class="detail-last">
+      <h3>Related notes:</h3>
+      <table>
+        <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Body</th>
+        </tr>
+        </thead>
+        <tbody>
+            #foreach($ctxNote in $relatedCtxNoteList)
+            <tr>
+              <td><a href="javascript:void(0)"
+                     onclick="let aid = 'note-${ctxNote.dbNote.noteId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${ctxNote.dbNote.subject}</a>
+              </td>
+              <td class="unwrap">${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}</td>
+            </tr>
+            #end
+        </tbody>
+      </table>
+    </div>
+    <button class="close" id="close-sequence-${ctxSequence.dbSequence.sequenceId}">CLOSE</button>
   </div>
-  <div class="detail">
-    <h3>Ddl:</h3>
-    <pre>${ddl}</pre>
-  </div>
-  <div class="detail-last">
-    <h3>Related notes:</h3>
-    <table>
-      <thead>
-      <tr>
-        <th>Subject</th>
-        <th>Body</th>
-      </tr>
-      </thead>
-      <tbody>
-          #foreach($ctxNote in $relatedCtxNoteList)
-          <tr>
-            <td><a href="javascript:void(0)"
-                   onclick="let aid = 'note-${ctxNote.dbNote.noteId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${ctxNote.dbNote.subject}</a>
-            </td>
-            <td class="unwrap">${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}</td>
-          </tr>
-          #end
-      </tbody>
-    </table>
-  </div>
-  <button class="close" id="close-sequence-${ctxSequence.dbSequence.sequenceId}">CLOSE</button>
 </dialog>

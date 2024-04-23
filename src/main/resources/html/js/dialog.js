@@ -5,7 +5,12 @@ for (let i = 0; i < es.length; i++) {
 
     var id = "dialog-" + e.target.id;
     var d = document.getElementById(id);
-    d.addEventListener('click', (ee) => ee.stopPropagation());
+    d.addEventListener('click', (ee) => {
+      if (ee.target.closest('div.container') == void (0)) {
+        d.close();
+      }
+      ee.stopPropagation();
+    });
     d.addEventListener('mouseover', (ee) => ee.stopPropagation());
     d.addEventListener('mousemove', (ee) => ee.stopPropagation());
     d.addEventListener('mousedown', (ee) => ee.stopPropagation());

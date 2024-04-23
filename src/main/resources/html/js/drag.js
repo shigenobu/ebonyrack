@@ -14,7 +14,7 @@ function mousedragscrollable(element) {
       evt.stopPropagation();
     });
     elms[i].addEventListener('click', function (evt) {
-      if (elms[i].detaset != null && elms[i].detaset.move
+      if (elms[i].dataset != null && elms[i].dataset.move
           == 'true') {
         evt.stopPropagation();
       }

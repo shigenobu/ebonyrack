@@ -1,230 +1,232 @@
 #set($dialogId = "dialog-table-${ctxTable.dbTable.tableId}")
 <dialog id="${dialogId}">
-  <div class="detail">
-    <h3>Table:</h3>
-    <table>
-      <tbody>
-      <tr>
-        <td class="headline">Table name</td>
-        <td>${tmpTable.tableName}</td>
-        <td class="headline">Table comment</td>
-        <td>${tmpTable.tableComment}</td>
-        <td class="headline">Engine</td>
-        <td>${tmpTable.engine}</td>
-        <td class="headline">Charset</td>
-        <td>${tmpTable.charsetValue}</td>
-        <td class="headline">Collate</td>
-        <td>${tmpTable.collateValue}</td>
-      </tr>
-      <tr>
-        <td class="headline">Auto increment</td>
-        <td>${tmpTable.autoIncrementValue}</td>
-        <td class="headline">Option</td>
-        <td colspan="7">${tmpTable.option}</td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="detail">
-    <h3>Columns:</h3>
-    <table>
-      <thead>
-      <tr>
-        <th>-</th>
-        <th>Column name</th>
-        <th>Column comment</th>
-        <th>Column type</th>
-        <th>Not null</th>
-        <th>Charset</th>
-        <th>Collate</th>
-        <th>Default</th>
-        <th>On update</th>
-        <th>Auto increment</th>
-        <th>Option</th>
-        <th>Note</th>
-      </tr>
-      </thead>
-      <tbody>
-          #foreach($tmpColumn in $tmpColumnList)
-          <tr class="key">
-              #if($tmpPrimaryKey && $tmpPrimaryKey.getColumnNames().contains($tmpColumn.columnName))
-                <td>PK</td>
-              #else
-                <td></td>
-              #end
-            <td>${tmpColumn.columnName}</td>
-            <td>${tmpColumn.columnComment}</td>
-            <td>${tmpColumn.columnType}</td>
-            <td>${tmpColumn.notNullValue}</td>
-            <td>${tmpColumn.charsetValue}</td>
-            <td>${tmpColumn.collateValue}</td>
-            <td>${tmpColumn.defaultValue}</td>
-            <td>${tmpColumn.onUpdate}</td>
-            <td>${tmpColumn.autoIncrementDefinition}</td>
-            <td>${tmpColumn.option}</td>
-            <td>
-                #foreach($ctxNote in $relatedCtxNoteList)
-                    #if($ctxNote.dbNote.subject == $tmpColumn.columnName)
-                      <div>${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}</div>
+  <div class="container">
+    <div class="detail">
+      <h3>Table:</h3>
+      <table>
+        <tbody>
+        <tr>
+          <td class="headline">Table name</td>
+          <td>${tmpTable.tableName}</td>
+          <td class="headline">Table comment</td>
+          <td>${tmpTable.tableComment}</td>
+          <td class="headline">Engine</td>
+          <td>${tmpTable.engine}</td>
+          <td class="headline">Charset</td>
+          <td>${tmpTable.charsetValue}</td>
+          <td class="headline">Collate</td>
+          <td>${tmpTable.collateValue}</td>
+        </tr>
+        <tr>
+          <td class="headline">Auto increment</td>
+          <td>${tmpTable.autoIncrementValue}</td>
+          <td class="headline">Option</td>
+          <td colspan="7">${tmpTable.option}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="detail">
+      <h3>Columns:</h3>
+      <table>
+        <thead>
+        <tr>
+          <th>-</th>
+          <th>Column name</th>
+          <th>Column comment</th>
+          <th>Column type</th>
+          <th>Not null</th>
+          <th>Charset</th>
+          <th>Collate</th>
+          <th>Default</th>
+          <th>On update</th>
+          <th>Auto increment</th>
+          <th>Option</th>
+          <th>Note</th>
+        </tr>
+        </thead>
+        <tbody>
+            #foreach($tmpColumn in $tmpColumnList)
+            <tr class="key">
+                #if($tmpPrimaryKey && $tmpPrimaryKey.getColumnNames().contains($tmpColumn.columnName))
+                  <td>PK</td>
+                #else
+                  <td></td>
+                #end
+              <td>${tmpColumn.columnName}</td>
+              <td>${tmpColumn.columnComment}</td>
+              <td>${tmpColumn.columnType}</td>
+              <td>${tmpColumn.notNullValue}</td>
+              <td>${tmpColumn.charsetValue}</td>
+              <td>${tmpColumn.collateValue}</td>
+              <td>${tmpColumn.defaultValue}</td>
+              <td>${tmpColumn.onUpdate}</td>
+              <td>${tmpColumn.autoIncrementDefinition}</td>
+              <td>${tmpColumn.option}</td>
+              <td>
+                  #foreach($ctxNote in $relatedCtxNoteList)
+                      #if($ctxNote.dbNote.subject == $tmpColumn.columnName)
+                        <div>${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}</div>
+                      #end
+                  #end
+              </td>
+            </tr>
+            #end
+        </tbody>
+      </table>
+    </div>
+    <div class="detail">
+      <h3>Primary key:</h3>
+      <table>
+        <thead>
+        <tr>
+          <th>Key name</th>
+          <th>Columns and collations</th>
+          <th>Index comment</th>
+          <th>Index type</th>
+        </tr>
+        </thead>
+        <tbody>
+            #if($tmpPrimaryKey)
+            <tr>
+              <td>${tmpPrimaryKey.keyName}</td>
+              <td>${tmpPrimaryKey.getColumnsAndCollations()}</td>
+              <td>${tmpPrimaryKey.indexComment}</td>
+              <td>${tmpPrimaryKey.indexType}</td>
+            </tr>
+            #end
+        </tbody>
+      </table>
+    </div>
+    <div class="detail">
+      <h3>Unique key:</h3>
+      <table>
+        <thead>
+        <tr>
+          <th>Key name</th>
+          <th>Columns and collations</th>
+          <th>Index comment</th>
+          <th>Index type</th>
+        </tr>
+        </thead>
+        <tbody>
+            #foreach($tmpUniqueKey in $tmpUniqueKeyList)
+            <tr>
+              <td>${tmpUniqueKey.keyName}</td>
+              <td>${tmpUniqueKey.getColumnsAndCollations()}</td>
+              <td>${tmpUniqueKey.indexComment}</td>
+              <td>${tmpUniqueKey.indexType}</td>
+            </tr>
+            #end
+        </tbody>
+      </table>
+    </div>
+    <div class="detail">
+      <h3>Key:</h3>
+      <table>
+        <thead>
+        <tr>
+          <th>Key name</th>
+          <th>Columns and collations</th>
+          <th>Index comment</th>
+          <th>Index type</th>
+        </tr>
+        </thead>
+        <tbody>
+            #foreach($tmpKey in $tmpKeyList)
+            <tr>
+              <td>${tmpKey.keyName}</td>
+              <td>${tmpKey.getColumnsAndCollations()}</td>
+              <td>${tmpKey.indexComment}</td>
+              <td>${tmpKey.indexType}</td>
+            </tr>
+            #end
+        </tbody>
+      </table>
+    </div>
+    <div class="detail">
+      <h3>Foreign key:</h3>
+      <table>
+        <thead>
+        <tr>
+          <th>Constraint name</th>
+          <th>Key name</th>
+          <th>Columns</th>
+          <th>Reference table</th>
+          <th>Reference columns</th>
+          <th>On update</th>
+          <th>On delete</th>
+          <th>Relationship</th>
+        </tr>
+        </thead>
+        <tbody>
+            #foreach($tmpForeignKey in $tmpForeignKeyList)
+            <tr>
+              <td>${tmpForeignKey.constraintName}</td>
+              <td>${tmpForeignKey.keyName}</td>
+              <td>${tmpForeignKey.getColumns()}</td>
+                #foreach($dbTable in $dbTableList)
+                    #if($dbTable.tableName == $tmpForeignKey.referenceTableName)
+                      <td><a href="javascript:void(0)"
+                             onclick="let aid = 'table-${dbTable.tableId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${tmpForeignKey.referenceTableName}</a>
+                      </td>
                     #end
                 #end
-            </td>
-          </tr>
-          #end
-      </tbody>
-    </table>
+              <td>${tmpForeignKey.getReferenceColumns()}</td>
+              <td>${tmpForeignKey.onUpdate}</td>
+              <td>${tmpForeignKey.onDelete}</td>
+              <td>${tmpForeignKey.relationship}</td>
+            </tr>
+            #end
+        </tbody>
+      </table>
+    </div>
+    <div class="detail">
+      <h3>Referenced tables:</h3>
+      <table>
+        <thead>
+        <tr>
+          <th>Table name</th>
+          <th>Table comment</th>
+        </tr>
+        </thead>
+        <tbody>
+            #foreach($referencedDbTable in $referencedDbTableList)
+            <tr>
+              <td><a href="javascript:void(0)"
+                     onclick="let aid = 'table-${referencedDbTable.tableId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${referencedDbTable.tableName}</a>
+              </td>
+              <td>${referencedDbTable.tableComment}</td>
+            </tr>
+            #end
+        </tbody>
+      </table>
+    </div>
+    <div class="detail">
+      <h3>Ddl:</h3>
+      <pre>${ddl}</pre>
+    </div>
+    <div class="detail-last">
+      <h3>Related notes:</h3>
+      <table>
+        <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Body</th>
+        </tr>
+        </thead>
+        <tbody>
+            #foreach($ctxNote in $relatedCtxNoteList)
+            <tr>
+              <td><a href="javascript:void(0)"
+                     onclick="let aid = 'note-${ctxNote.dbNote.noteId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${ctxNote.dbNote.subject}</a>
+              </td>
+              <td class="unwrap">${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}</td>
+            </tr>
+            #end
+        </tbody>
+      </table>
+    </div>
+    <button class="close" id="close-table-${ctxTable.dbTable.tableId}">CLOSE</button>
   </div>
-  <div class="detail">
-    <h3>Primary key:</h3>
-    <table>
-      <thead>
-      <tr>
-        <th>Key name</th>
-        <th>Columns and collations</th>
-        <th>Index comment</th>
-        <th>Index type</th>
-      </tr>
-      </thead>
-      <tbody>
-          #if($tmpPrimaryKey)
-          <tr>
-            <td>${tmpPrimaryKey.keyName}</td>
-            <td>${tmpPrimaryKey.getColumnsAndCollations()}</td>
-            <td>${tmpPrimaryKey.indexComment}</td>
-            <td>${tmpPrimaryKey.indexType}</td>
-          </tr>
-          #end
-      </tbody>
-    </table>
-  </div>
-  <div class="detail">
-    <h3>Unique key:</h3>
-    <table>
-      <thead>
-      <tr>
-        <th>Key name</th>
-        <th>Columns and collations</th>
-        <th>Index comment</th>
-        <th>Index type</th>
-      </tr>
-      </thead>
-      <tbody>
-          #foreach($tmpUniqueKey in $tmpUniqueKeyList)
-          <tr>
-            <td>${tmpUniqueKey.keyName}</td>
-            <td>${tmpUniqueKey.getColumnsAndCollations()}</td>
-            <td>${tmpUniqueKey.indexComment}</td>
-            <td>${tmpUniqueKey.indexType}</td>
-          </tr>
-          #end
-      </tbody>
-    </table>
-  </div>
-  <div class="detail">
-    <h3>Key:</h3>
-    <table>
-      <thead>
-      <tr>
-        <th>Key name</th>
-        <th>Columns and collations</th>
-        <th>Index comment</th>
-        <th>Index type</th>
-      </tr>
-      </thead>
-      <tbody>
-          #foreach($tmpKey in $tmpKeyList)
-          <tr>
-            <td>${tmpKey.keyName}</td>
-            <td>${tmpKey.getColumnsAndCollations()}</td>
-            <td>${tmpKey.indexComment}</td>
-            <td>${tmpKey.indexType}</td>
-          </tr>
-          #end
-      </tbody>
-    </table>
-  </div>
-  <div class="detail">
-    <h3>Foreign key:</h3>
-    <table>
-      <thead>
-      <tr>
-        <th>Constraint name</th>
-        <th>Key name</th>
-        <th>Columns</th>
-        <th>Reference table</th>
-        <th>Reference columns</th>
-        <th>On update</th>
-        <th>On delete</th>
-        <th>Relationship</th>
-      </tr>
-      </thead>
-      <tbody>
-          #foreach($tmpForeignKey in $tmpForeignKeyList)
-          <tr>
-            <td>${tmpForeignKey.constraintName}</td>
-            <td>${tmpForeignKey.keyName}</td>
-            <td>${tmpForeignKey.getColumns()}</td>
-              #foreach($dbTable in $dbTableList)
-                  #if($dbTable.tableName == $tmpForeignKey.referenceTableName)
-                    <td><a href="javascript:void(0)"
-                           onclick="let aid = 'table-${dbTable.tableId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${tmpForeignKey.referenceTableName}</a>
-                    </td>
-                  #end
-              #end
-            <td>${tmpForeignKey.getReferenceColumns()}</td>
-            <td>${tmpForeignKey.onUpdate}</td>
-            <td>${tmpForeignKey.onDelete}</td>
-            <td>${tmpForeignKey.relationship}</td>
-          </tr>
-          #end
-      </tbody>
-    </table>
-  </div>
-  <div class="detail">
-    <h3>Referenced tables:</h3>
-    <table>
-      <thead>
-      <tr>
-        <th>Table name</th>
-        <th>Table comment</th>
-      </tr>
-      </thead>
-      <tbody>
-          #foreach($referencedDbTable in $referencedDbTableList)
-          <tr>
-            <td><a href="javascript:void(0)"
-                   onclick="let aid = 'table-${referencedDbTable.tableId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${referencedDbTable.tableName}</a>
-            </td>
-            <td>${referencedDbTable.tableComment}</td>
-          </tr>
-          #end
-      </tbody>
-    </table>
-  </div>
-  <div class="detail">
-    <h3>Ddl:</h3>
-    <pre>${ddl}</pre>
-  </div>
-  <div class="detail-last">
-    <h3>Related notes:</h3>
-    <table>
-      <thead>
-      <tr>
-        <th>Subject</th>
-        <th>Body</th>
-      </tr>
-      </thead>
-      <tbody>
-          #foreach($ctxNote in $relatedCtxNoteList)
-          <tr>
-            <td><a href="javascript:void(0)"
-                   onclick="let aid = 'note-${ctxNote.dbNote.noteId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${ctxNote.dbNote.subject}</a>
-            </td>
-            <td class="unwrap">${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}</td>
-          </tr>
-          #end
-      </tbody>
-    </table>
-  </div>
-  <button class="close" id="close-table-${ctxTable.dbTable.tableId}">CLOSE</button>
 </dialog>
