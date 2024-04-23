@@ -13,6 +13,11 @@ public class Const {
   public static final String TITLE = "ebonyrack";
 
   /**
+   * version check url.
+   */
+  public static final String VERSION_CHECK_URL = "https://github.com/shigenobu/ebonyrack/releases/latest";
+
+  /**
    * color ebony.
    */
   public static final Color COLOR_EBONY = new Color(73, 70, 44);
