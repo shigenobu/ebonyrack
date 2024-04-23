@@ -18,7 +18,6 @@ import com.walksocket.er.custom.ErConnectorEndpoint;
 import com.walksocket.er.custom.ErConnectorPositioned;
 import com.walksocket.er.custom.ErConnectorStyle;
 import com.walksocket.er.custom.ErConnectorStyle.LineStyle;
-import com.walksocket.er.custom.ErDialog;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.context.CtxNote;
 import com.walksocket.er.sqlite.context.CtxSequence;
@@ -1151,7 +1150,9 @@ public class Workspace extends ErConnectorPositioned {
           return;
         }
 
-        ErDialog.show(new ImpTable(workspace, new Point(x, y)));
+        var impTable = new ImpTable(workspace, new Point(x, y));
+        impTable.setModal(true);
+        impTable.setVisible(true);
       });
       add(menuItemImportTable);
 
@@ -1163,7 +1164,9 @@ public class Workspace extends ErConnectorPositioned {
           return;
         }
 
-        ErDialog.show(new ImpSequence(workspace, new Point(x, y)));
+        var impSequence = new ImpSequence(workspace, new Point(x, y));
+        impSequence.setModal(true);
+        impSequence.setVisible(true);
       });
       add(menuItemImportSequence);
     }

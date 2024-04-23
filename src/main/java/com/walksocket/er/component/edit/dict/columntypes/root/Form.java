@@ -5,7 +5,6 @@ import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.UsedDictColumnTypes;
 import com.walksocket.er.component.edit.dict.columntypes.Root;
-import com.walksocket.er.custom.ErDialog;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.sqlite.Bucket;
@@ -265,7 +264,9 @@ public class Form extends JPanel {
                 .findFirst()
                 .get();
 
-            ErDialog.show(new UsedDictColumnTypes(dbDictColumnType));
+            var usedDictColumnTypes = new UsedDictColumnTypes(dbDictColumnType);
+            usedDictColumnTypes.setModal(true);
+            usedDictColumnTypes.setVisible(true);
           }
           return;
         }

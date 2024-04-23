@@ -8,7 +8,6 @@ import com.walksocket.er.component.main.root.Workspace;
 import com.walksocket.er.custom.ErColorChooser;
 import com.walksocket.er.custom.ErConnector;
 import com.walksocket.er.custom.ErConnectorEndpoint;
-import com.walksocket.er.custom.ErDialog;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.context.CtxSequence;
 import java.awt.Color;
@@ -111,7 +110,9 @@ public class Sequence extends ErConnectorEndpoint {
 
         // edit
         if (e.getClickCount() >= 2) {
-          ErDialog.show(new InputSequence(sequence));
+          var inputSequence = new InputSequence(sequence);
+          inputSequence.setModal(true);
+          inputSequence.setVisible(true);
         }
       }
 
@@ -306,7 +307,9 @@ public class Sequence extends ErConnectorEndpoint {
       // Edit
       var menuItemEdit = new JMenuItem("Edit sequence");
       menuItemEdit.addActionListener(actionEvent -> {
-        ErDialog.show(new InputSequence(sequence));
+        var inputSequence = new InputSequence(sequence);
+        inputSequence.setModal(true);
+        inputSequence.setVisible(true);
       });
       add(menuItemEdit);
       addSeparator();
@@ -332,7 +335,9 @@ public class Sequence extends ErConnectorEndpoint {
       // ddl
       var menuItemDdl = new JMenuItem("Show sequence ddl");
       menuItemDdl.addActionListener(actionEvent -> {
-        ErDialog.show(new ShowDdl(Bucket.getInstance().getSequenceDdl(ctxSequence)));
+        var showDdl = new ShowDdl(Bucket.getInstance().getSequenceDdl(ctxSequence));
+        showDdl.setModal(true);
+        showDdl.setVisible(true);
       });
       add(menuItemDdl);
 

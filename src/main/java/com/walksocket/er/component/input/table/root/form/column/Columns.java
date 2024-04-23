@@ -3,7 +3,6 @@ package com.walksocket.er.component.input.table.root.form.column;
 import com.walksocket.er.Size.DialogLarge;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.InputColumnName;
-import com.walksocket.er.custom.ErDialog;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.custom.ErTableButtons;
@@ -179,7 +178,9 @@ public class Columns extends JPanel {
           // column name
           if (row >= 0 && col == 0) {
             var tmpColumnForDict = getTmpColumnForDict(row);
-            ErDialog.show(new InputColumnName(columns, row, tmpColumnForDict));
+            var inputColumnName = new InputColumnName(columns, row, tmpColumnForDict);
+            inputColumnName.setModal(true);
+            inputColumnName.setVisible(true);
           }
         }
       }

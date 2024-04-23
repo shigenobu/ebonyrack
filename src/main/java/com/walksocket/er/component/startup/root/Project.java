@@ -8,7 +8,6 @@ import com.walksocket.er.component.Main;
 import com.walksocket.er.component.SetupProject;
 import com.walksocket.er.component.startup.Root;
 import com.walksocket.er.config.CfgProject;
-import com.walksocket.er.custom.ErDialog;
 import com.walksocket.er.custom.ErDialogWaiting;
 import com.walksocket.er.custom.ErLinkLabel;
 import com.walksocket.er.custom.ErUnderlineBorder;
@@ -71,7 +70,9 @@ public class Project extends JPanel {
     add(panel1);
     buttonNewProject.addActionListener(actionEvent -> {
       // new
-      ErDialog.show(new SetupProject(root, new CfgProject()));
+      var setupProject = new SetupProject(root, new CfgProject());
+      setupProject.setModal(true);
+      setupProject.setVisible(true);
     });
     panel1.add(buttonNewProject);
 
@@ -204,7 +205,8 @@ public class Project extends JPanel {
               }
             }
           }).execute();
-          ErDialogWaiting.show(dialogWriting);
+          dialogWriting.setModal(true);
+          dialogWriting.setVisible(true);
         }
       });
       p.add(buttonWrite);
@@ -284,7 +286,8 @@ public class Project extends JPanel {
               }
             }
           }).execute();
-          ErDialogWaiting.show(dialogReading);
+          dialogReading.setModal(true);
+          dialogReading.setVisible(true);
         }
       });
       p.add(buttonRead);
@@ -292,7 +295,9 @@ public class Project extends JPanel {
       // edit
       var buttonEdit = new JButton("Edit");
       buttonEdit.addActionListener(actionEvent -> {
-        ErDialog.show(new SetupProject(root, cfgProject));
+        var setupProject = new SetupProject(root, cfgProject);
+        setupProject.setModal(true);
+        setupProject.setVisible(true);
       });
       p.add(buttonEdit);
 
@@ -356,7 +361,8 @@ public class Project extends JPanel {
               }
             }
           }).execute();
-          ErDialogWaiting.show(dialogImporting);
+          dialogImporting.setModal(true);
+          dialogImporting.setVisible(true);
         }
       });
       p.add(buttonImport);

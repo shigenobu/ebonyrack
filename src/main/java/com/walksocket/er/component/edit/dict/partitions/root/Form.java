@@ -5,7 +5,6 @@ import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.UsedDictPartition;
 import com.walksocket.er.component.edit.dict.partitions.Root;
-import com.walksocket.er.custom.ErDialog;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.sqlite.Bucket;
@@ -274,7 +273,9 @@ public class Form extends JPanel {
                 .findFirst()
                 .get();
 
-            ErDialog.show(new UsedDictPartition(dbDictPartition));
+            var usedDictPartitions = new UsedDictPartition(dbDictPartition);
+            usedDictPartitions.setModal(true);
+            usedDictPartitions.setVisible(true);
           }
           return;
         }

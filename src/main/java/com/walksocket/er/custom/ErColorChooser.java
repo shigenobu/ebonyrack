@@ -27,7 +27,8 @@ public class ErColorChooser extends ErDialog {
    */
   public static Color showDialog(Color initialColor) {
     var chooser = new ErColorChooser(initialColor);
-    ErDialog.show(chooser);
+    chooser.setModal(true);
+    chooser.setVisible(true);
     return chooser.selectedColor;
   }
 

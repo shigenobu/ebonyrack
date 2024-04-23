@@ -6,7 +6,6 @@ import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.UsedDictGroups;
 import com.walksocket.er.component.edit.dict.groups.Root;
-import com.walksocket.er.custom.ErDialog;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.sqlite.Bucket;
@@ -305,7 +304,9 @@ public class Form extends JPanel {
                 .findFirst()
                 .get();
 
-            ErDialog.show(new UsedDictGroups(dbDictGroup));
+            var usedDictGroups = new UsedDictGroups(dbDictGroup);
+            usedDictGroups.setModal(true);
+            usedDictGroups.setVisible(true);
           }
           return;
         }
