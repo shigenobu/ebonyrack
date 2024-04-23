@@ -128,6 +128,7 @@ dialog h3 {
 dialog div.container {
   margin: -8px;
   padding: 8px;
+  height: 100%;
 }
 
 dialog div.detail {
