@@ -6,6 +6,7 @@ import com.walksocket.er.Word;
 import com.walksocket.er.component.InputForeignKey;
 import com.walksocket.er.component.input.table.root.form.Other;
 import com.walksocket.er.custom.ErConnectorStyle;
+import com.walksocket.er.custom.ErDialog;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.custom.ErTableButtons;
@@ -181,13 +182,11 @@ public class ForeignKey extends JPanel {
             var validTmpUniqueKeyList = other.getUniqueKey().getValidTmpUniqueKeyList();
             var validTmpKeyList = other.getKey().getValidTmpKeyList();
 
-            var inputForeignKey = new InputForeignKey(foreignKey, row, tmpForeignKey, tmpColumnList,
+            ErDialog.show(new InputForeignKey(foreignKey, row, tmpForeignKey, tmpColumnList,
                 validTmpPrimaryKey,
                 validTmpUniqueKeyList,
                 validTmpKeyList,
-                dbTableList);
-            inputForeignKey.setModal(true);
-            inputForeignKey.setVisible(true);
+                dbTableList));
           }
         }
       }

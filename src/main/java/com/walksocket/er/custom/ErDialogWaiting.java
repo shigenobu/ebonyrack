@@ -15,6 +15,17 @@ import javax.swing.JLabel;
 public class ErDialogWaiting extends JDialog {
 
   /**
+   * show.
+   *
+   * @param dialog dialog
+   */
+  public static void show(ErDialogWaiting dialog) {
+    dialog.setAlwaysOnTop(true);
+    dialog.setModal(true);
+    dialog.setVisible(true);
+  }
+
+  /**
    * Constructor.
    *
    * @param owner owner

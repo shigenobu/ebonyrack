@@ -5,6 +5,7 @@ import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.UsedDictColumn;
 import com.walksocket.er.component.edit.dict.columns.Root;
+import com.walksocket.er.custom.ErDialog;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.custom.ErUnderlineBorder;
@@ -444,9 +445,7 @@ public class Form extends JPanel {
                 .findFirst()
                 .get();
 
-            var usedDictColumn = new UsedDictColumn(dbDictColumnType);
-            usedDictColumn.setModal(true);
-            usedDictColumn.setVisible(true);
+            ErDialog.show(new UsedDictColumn(dbDictColumnType));
           }
           return;
         }

@@ -4,6 +4,7 @@ import com.walksocket.er.Size.DialogLarge;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.InputPrimaryKey;
 import com.walksocket.er.component.input.table.root.form.Other;
+import com.walksocket.er.custom.ErDialog;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.definition.IndexType;
@@ -123,10 +124,9 @@ public class PrimaryKey extends JPanel {
             var tmpPrimaryKey = getTmpPrimaryKey(row);
             var tmpColumnList = other.getForm().getColumn().getColumns().getTmpColumnList();
             tmpColumnList.addAll(other.getForm().getColumn().getGroup().getTmpColumnList());
-            var inputPrimaryKey = new InputPrimaryKey(primaryKey, row, tmpPrimaryKey,
-                tmpColumnList);
-            inputPrimaryKey.setModal(true);
-            inputPrimaryKey.setVisible(true);
+
+            ErDialog.show(new InputPrimaryKey(primaryKey, row, tmpPrimaryKey,
+                tmpColumnList));
           }
         }
       }

@@ -16,6 +16,7 @@ import com.walksocket.er.component.main.root.workspace.Note;
 import com.walksocket.er.component.main.root.workspace.Sequence;
 import com.walksocket.er.component.main.root.workspace.Table;
 import com.walksocket.er.config.CfgProject;
+import com.walksocket.er.custom.ErDialog;
 import com.walksocket.er.custom.ErDialogWaiting;
 import com.walksocket.er.custom.ErLinkLabel;
 import com.walksocket.er.sqlite.Bucket;
@@ -175,9 +176,7 @@ public class Main extends JFrame {
     menuFile.addSeparator();
     var menuItemExportDdl = new JMenuItem("Export ddl");
     menuItemExportDdl.addActionListener(actionEvent -> {
-      var exportDdl = new ExportDdl(main, cfgProject);
-      exportDdl.setModal(true);
-      exportDdl.setVisible(true);
+      ErDialog.show(new ExportDdl(main, cfgProject));
     });
     menuFile.add(menuItemExportDdl);
     var menuItemExportImage = new JMenuItem("Export image");
@@ -245,8 +244,7 @@ public class Main extends JFrame {
             }
           }
         }).execute();
-        dialogExporting.setModal(true);
-        dialogExporting.setVisible(true);
+        ErDialogWaiting.show(dialogExporting);
       }
     });
     menuFile.add(menuItemExportImage);
@@ -314,16 +312,13 @@ public class Main extends JFrame {
             }
           }
         }).execute();
-        dialogExporting.setModal(true);
-        dialogExporting.setVisible(true);
+        ErDialogWaiting.show(dialogExporting);
       }
     });
     menuFile.add(menuItemExportHtml);
     var menuItemExportTableClass = new JMenuItem("Export table class");
     menuItemExportTableClass.addActionListener(actionEvent -> {
-      var exportTableClass = new ExportTableClass(main, cfgProject);
-      exportTableClass.setModal(true);
-      exportTableClass.setVisible(true);
+      ErDialog.show(new ExportTableClass(main, cfgProject));
     });
     menuFile.add(menuItemExportTableClass);
     menuBar.add(menuFile);
@@ -332,37 +327,27 @@ public class Main extends JFrame {
     var menuEdit = new JMenu("Edit");
     var menuItemEditDefault = new JMenuItem("Edit default");
     menuItemEditDefault.addActionListener(actionEvent -> {
-      var editDefault = new EditDefault(main);
-      editDefault.setModal(true);
-      editDefault.setVisible(true);
+      ErDialog.show(new EditDefault(main));
     });
     menuEdit.add(menuItemEditDefault);
     var menuItemEditDictColumnTypes = new JMenuItem("Edit dict column types");
     menuItemEditDictColumnTypes.addActionListener(actionEvent -> {
-      var editDictColumnTypes = new EditDictColumnTypes(main);
-      editDictColumnTypes.setModal(true);
-      editDictColumnTypes.setVisible(true);
+      ErDialog.show(new EditDictColumnTypes(main));
     });
     menuEdit.add(menuItemEditDictColumnTypes);
     var menuItemEditDictColumns = new JMenuItem("Edit dict columns");
     menuItemEditDictColumns.addActionListener(actionEvent -> {
-      var editDictColumns = new EditDictColumns(main);
-      editDictColumns.setModal(true);
-      editDictColumns.setVisible(true);
+      ErDialog.show(new EditDictColumns(main));
     });
     menuEdit.add(menuItemEditDictColumns);
     var menuItemEditDictGroups = new JMenuItem("Edit dict groups");
     menuItemEditDictGroups.addActionListener(actionEvent -> {
-      var editDictGroups = new EditDictGroups(main);
-      editDictGroups.setModal(true);
-      editDictGroups.setVisible(true);
+      ErDialog.show(new EditDictGroups(main));
     });
     menuEdit.add(menuItemEditDictGroups);
     var menuItemEditDictPartitions = new JMenuItem("Edit dict partitions");
     menuItemEditDictPartitions.addActionListener(actionEvent -> {
-      var editDictPartitions = new EditDictPartitions(main);
-      editDictPartitions.setModal(true);
-      editDictPartitions.setVisible(true);
+      ErDialog.show(new EditDictPartitions(main));
     });
     menuEdit.add(menuItemEditDictPartitions);
     menuBar.add(menuEdit);
@@ -426,8 +411,7 @@ public class Main extends JFrame {
         dialogLoading.dispose();
       }
     }).execute();
-    dialogLoading.setModal(true);
-    dialogLoading.setVisible(true);
+    ErDialogWaiting.show(dialogLoading);
   }
 
   /**

@@ -5,6 +5,7 @@ import com.walksocket.er.Utils;
 import com.walksocket.er.Word;
 import com.walksocket.er.component.InputUniqueKey;
 import com.walksocket.er.component.input.table.root.form.Other;
+import com.walksocket.er.custom.ErDialog;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.custom.ErTableButtons;
@@ -131,9 +132,8 @@ public class UniqueKey extends JPanel {
             var tmpUniqueKey = getTmpUniqueKey(row);
             var tmpColumnList = other.getForm().getColumn().getColumns().getTmpColumnList();
             tmpColumnList.addAll(other.getForm().getColumn().getGroup().getTmpColumnList());
-            var inputUniqueKey = new InputUniqueKey(uniqueKey, row, tmpUniqueKey, tmpColumnList);
-            inputUniqueKey.setModal(true);
-            inputUniqueKey.setVisible(true);
+
+            ErDialog.show(new InputUniqueKey(uniqueKey, row, tmpUniqueKey, tmpColumnList));
           }
         }
       }

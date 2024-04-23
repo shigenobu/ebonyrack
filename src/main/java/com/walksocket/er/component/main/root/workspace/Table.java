@@ -12,6 +12,7 @@ import com.walksocket.er.custom.ErColorChooser;
 import com.walksocket.er.custom.ErConnector;
 import com.walksocket.er.custom.ErConnectorEndpoint;
 import com.walksocket.er.custom.ErConnectorEndpointRelation;
+import com.walksocket.er.custom.ErDialog;
 import com.walksocket.er.definition.AutoIncrement;
 import com.walksocket.er.definition.DataType;
 import com.walksocket.er.definition.NotNull;
@@ -267,9 +268,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
 
         // edit
         if (e.getClickCount() >= 2) {
-          var inputTable = new InputTable(table);
-          inputTable.setModal(true);
-          inputTable.setVisible(true);
+          ErDialog.show(new InputTable(table));
         }
       }
 
@@ -729,9 +728,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
       // Edit
       var menuItemEdit = new JMenuItem("Edit table");
       menuItemEdit.addActionListener(actionEvent -> {
-        var inputTable = new InputTable(table);
-        inputTable.setModal(true);
-        inputTable.setVisible(true);
+        ErDialog.show(new InputTable(table));
       });
       add(menuItemEdit);
       addSeparator();
@@ -764,18 +761,14 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
           builder.append("\n");
           builder.append(fkDdl);
         }
-        var showDdl = new ShowDdl(builder.toString());
-        showDdl.setModal(true);
-        showDdl.setVisible(true);
+        ErDialog.show(new ShowDdl(builder.toString()));
       });
       add(menuItemDdl);
 
       // class
       var menuItemClass = new JMenuItem("Show table class");
       menuItemClass.addActionListener(actionEvent -> {
-        var showTableClass = new ShowTableClass(ctxTable);
-        showTableClass.setModal(true);
-        showTableClass.setVisible(true);
+        ErDialog.show(new ShowTableClass(ctxTable));
       });
       add(menuItemClass);
 

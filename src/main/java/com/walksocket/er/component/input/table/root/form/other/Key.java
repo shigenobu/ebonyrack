@@ -5,6 +5,7 @@ import com.walksocket.er.Utils;
 import com.walksocket.er.Word;
 import com.walksocket.er.component.InputKey;
 import com.walksocket.er.component.input.table.root.form.Other;
+import com.walksocket.er.custom.ErDialog;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.custom.ErTableButtons;
@@ -131,9 +132,8 @@ public class Key extends JPanel {
             var tmpKey = getTmpKey(row);
             var tmpColumnList = other.getForm().getColumn().getColumns().getTmpColumnList();
             tmpColumnList.addAll(other.getForm().getColumn().getGroup().getTmpColumnList());
-            var inputKey = new InputKey(key, row, tmpKey, tmpColumnList);
-            inputKey.setModal(true);
-            inputKey.setVisible(true);
+
+            ErDialog.show(new InputKey(key, row, tmpKey, tmpColumnList));
           }
         }
       }

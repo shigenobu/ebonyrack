@@ -13,11 +13,20 @@ import javax.swing.KeyStroke;
 public abstract class ErDialog extends JDialog {
 
   /**
+   * show.
+   *
+   * @param dialog dialog
+   */
+  public static void show(ErDialog dialog) {
+    dialog.setAlwaysOnTop(true);
+    dialog.setModal(true);
+    dialog.setVisible(true);
+  }
+
+  /**
    * Constructor.
    */
   public ErDialog() {
-    setAlwaysOnTop(true);
-
     // escape
     var escape = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
     getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escape, "ESCAPE");
