@@ -186,6 +186,7 @@ public class ForeignKey extends JPanel {
                 validTmpUniqueKeyList,
                 validTmpKeyList,
                 dbTableList);
+            inputForeignKey.setAlwaysOnTop(true);
             inputForeignKey.setModal(true);
             inputForeignKey.setVisible(true);
           }

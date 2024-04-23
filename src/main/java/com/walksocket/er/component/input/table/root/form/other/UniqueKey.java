@@ -132,6 +132,7 @@ public class UniqueKey extends JPanel {
             var tmpColumnList = other.getForm().getColumn().getColumns().getTmpColumnList();
             tmpColumnList.addAll(other.getForm().getColumn().getGroup().getTmpColumnList());
             var inputUniqueKey = new InputUniqueKey(uniqueKey, row, tmpUniqueKey, tmpColumnList);
+            inputUniqueKey.setAlwaysOnTop(true);
             inputUniqueKey.setModal(true);
             inputUniqueKey.setVisible(true);
           }

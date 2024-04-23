@@ -132,6 +132,7 @@ public class Key extends JPanel {
             var tmpColumnList = other.getForm().getColumn().getColumns().getTmpColumnList();
             tmpColumnList.addAll(other.getForm().getColumn().getGroup().getTmpColumnList());
             var inputKey = new InputKey(key, row, tmpKey, tmpColumnList);
+            inputKey.setAlwaysOnTop(true);
             inputKey.setModal(true);
             inputKey.setVisible(true);
           }

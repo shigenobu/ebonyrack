@@ -265,6 +265,7 @@ public class Form extends JPanel {
                 .get();
 
             var usedDictColumnTypes = new UsedDictColumnTypes(dbDictColumnType);
+            usedDictColumnTypes.setAlwaysOnTop(true);
             usedDictColumnTypes.setModal(true);
             usedDictColumnTypes.setVisible(true);
           }

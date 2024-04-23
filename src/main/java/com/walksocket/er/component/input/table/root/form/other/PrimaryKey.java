@@ -125,6 +125,7 @@ public class PrimaryKey extends JPanel {
             tmpColumnList.addAll(other.getForm().getColumn().getGroup().getTmpColumnList());
             var inputPrimaryKey = new InputPrimaryKey(primaryKey, row, tmpPrimaryKey,
                 tmpColumnList);
+            inputPrimaryKey.setAlwaysOnTop(true);
             inputPrimaryKey.setModal(true);
             inputPrimaryKey.setVisible(true);
           }

@@ -179,6 +179,7 @@ public class Columns extends JPanel {
           if (row >= 0 && col == 0) {
             var tmpColumnForDict = getTmpColumnForDict(row);
             var inputColumnName = new InputColumnName(columns, row, tmpColumnForDict);
+            inputColumnName.setAlwaysOnTop(true);
             inputColumnName.setModal(true);
             inputColumnName.setVisible(true);
           }

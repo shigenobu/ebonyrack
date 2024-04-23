@@ -445,6 +445,7 @@ public class Form extends JPanel {
                 .get();
 
             var usedDictColumn = new UsedDictColumn(dbDictColumnType);
+            usedDictColumn.setAlwaysOnTop(true);
             usedDictColumn.setModal(true);
             usedDictColumn.setVisible(true);
           }

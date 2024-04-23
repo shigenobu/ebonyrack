@@ -274,6 +274,7 @@ public class Form extends JPanel {
                 .get();
 
             var usedDictPartitions = new UsedDictPartition(dbDictPartition);
+            usedDictPartitions.setAlwaysOnTop(true);
             usedDictPartitions.setModal(true);
             usedDictPartitions.setVisible(true);
           }

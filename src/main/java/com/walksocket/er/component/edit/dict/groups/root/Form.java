@@ -305,6 +305,7 @@ public class Form extends JPanel {
                 .get();
 
             var usedDictGroups = new UsedDictGroups(dbDictGroup);
+            usedDictGroups.setAlwaysOnTop(true);
             usedDictGroups.setModal(true);
             usedDictGroups.setVisible(true);
           }
