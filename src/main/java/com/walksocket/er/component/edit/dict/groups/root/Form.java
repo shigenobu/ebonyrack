@@ -101,6 +101,11 @@ public class Form extends JPanel {
   }
 
   /**
+   * root.
+   */
+  private final Root root;
+
+  /**
    * table.
    */
   private final JTable table;
@@ -116,6 +121,7 @@ public class Form extends JPanel {
    * @param root root
    */
   public Form(Root root) {
+    this.root = root;
     var form = this;
 
     // layout
@@ -304,7 +310,7 @@ public class Form extends JPanel {
                 .findFirst()
                 .get();
 
-            var usedDictGroups = new UsedDictGroups(dbDictGroup);
+            var usedDictGroups = new UsedDictGroups(form, dbDictGroup);
             usedDictGroups.setAlwaysOnTop(true);
             usedDictGroups.setModal(true);
             usedDictGroups.setVisible(true);
@@ -407,5 +413,14 @@ public class Form extends JPanel {
     }
 
     buttonRemove.setEnabled(false);
+  }
+
+  /**
+   * get root.
+   *
+   * @return root
+   */
+  public Root getRoot() {
+    return root;
   }
 }

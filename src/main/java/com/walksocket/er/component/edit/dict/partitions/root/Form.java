@@ -97,6 +97,11 @@ public class Form extends JPanel {
   }
 
   /**
+   * root.
+   */
+  private final Root root;
+
+  /**
    * table.
    */
   private final JTable table;
@@ -112,6 +117,7 @@ public class Form extends JPanel {
    * @param root root
    */
   public Form(Root root) {
+    this.root = root;
     var form = this;
 
     // layout
@@ -273,7 +279,7 @@ public class Form extends JPanel {
                 .findFirst()
                 .get();
 
-            var usedDictPartitions = new UsedDictPartition(dbDictPartition);
+            var usedDictPartitions = new UsedDictPartition(form, dbDictPartition);
             usedDictPartitions.setAlwaysOnTop(true);
             usedDictPartitions.setModal(true);
             usedDictPartitions.setVisible(true);
@@ -346,5 +352,14 @@ public class Form extends JPanel {
     textAreaExpression.setText(expressionStarting);
 
     buttonRemove.setEnabled(false);
+  }
+
+  /**
+   * get root.
+   *
+   * @return root
+   */
+  public Root getRoot() {
+    return root;
   }
 }
