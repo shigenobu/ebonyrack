@@ -2,7 +2,6 @@ package com.walksocket.er.component;
 
 import com.walksocket.er.Const;
 import com.walksocket.er.Size.DialogMedium;
-import com.walksocket.er.Size.Screen;
 import com.walksocket.er.component.edit.dict.groups.Root;
 import com.walksocket.er.custom.ErDialog;
 import java.awt.Dimension;
@@ -36,12 +35,13 @@ public class EditDictGroups extends ErDialog {
     this.main = main;
 
     // pos
-    var x = (Screen.getWidth() - DialogMedium.WIDTH) / 2;
-    var y = (Screen.getHeight() - DialogMedium.HEIGHT) / 2;
+    var b = main.getGraphicsConfiguration().getBounds();
+    var x = (b.getWidth() - DialogMedium.WIDTH) / 2 + b.getX();
+    var y = (b.getHeight() - DialogMedium.HEIGHT) / 2 + b.getY();
 
     // init
     setTitle(String.format("%s - dict groups", Const.TITLE));
-    setLocation(new Point(x, y));
+    setLocation(new Point((int) x, (int) y));
     setMinimumSize(new Dimension(DialogMedium.WIDTH, DialogMedium.HEIGHT));
     setResizable(false);
     setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
