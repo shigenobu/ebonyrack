@@ -132,4 +132,13 @@ public class Root extends JPanel {
     }
     return false;
   }
+
+  /**
+   * get input table.
+   *
+   * @return input table
+   */
+  public InputTable getInputTable() {
+    return inputTable;
+  }
 }

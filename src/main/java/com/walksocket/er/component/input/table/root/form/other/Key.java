@@ -236,4 +236,13 @@ public class Key extends JPanel {
       }
     };
   }
+
+  /**
+   * get other.
+   *
+   * @return other
+   */
+  public Other getOther() {
+    return other;
+  }
 }

@@ -3,6 +3,7 @@ package com.walksocket.er.component.input.table.root.form.column;
 import com.walksocket.er.Size.DialogLarge;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.InputColumnName;
+import com.walksocket.er.component.input.table.root.form.Column;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.custom.ErTableButtons;
@@ -60,6 +61,11 @@ public class Columns extends JPanel {
   }
 
   /**
+   * column.
+   */
+  private final Column colum;
+
+  /**
    * ctx table.
    */
   private final CtxTable ctxTable;
@@ -77,9 +83,11 @@ public class Columns extends JPanel {
   /**
    * Constructor.
    *
+   * @param column   column
    * @param ctxTable ctxTable
    */
-  public Columns(CtxTable ctxTable) {
+  public Columns(Column column, CtxTable ctxTable) {
+    this.colum = column;
     this.ctxTable = ctxTable;
 
     // layout
@@ -202,6 +210,15 @@ public class Columns extends JPanel {
       var tmpColumn = tmpColumnList.get(i);
       setTmpColumnForDict(i, tmpColumn);
     }
+  }
+
+  /**
+   * get column.
+   *
+   * @return column
+   */
+  public Column getColum() {
+    return colum;
   }
 
   /**

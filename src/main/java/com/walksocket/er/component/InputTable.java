@@ -2,7 +2,6 @@ package com.walksocket.er.component;
 
 import com.walksocket.er.Const;
 import com.walksocket.er.Size.DialogLarge;
-import com.walksocket.er.Size.Screen;
 import com.walksocket.er.component.input.table.Root;
 import com.walksocket.er.component.main.root.workspace.Table;
 import com.walksocket.er.custom.ErDialog;
@@ -30,12 +29,13 @@ public class InputTable extends ErDialog {
     this.table = table;
 
     // pos
-    var x = (Screen.getWidth() - DialogLarge.WIDTH) / 2;
-    var y = (Screen.getHeight() - DialogLarge.HEIGHT) / 2;
+    var b = table.getWorkspace().getRoot().getMain().getGraphicsConfiguration().getBounds();
+    var x = (b.getWidth() - DialogLarge.WIDTH) / 2 + b.getX();
+    var y = (b.getHeight() - DialogLarge.HEIGHT) / 2 + b.getY();
 
     // init
     setTitle(String.format("%s - table", Const.TITLE));
-    setLocation(new Point(x, y));
+    setLocation(new Point((int) x, (int) y));
     setMinimumSize(new Dimension(DialogLarge.WIDTH, DialogLarge.HEIGHT));
     setResizable(false);
     setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

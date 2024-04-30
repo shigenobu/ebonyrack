@@ -208,4 +208,13 @@ public class PrimaryKey extends JPanel {
       }
     };
   }
+
+  /**
+   * get other.
+   *
+   * @return other
+   */
+  public Other getOther() {
+    return other;
+  }
 }

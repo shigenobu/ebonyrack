@@ -2,7 +2,6 @@ package com.walksocket.er.component;
 
 import com.walksocket.er.Const;
 import com.walksocket.er.Size.DialogMedium;
-import com.walksocket.er.Size.Screen;
 import com.walksocket.er.component.input.columnname.Root;
 import com.walksocket.er.component.input.table.root.form.column.Columns;
 import com.walksocket.er.custom.ErDialog;
@@ -33,12 +32,14 @@ public class InputColumnName extends ErDialog {
     this.columns = columns;
 
     // pos
-    var x = (Screen.getWidth() - DialogMedium.WIDTH) / 2;
-    var y = (Screen.getHeight() - DialogMedium.HEIGHT) / 2;
+    var b = columns.getColum().getForm().getRoot().getInputTable().getGraphicsConfiguration()
+        .getBounds();
+    var x = (b.getWidth() - DialogMedium.WIDTH) / 2 + b.getX();
+    var y = (b.getHeight() - DialogMedium.HEIGHT) / 2 + b.getY();
 
     // init
     setTitle(String.format("%s - column name", Const.TITLE));
-    setLocation(new Point(x, y));
+    setLocation(new Point((int) x, (int) y));
     setMinimumSize(new Dimension(DialogMedium.WIDTH, DialogMedium.HEIGHT));
     setResizable(false);
     setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

@@ -1,6 +1,7 @@
 package com.walksocket.er.component.input.table.root.form;
 
 import com.walksocket.er.Size.DialogLarge;
+import com.walksocket.er.component.input.table.root.Form;
 import com.walksocket.er.component.input.table.root.form.column.Columns;
 import com.walksocket.er.component.input.table.root.form.column.Group;
 import com.walksocket.er.component.input.table.root.form.column.Partition;
@@ -13,6 +14,11 @@ import javax.swing.JTabbedPane;
  * Column.
  */
 public class Column extends JPanel {
+
+  /**
+   * form.
+   */
+  private final Form form;
 
   /**
    * columns.
@@ -32,11 +38,14 @@ public class Column extends JPanel {
   /**
    * Constructor.
    *
+   * @param form     form
    * @param ctxTable ctxTable
    */
-  public Column(CtxTable ctxTable) {
+  public Column(Form form, CtxTable ctxTable) {
+    this.form = form;
+
     // columns
-    columns = new Columns(ctxTable);
+    columns = new Columns(this, ctxTable);
     columns.setPreferredSize(new Dimension(DialogLarge.WIDTH - 20, DialogLarge.HEIGHT / 40 * 20));
 
     // group
@@ -53,6 +62,15 @@ public class Column extends JPanel {
     tab.addTab("group", group);
     tab.addTab("partition", partition);
     add(tab);
+  }
+
+  /**
+   * get form.
+   *
+   * @return form
+   */
+  public Form getForm() {
+    return form;
   }
 
   /**

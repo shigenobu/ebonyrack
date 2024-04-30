@@ -61,7 +61,7 @@ public class Form extends JPanel {
     add(base);
 
     // column
-    column = new Column(ctxTable);
+    column = new Column(this, ctxTable);
     column.setPreferredSize(new Dimension(DialogLarge.WIDTH - 20, DialogLarge.HEIGHT / 40 * 20));
     column.setAlignmentX(Component.LEFT_ALIGNMENT);
     add(column);
@@ -71,6 +71,15 @@ public class Form extends JPanel {
     other.setPreferredSize(new Dimension(DialogLarge.WIDTH - 20, DialogLarge.HEIGHT / 40 * 10));
     other.setAlignmentX(Component.LEFT_ALIGNMENT);
     add(other);
+  }
+
+  /**
+   * get root.
+   *
+   * @return root
+   */
+  public Root getRoot() {
+    return root;
   }
 
   /**
