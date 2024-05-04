@@ -3,7 +3,6 @@ package com.walksocket.er.component;
 import com.walksocket.er.Const;
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogSmall;
-import com.walksocket.er.Size.Screen;
 import com.walksocket.er.component.setup.project.Root;
 import com.walksocket.er.config.CfgProject;
 import com.walksocket.er.custom.ErDialog;
@@ -28,12 +27,13 @@ public class SetupProject extends ErDialog {
     super();
 
     // pos
-    var x = (Screen.getWidth() - DialogSmall.WIDTH) / 2;
-    var y = (Screen.getHeight() - DialogSmall.HEIGHT) / 2;
+    var b = root.getStartup().getGraphicsConfiguration().getBounds();
+    var x = (b.getWidth() - DialogSmall.WIDTH) / 2 + b.getX();
+    var y = (b.getHeight() - DialogSmall.HEIGHT) / 2 + b.getY();
 
     // init
     setTitle(String.format("%s - project", Const.TITLE));
-    setLocation(new Point(x, y));
+    setLocation(new Point((int) x, (int) y));
     setMinimumSize(new Dimension(DialogSmall.WIDTH, DialogSmall.HEIGHT));
     setResizable(false);
     setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
