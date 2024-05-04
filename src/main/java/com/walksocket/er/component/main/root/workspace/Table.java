@@ -25,6 +25,8 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -40,7 +42,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.SwingConstants;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
@@ -496,14 +498,46 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
         p2.setPreferredSize(new Dimension(w - 110, ph));
         p.add(p2);
         var showColumnName = dbDictColumn.getShowColumnName();
-        var labelColumnName = new JLabel(showColumnName);
-        labelColumnName.setVerticalAlignment(SwingConstants.TOP);
-        labelColumnName.setPreferredSize(new Dimension(w - 110, ph));
-        p2.add(labelColumnName);
+        var textFieldColumnName = new JTextField();
+        textFieldColumnName.setText(showColumnName);
+        textFieldColumnName.setEditable(false);
+        textFieldColumnName.setBackground(null);
+        textFieldColumnName.setBorder(null);
+        textFieldColumnName.setPreferredSize(new Dimension(w - 120, ph));
+        p2.add(textFieldColumnName);
         if (idx >= noGroupLen) {
-          labelColumnName.setText(String.format("<html><font color='gray'>%s</font></html>",
-              labelColumnName.getText()));
+          textFieldColumnName.setForeground(Color.GRAY);
+          textFieldColumnName.setText(textFieldColumnName.getText());
         }
+        textFieldColumnName.addFocusListener(new FocusAdapter() {
+          @Override
+          public void focusLost(FocusEvent e) {
+            textFieldColumnName.setScrollOffset(0);
+          }
+        });
+        textFieldColumnName.addMouseListener(new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent e) {
+            if (e.getClickCount() == 2) {
+              if (!Utils.isNullOrEmpty(dbDictColumn.columnComment)) {
+                try {
+                  var range = new int[]{dbDictColumn.columnName.length() + 3,
+                      dbDictColumn.getShowColumnName().length()};
+                  var start = textFieldColumnName.getSelectionStart();
+                  var end = textFieldColumnName.getSelectionEnd();
+                  if (start >= range[0] && end <= range[1]) {
+                    textFieldColumnName.select(range[0], range[1]);
+                  }
+                } catch (Exception ex) {
+                  Log.error(ex);
+                }
+              }
+              return;
+            }
+            table.requestFocusInWindow();
+          }
+        });
+        textFieldColumnName.setToolTipText(p.getToolTipText());
 
         // data type
         var p3 = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
