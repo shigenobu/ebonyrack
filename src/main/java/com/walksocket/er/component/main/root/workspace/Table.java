@@ -518,7 +518,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
         textFieldColumnName.addMouseListener(new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
-            if (e.getClickCount() == 2) {
+            if (e.getClickCount() >= 2) {
               if (!Utils.isNullOrEmpty(dbDictColumn.columnComment)) {
                 try {
                   var range = new int[]{dbDictColumn.columnName.length() + 3,
