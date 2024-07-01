@@ -18,10 +18,11 @@ Entity relationship creation tool for MariaDB.
 
 ##### environment values
 
-| NAME | VALUE | EXPLANATION                                                          |
-|------|-------|----------------------------------------------------------------------|
-|ER_ENV|DEBUG| If 'DEBUG', logging in detail.                                       |
-|ER_HOME|{your value}| If not set, `~/.ebonyrack` directory is created and used as default. |
+| NAME        | VALUE        | EXPLANATION                                                          |
+|-------------|--------------|----------------------------------------------------------------------|
+| ER_ENV      | DEBUG        | If 'DEBUG', logging in detail.                                       |
+| ER_READONLY | YES          | If 'YES', all projects are read only.                                |
+| ER_HOME     | {your value} | If not set, `~/.ebonyrack` directory is created and used as default. |
 
 ##### args values
 

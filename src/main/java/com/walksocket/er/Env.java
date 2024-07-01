@@ -13,6 +13,11 @@ public class Env {
   private static boolean isDebug = false;
 
   /**
+   * is readonly.
+   */
+  private static boolean isReadonly = false;
+
+  /**
    * home directory.
    */
   private static String home = System.getProperty("user.home") + File.separator + "." + Const.TITLE;
@@ -21,6 +26,11 @@ public class Env {
     var tmpEnv = System.getenv("ER_ENV");
     if (tmpEnv != null && tmpEnv.equals("DEBUG")) {
       isDebug = true;
+    }
+
+    var tmpReadonly = System.getenv("ER_READONLY");
+    if (tmpReadonly != null && tmpReadonly.equals("YES")) {
+      isReadonly = true;
     }
 
     var tmpHome = System.getenv("ER_HOME");
@@ -47,6 +57,22 @@ public class Env {
    */
   public static void setDebug() {
     isDebug = true;
+  }
+
+  /**
+   * is readonly.
+   *
+   * @return if readonly, true
+   */
+  public static boolean isReadonly() {
+    return isReadonly;
+  }
+
+  /**
+   * set readonly.
+   */
+  public static void setReadonly() {
+    isReadonly = true;
   }
 
   /**

@@ -1,6 +1,7 @@
 package com.walksocket.er.component.startup.root;
 
 import com.walksocket.er.Config;
+import com.walksocket.er.Env;
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.WindowStartup;
 import com.walksocket.er.Utils;
@@ -119,6 +120,9 @@ public class Project extends JPanel {
         getRoot().getStartup().dispose();
       });
       p.add(buttonOpen);
+      if (Env.isReadonly()) {
+        buttonOpen.setEnabled(false);
+      }
 
       // open readonly
       var buttonOpenReadonly = new JButton("Open RO");
