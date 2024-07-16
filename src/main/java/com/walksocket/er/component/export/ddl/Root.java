@@ -127,6 +127,11 @@ public class Root extends JPanel {
   private String getDdl(TmpDdl tmpDdl) {
     var builder = new StringBuilder();
 
+    // schema
+    if (!Utils.isNullOrEmpty(tmpDdl.schemaValue)) {
+      builder.append(String.format("use `%s`;\n\n", tmpDdl.schemaValue));
+    }
+
     // sequence
     if (tmpDdl.selectedSequence) {
       builder.append("-- ----------------------------------------\n");

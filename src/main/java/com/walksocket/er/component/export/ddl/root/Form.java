@@ -2,6 +2,7 @@ package com.walksocket.er.component.export.ddl.root;
 
 import com.walksocket.er.Size.DialogSmall;
 import com.walksocket.er.Utils;
+import com.walksocket.er.custom.ErUnderlineBorder;
 import com.walksocket.er.sqlite.TmpResult;
 import com.walksocket.er.sqlite.tmp.TmpDdl;
 import java.awt.Dimension;
@@ -17,6 +18,16 @@ import javax.swing.JTextField;
  * Form.
  */
 public class Form extends JPanel {
+
+  /**
+   * label schema.
+   */
+  private final JLabel labelSchema = new JLabel("Schema:");
+
+  /**
+   * text field schema.
+   */
+  private final JTextField textFieldSchema = new JTextField(30);
 
   /**
    * label sequence.
@@ -145,38 +156,66 @@ public class Form extends JPanel {
    * Constructor.
    */
   public Form() {
-    // panel - sequence
-    var panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    panel1.setPreferredSize(new Dimension(DialogSmall.WIDTH - 20, DialogSmall.HEIGHT / 10 * 3));
-    add(panel1);
+    // panel - use
+    var panelSchema = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    panelSchema.setPreferredSize(
+        new Dimension(DialogSmall.WIDTH - 20, DialogSmall.HEIGHT / 15 + 10));
+    add(panelSchema);
 
-    var panel1innerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    panel1innerLeft.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 5, DialogSmall.HEIGHT / 10 * 3));
-    panel1.add(panel1innerLeft);
+    var panelSchemaInnerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    panelSchemaInnerLeft.setPreferredSize(
+        new Dimension(DialogSmall.WIDTH / 5, DialogSmall.HEIGHT / 15 + 10));
+    panelSchema.add(panelSchemaInnerLeft);
+
+    labelSchema.setPreferredSize(
+        new Dimension(DialogSmall.WIDTH / 5, DialogSmall.HEIGHT / 15 - 10));
+    panelSchemaInnerLeft.add(labelSchema);
+
+    var panelSchemaInnerRight = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    panelSchemaInnerRight.setPreferredSize(
+        new Dimension(DialogSmall.WIDTH / 5 * 3, DialogSmall.HEIGHT / 15 + 10));
+    panelSchema.add(panelSchemaInnerRight);
+
+    panelSchemaInnerRight.add(textFieldSchema);
+
+    var borderPanel1 = new JPanel();
+    borderPanel1.setPreferredSize(new Dimension(DialogSmall.WIDTH - 20, 10));
+    borderPanel1.setBorder(new ErUnderlineBorder());
+    add(borderPanel1);
+
+    // panel - sequence
+    var panelSequence = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    panelSequence.setPreferredSize(
+        new Dimension(DialogSmall.WIDTH - 20, DialogSmall.HEIGHT / 15 * 4));
+    add(panelSequence);
+
+    var panelSequenceInnerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    panelSequenceInnerLeft.setPreferredSize(
+        new Dimension(DialogSmall.WIDTH / 5, DialogSmall.HEIGHT / 15 * 4));
+    panelSequence.add(panelSequenceInnerLeft);
 
     labelSequence.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 5, DialogSmall.HEIGHT / 10));
-    panel1innerLeft.add(labelSequence);
+        new Dimension(DialogSmall.WIDTH / 5, DialogSmall.HEIGHT / 15));
+    panelSequenceInnerLeft.add(labelSequence);
 
-    var panel1innerRight = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    panel1innerRight.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 5 * 3, DialogSmall.HEIGHT / 10 * 3));
-    panel1.add(panel1innerRight);
+    var panelSequenceInnerRight = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    panelSequenceInnerRight.setPreferredSize(
+        new Dimension(DialogSmall.WIDTH / 5 * 3, DialogSmall.HEIGHT / 15 * 4));
+    panelSequence.add(panelSequenceInnerRight);
 
     var buttonGroupSequence = new ButtonGroup();
     buttonGroupSequence.add(radioButtonSequenceYes);
     buttonGroupSequence.add(radioButtonSequenceNo);
     radioButtonSequenceYes.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 8, DialogSmall.HEIGHT / 10));
-    panel1innerRight.add(radioButtonSequenceYes);
+        new Dimension(DialogSmall.WIDTH / 8, DialogSmall.HEIGHT / 15));
+    panelSequenceInnerRight.add(radioButtonSequenceYes);
     radioButtonSequenceNo.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 8, DialogSmall.HEIGHT / 10));
-    panel1innerRight.add(radioButtonSequenceNo);
+        new Dimension(DialogSmall.WIDTH / 8, DialogSmall.HEIGHT / 15));
+    panelSequenceInnerRight.add(radioButtonSequenceNo);
 
     labelFilterSequence.setPreferredSize(
         new Dimension(DialogSmall.WIDTH / 5 * 3, labelFilterSequence.getFont().getSize() * 2));
-    panel1innerRight.add(labelFilterSequence);
+    panelSequenceInnerRight.add(labelFilterSequence);
 
     radioButtonSequenceFilterNone.addItemListener(itemEvent -> {
       if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
@@ -193,67 +232,72 @@ public class Form extends JPanel {
     buttonGroupSequenceFilter.add(radioButtonSequenceFilterContains);
     buttonGroupSequenceFilter.add(radioButtonSequenceFilterStartWith);
     buttonGroupSequenceFilter.add(radioButtonSequenceFilterEndWith);
-    panel1innerRight.add(radioButtonSequenceFilterNone);
-    panel1innerRight.add(radioButtonSequenceFilterContains);
-    panel1innerRight.add(radioButtonSequenceFilterStartWith);
-    panel1innerRight.add(radioButtonSequenceFilterEndWith);
+    panelSequenceInnerRight.add(radioButtonSequenceFilterNone);
+    panelSequenceInnerRight.add(radioButtonSequenceFilterContains);
+    panelSequenceInnerRight.add(radioButtonSequenceFilterStartWith);
+    panelSequenceInnerRight.add(radioButtonSequenceFilterEndWith);
     textFieldSequenceFilter.setEditable(false);
-    panel1innerRight.add(textFieldSequenceFilter);
+    panelSequenceInnerRight.add(textFieldSequenceFilter);
+
+    var borderPanel2 = new JPanel();
+    borderPanel2.setPreferredSize(new Dimension(DialogSmall.WIDTH - 20, 10));
+    borderPanel2.setBorder(new ErUnderlineBorder());
+    add(borderPanel2);
 
     // panel - table, foreign key
-    var panel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    panel2.setPreferredSize(new Dimension(DialogSmall.WIDTH - 20, DialogSmall.HEIGHT / 10 * 5));
-    add(panel2);
+    var panelTable = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    panelTable.setPreferredSize(new Dimension(DialogSmall.WIDTH - 20, DialogSmall.HEIGHT / 15 * 7));
+    add(panelTable);
 
-    var panel2innerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    panel2innerLeft.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 5, DialogSmall.HEIGHT / 10 * 5));
-    panel2.add(panel2innerLeft);
+    var panelTableInnerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    panelTableInnerLeft.setPreferredSize(
+        new Dimension(DialogSmall.WIDTH / 5, DialogSmall.HEIGHT / 15 * 7));
+    panelTable.add(panelTableInnerLeft);
 
     labelTable.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 4, DialogSmall.HEIGHT / 10));
-    panel2innerLeft.add(labelTable);
+        new Dimension(DialogSmall.WIDTH / 4, DialogSmall.HEIGHT / 15));
+    panelTableInnerLeft.add(labelTable);
 
     var emptyPanel1 = new JPanel();
     emptyPanel1.setPreferredSize(new Dimension(DialogSmall.WIDTH / 5, 0));
-    panel2innerLeft.add(emptyPanel1);
+    panelTableInnerLeft.add(emptyPanel1);
 
     labelForeignKey.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 4, DialogSmall.HEIGHT / 10));
-    panel2innerLeft.add(labelForeignKey);
+        new Dimension(DialogSmall.WIDTH / 4, DialogSmall.HEIGHT / 15));
+    panelTableInnerLeft.add(labelForeignKey);
 
-    var panel2innerRight = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    panel2innerRight.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 5 * 3, DialogSmall.HEIGHT / 10 * 5));
-    panel2.add(panel2innerRight);
+    var panelTableInnerRight = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    panelTableInnerRight.setPreferredSize(
+        new Dimension(DialogSmall.WIDTH / 5 * 3, DialogSmall.HEIGHT / 15 * 7));
+    panelTable.add(panelTableInnerRight);
 
     var buttonGroupTable = new ButtonGroup();
     buttonGroupTable.add(radioButtonTableYes);
     buttonGroupTable.add(radioButtonTableNo);
     radioButtonTableYes.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 8, DialogSmall.HEIGHT / 10));
-    panel2innerRight.add(radioButtonTableYes);
+        new Dimension(DialogSmall.WIDTH / 8, DialogSmall.HEIGHT / 15));
+    panelTableInnerRight.add(radioButtonTableYes);
     radioButtonTableNo.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 8, DialogSmall.HEIGHT / 10));
-    panel2innerRight.add(radioButtonTableNo);
+        new Dimension(DialogSmall.WIDTH / 8, DialogSmall.HEIGHT / 15));
+    panelTableInnerRight.add(radioButtonTableNo);
 
     var emptyPanel2 = new JPanel();
     emptyPanel2.setPreferredSize(new Dimension(DialogSmall.WIDTH / 5 * 3, 0));
-    panel2innerRight.add(emptyPanel2);
+    panelTableInnerRight.add(emptyPanel2);
 
     var buttonGroupForeignKey = new ButtonGroup();
     buttonGroupForeignKey.add(radioButtonForeignKeyYes);
     buttonGroupForeignKey.add(radioButtonForeignKeyNo);
     radioButtonForeignKeyYes.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 8, DialogSmall.HEIGHT / 10));
-    panel2innerRight.add(radioButtonForeignKeyYes);
+        new Dimension(DialogSmall.WIDTH / 8, DialogSmall.HEIGHT / 15));
+    panelTableInnerRight.add(radioButtonForeignKeyYes);
     radioButtonForeignKeyNo.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 8, DialogSmall.HEIGHT / 10));
-    panel2innerRight.add(radioButtonForeignKeyNo);
+        new Dimension(DialogSmall.WIDTH / 8, DialogSmall.HEIGHT / 15));
+    panelTableInnerRight.add(radioButtonForeignKeyNo);
 
     labelFilterTable.setPreferredSize(
         new Dimension(DialogSmall.WIDTH / 5 * 3, labelFilterTable.getFont().getSize() * 2));
-    panel2innerRight.add(labelFilterTable);
+    panelTableInnerRight.add(labelFilterTable);
 
     radioButtonTableFilterNone.addItemListener(itemEvent -> {
       if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
@@ -270,12 +314,12 @@ public class Form extends JPanel {
     buttonGroupTableFilter.add(radioButtonTableFilterContains);
     buttonGroupTableFilter.add(radioButtonTableFilterStartWith);
     buttonGroupTableFilter.add(radioButtonTableFilterEndWith);
-    panel2innerRight.add(radioButtonTableFilterNone);
-    panel2innerRight.add(radioButtonTableFilterContains);
-    panel2innerRight.add(radioButtonTableFilterStartWith);
-    panel2innerRight.add(radioButtonTableFilterEndWith);
+    panelTableInnerRight.add(radioButtonTableFilterNone);
+    panelTableInnerRight.add(radioButtonTableFilterContains);
+    panelTableInnerRight.add(radioButtonTableFilterStartWith);
+    panelTableInnerRight.add(radioButtonTableFilterEndWith);
     textFieldTableFilter.setEditable(false);
-    panel2innerRight.add(textFieldTableFilter);
+    panelTableInnerRight.add(textFieldTableFilter);
   }
 
   /**
@@ -285,6 +329,7 @@ public class Form extends JPanel {
    */
   public TmpResult<TmpDdl> getResult() {
     var tmpDdl = new TmpDdl();
+    tmpDdl.schemaValue = Utils.getString(textFieldSchema);
     if (radioButtonSequenceYes.isSelected()) {
       tmpDdl.selectedSequence = true;
     }

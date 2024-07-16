@@ -28,6 +28,11 @@ public class TmpDdl implements Tmp {
   public static final String FILTER_END_WITH = "End with";
 
   /**
+   * schema value.
+   */
+  public String schemaValue;
+
+  /**
    * selected sequence.
    */
   public boolean selectedSequence;
