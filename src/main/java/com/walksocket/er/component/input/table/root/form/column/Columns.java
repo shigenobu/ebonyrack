@@ -1,5 +1,6 @@
 package com.walksocket.er.component.input.table.root.form.column;
 
+import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogLarge;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.InputColumnName;
@@ -17,12 +18,19 @@ import com.walksocket.er.sqlite.Tmp;
 import com.walksocket.er.sqlite.TmpResult;
 import com.walksocket.er.sqlite.context.CtxTable;
 import com.walksocket.er.sqlite.tmp.TmpColumn;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -31,9 +39,11 @@ import java.util.stream.Collectors;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -124,6 +134,19 @@ public class Columns extends JPanel {
       var tc = table.getColumnModel().getColumn(i);
       tc.setPreferredWidth(widthList[i]);
 
+      // column name
+      if (i == 0) {
+        tc.setCellRenderer(new DefaultTableCellRenderer() {
+          @Override
+          public Component getTableCellRendererComponent(JTable table, Object value,
+              boolean isSelected, boolean hasFocus, int row, int column) {
+            setBackground(new Color(255, 51, 51, 20));
+            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
+                column);
+          }
+        });
+      }
+
       // column type
       if (i == 2) {
         var columnTypeList = dbDictColumnTypeList.stream()
@@ -190,6 +213,60 @@ public class Columns extends JPanel {
             inputColumnName.setAlwaysOnTop(true);
             inputColumnName.setModal(true);
             inputColumnName.setVisible(true);
+          }
+        }
+      }
+    });
+    table.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyReleased(KeyEvent e) {
+        var selectedColumn = table.getSelectedColumn();
+        if (selectedColumn != 0) {
+          return;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_V && e.isControlDown()) {
+          var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+          var transferable = clipboard.getContents(table);
+          if (transferable != null) {
+            try {
+              var model = (DefaultTableModel) table.getModel();
+              var selectedRow = table.getSelectedRow();
+              var columnCount = table.getColumnCount();
+              var pasteStr = (String) transferable.getTransferData(DataFlavor.stringFlavor);
+              pasteStr = pasteStr.replace("\r", "");
+              var rows = Arrays.stream(pasteStr.split("\n"))
+                  .filter(r -> !Utils.isNullOrEmpty(r))
+                  .toList();
+              for (int i = 0; i < rows.size(); i++) {
+                model.insertRow(selectedRow, new Object[columnCount]);
+              }
+              for (int i = 0; i < rows.size(); i++) {
+                var cols = Arrays.stream(rows.get(i).split("\t"))
+                    .filter(c -> !Utils.isNullOrEmpty(c))
+                    .toList();
+                var colLimit = cols.size();
+                if (colLimit > columnCount) {
+                  colLimit = columnCount;
+                }
+                for (int j = 0; j < colLimit; j++) {
+                  table.setValueAt(cols.get(j), i + selectedRow, j);
+                }
+              }
+              table.setRowSelectionInterval(selectedRow, selectedRow + rows.size() - 1);
+            } catch (Exception ex) {
+              Log.error(ex);
+              JOptionPane.showMessageDialog(columns.getColum().getForm().getRoot(),
+                  ex.getMessage());
+            }
+          }
+        } else if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+          var rs = table.getSelectedRows();
+          var columnCount = table.getColumnCount();
+          for (var r : rs) {
+            for (int i = 0; i < columnCount; i++) {
+              table.setValueAt("", r, i);
+            }
           }
         }
       }
