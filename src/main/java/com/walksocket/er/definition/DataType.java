@@ -2,7 +2,6 @@ package com.walksocket.er.definition;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * DataType.
@@ -138,13 +137,24 @@ public class DataType {
   }
 
   /**
+   * allow auto increment.
+   *
+   * @param columnType columnType
+   * @return if allow auto increment, true
+   */
+  public static boolean allowAutoIncrement(String columnType) {
+    columnType = columnType.toLowerCase();
+    return columnType.contains("int");
+  }
+
+  /**
    * allow current timestamp.
    *
    * @param columnType columnType
    * @return timestamp or datetime is true
    */
   public static boolean allowCurrentTimestamp(String columnType) {
-    columnType = columnType.toLowerCase(Locale.ROOT);
+    columnType = columnType.toLowerCase();
     return columnType.startsWith("timestamp") || columnType.startsWith("datetime");
   }
 

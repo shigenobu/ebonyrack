@@ -11,6 +11,7 @@ import com.walksocket.er.custom.ErTableButtons;
 import com.walksocket.er.definition.AutoIncrement;
 import com.walksocket.er.definition.Charset;
 import com.walksocket.er.definition.Collate;
+import com.walksocket.er.definition.DataType;
 import com.walksocket.er.definition.NotNull;
 import com.walksocket.er.definition.OnUpdate;
 import com.walksocket.er.sqlite.Bucket;
@@ -391,6 +392,10 @@ public class Columns extends JPanel {
           // auto increment
           if (!Utils.isNullOrEmpty(tmp.autoIncrementDefinition)) {
             autoIncrementAppears++;
+
+            if (!DataType.allowAutoIncrement(tmp.columnType)) {
+              throw new Exception("Not allowed 'Auto increment'.");
+            }
           }
         }
 
