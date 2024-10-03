@@ -26,6 +26,8 @@ import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
@@ -147,6 +149,17 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
     setLocation(new Point(ctxNote.dbNoteOption.posX, ctxNote.dbNoteOption.posY));
     setSize(new Dimension(ctxNote.dbNoteOption.width, ctxNote.dbNoteOption.height));
     var note = this;
+
+    // key event
+    addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_C && e.isControlDown()) {
+          // copy
+          workspace.getRoot().getMain().setCopied(ctxNote, CtxNote.class);
+        }
+      }
+    });
 
     // side
     panelSide = new JPanel(new FlowLayout(FlowLayout.LEFT));

@@ -27,6 +27,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -253,6 +255,17 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
     setLocation(new Point(ctxTable.dbTableOption.posX, ctxTable.dbTableOption.posY));
     setSize(new Dimension(MIN_WIDTH, 100));
     var table = this;
+
+    // key event
+    addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_C && e.isControlDown()) {
+          // copy
+          workspace.getRoot().getMain().setCopied(ctxTable, CtxTable.class);
+        }
+      }
+    });
 
     // table
     panelTable = new JPanel(new FlowLayout(FlowLayout.CENTER));

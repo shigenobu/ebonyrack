@@ -31,9 +31,12 @@ import com.walksocket.er.sqlite.entity.DbTableOption;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.TexturePaint;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -125,11 +128,40 @@ public class Workspace extends ErConnectorPositioned {
     this.root = root;
     this.cfgProject = cfgProject;
 
+    // init
+    var workspace = this;
+
     // layout
     setLayout(null);
 
+    // key event
+    addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_V && e.isControlDown()) {
+          // paste
+          var copied = root.getMain().getCopiedLatest();
+          if (copied == null) {
+            return;
+          }
+
+          var pi = MouseInfo.getPointerInfo();
+          var pt = pi.getLocation();
+          SwingUtilities.convertPointFromScreen(pt, workspace);
+          var x = pt.x;
+          var y = pt.y;
+          if (copied instanceof CtxTable) {
+            pasteTable(x, y);
+          } else if (copied instanceof CtxSequence) {
+            pasteSequence(x, y);
+          } else if (copied instanceof CtxNote) {
+            pasteNote(x, y);
+          }
+        }
+      }
+    });
+
     // mouse event
-    var workspace = this;
     addMouseListener(new MouseAdapter() {
 
       @Override
@@ -1042,32 +1074,7 @@ public class Workspace extends ErConnectorPositioned {
         menuItemPasteTable.setEnabled(false);
       }
       menuItemPasteTable.addActionListener(actionEvent -> {
-        // check
-        if (positionedTables.size() > Table.MAX_POSITIONED) {
-          JOptionPane.showMessageDialog(workspace, "No more create table.");
-          return;
-        }
-
-        var copiedCtxTable = getRoot().getMain().getCopied(CtxTable.class);
-        if (copiedCtxTable == null) {
-          JOptionPane.showMessageDialog(workspace, "No copied table.");
-          return;
-        }
-
-        try {
-          // register for copy
-          copiedCtxTable.dbTableOption.posX = x;
-          copiedCtxTable.dbTableOption.posY = y;
-          Bucket.getInstance().getBucketTable().registerForCopy(copiedCtxTable);
-
-          // add
-          var table = new Table(workspace, copiedCtxTable);
-          workspace.addTable(table);
-
-        } catch (Exception e) {
-          Log.error(e);
-          JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
-        }
+        pasteTable(x, y);
       });
       add(menuItemPasteTable);
 
@@ -1077,32 +1084,7 @@ public class Workspace extends ErConnectorPositioned {
         menuItemPasteSequence.setEnabled(false);
       }
       menuItemPasteSequence.addActionListener(actionEvent -> {
-        if (positionedSequences.size() > Sequence.MAX_POSITIONED) {
-          JOptionPane.showMessageDialog(workspace, "No more create sequence.");
-          return;
-        }
-
-        var copiedCtxSequence = getRoot().getMain().getCopied(CtxSequence.class);
-        if (copiedCtxSequence == null) {
-          JOptionPane.showMessageDialog(workspace, "No copied sequence.");
-          return;
-        }
-
-        try {
-          // register for copy
-          copiedCtxSequence.dbSequenceOption.posX = x;
-          copiedCtxSequence.dbSequenceOption.posY = y;
-
-          Bucket.getInstance().getBucketSequence().registerForCopy(copiedCtxSequence);
-
-          // add
-          var sequence = new Sequence(workspace, copiedCtxSequence);
-          workspace.addSequence(sequence);
-
-        } catch (Exception e) {
-          Log.error(e);
-          JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
-        }
+        pasteSequence(x, y);
       });
       add(menuItemPasteSequence);
 
@@ -1112,32 +1094,7 @@ public class Workspace extends ErConnectorPositioned {
         menuItemPasteNote.setEnabled(false);
       }
       menuItemPasteNote.addActionListener(actionEvent -> {
-        if (positionedNotes.size() > Note.MAX_POSITIONED) {
-          JOptionPane.showMessageDialog(workspace, "No more create note.");
-          return;
-        }
-
-        var copiedCtxNote = getRoot().getMain().getCopied(CtxNote.class);
-        if (copiedCtxNote == null) {
-          JOptionPane.showMessageDialog(workspace, "No copied note.");
-          return;
-        }
-
-        try {
-          // register for copy
-          copiedCtxNote.dbNoteOption.posX = x;
-          copiedCtxNote.dbNoteOption.posY = y;
-
-          Bucket.getInstance().getBucketNote().registerForCopy(copiedCtxNote);
-
-          // add
-          var note = new Note(workspace, copiedCtxNote);
-          workspace.addNote(note);
-
-        } catch (Exception e) {
-          Log.error(e);
-          JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
-        }
+        pasteNote(x, y);
       });
       add(menuItemPasteNote);
       addSeparator();
@@ -1220,5 +1177,112 @@ public class Workspace extends ErConnectorPositioned {
     }
 
     return false;
+  }
+
+  /**
+   * paste table.
+   *
+   * @param x x
+   * @param y y
+   */
+  public void pasteTable(int x, int y) {
+    // check
+    if (positionedTables.size() > Table.MAX_POSITIONED) {
+      JOptionPane.showMessageDialog(this, "No more create table.");
+      return;
+    }
+
+    var copiedCtxTable = getRoot().getMain().getCopied(CtxTable.class);
+    if (copiedCtxTable == null) {
+      JOptionPane.showMessageDialog(this, "No copied table.");
+      return;
+    }
+
+    try {
+      // register for copy
+      copiedCtxTable.dbTableOption.posX = x;
+      copiedCtxTable.dbTableOption.posY = y;
+      Bucket.getInstance().getBucketTable().registerForCopy(copiedCtxTable);
+
+      // add
+      var table = new Table(this, copiedCtxTable);
+      addTable(table);
+
+    } catch (Exception e) {
+      Log.error(e);
+      JOptionPane.showMessageDialog(getRoot(), e.getMessage());
+    }
+  }
+
+  /**
+   * paste sequence.
+   *
+   * @param x x
+   * @param y y
+   */
+  public void pasteSequence(int x, int y) {
+    // check
+    if (positionedSequences.size() > Sequence.MAX_POSITIONED) {
+      JOptionPane.showMessageDialog(this, "No more create sequence.");
+      return;
+    }
+
+    var copiedCtxSequence = getRoot().getMain().getCopied(CtxSequence.class);
+    if (copiedCtxSequence == null) {
+      JOptionPane.showMessageDialog(this, "No copied sequence.");
+      return;
+    }
+
+    try {
+      // register for copy
+      copiedCtxSequence.dbSequenceOption.posX = x;
+      copiedCtxSequence.dbSequenceOption.posY = y;
+
+      Bucket.getInstance().getBucketSequence().registerForCopy(copiedCtxSequence);
+
+      // add
+      var sequence = new Sequence(this, copiedCtxSequence);
+      addSequence(sequence);
+
+    } catch (Exception e) {
+      Log.error(e);
+      JOptionPane.showMessageDialog(getRoot(), e.getMessage());
+    }
+  }
+
+  /**
+   * paste note.
+   *
+   * @param x x
+   * @param y y
+   */
+  public void pasteNote(int x, int y) {
+    // check
+    if (positionedNotes.size() > Note.MAX_POSITIONED) {
+      JOptionPane.showMessageDialog(this, "No more create note.");
+      return;
+    }
+
+    var copiedCtxNote = getRoot().getMain().getCopied(CtxNote.class);
+    if (copiedCtxNote == null) {
+      JOptionPane.showMessageDialog(this, "No copied note.");
+      return;
+    }
+
+    try {
+      // register for copy
+      copiedCtxNote.dbNoteOption.posX = x;
+      copiedCtxNote.dbNoteOption.posY = y;
+
+      Bucket.getInstance().getBucketNote().registerForCopy(copiedCtxNote);
+
+      // add
+      var note = new Note(this, copiedCtxNote);
+      addNote(note);
+
+    } catch (Exception e) {
+      Log.error(e);
+      JOptionPane.showMessageDialog(getRoot(), e.getMessage());
+    }
   }
 }

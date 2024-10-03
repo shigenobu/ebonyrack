@@ -61,9 +61,9 @@ public class Main extends JFrame {
   private String title;
 
   /**
-   * copied data.
+   * copied info map.
    */
-  private final HashMap<Class, Copiable> copiedData = new HashMap<>();
+  private final HashMap<Class, CopiedInfo> copiedInfoMap = new HashMap<>();
 
   /**
    * draw lock.
@@ -612,7 +612,10 @@ public class Main extends JFrame {
    * @param <T>  type
    */
   public <T extends Copiable> void setCopied(Copiable copy, Class<T> cls) {
-    copiedData.put(cls, copy);
+    var info = new CopiedInfo<T>();
+    info.copiedTimestampMills = Date.timestampMillis();
+    info.data = copy;
+    copiedInfoMap.put(cls, info);
   }
 
   /**
@@ -623,10 +626,10 @@ public class Main extends JFrame {
    * @return copy
    */
   public <T extends Copiable> T getCopied(Class<T> cls) {
-    if (!copiedData.containsKey(cls)) {
+    if (!copiedInfoMap.containsKey(cls)) {
       return null;
     }
-    return (T) copiedData.get(cls).copy();
+    return (T) copiedInfoMap.get(cls).data.copy();
   }
 
   /**
@@ -637,6 +640,48 @@ public class Main extends JFrame {
    * @return if exists, true
    */
   public <T extends Copiable> boolean existCopied(Class<T> cls) {
-    return copiedData.containsKey(cls);
+    return copiedInfoMap.containsKey(cls);
+  }
+
+  /**
+   * get copied latest.
+   *
+   * @param <T> type
+   * @return copy
+   */
+  public <T extends Copiable> T getCopiedLatest() {
+    var opt = copiedInfoMap.values().stream()
+        .max(Comparator.comparingLong(CopiedInfo::getCopiedTimestampMills));
+    if (!opt.isPresent()) {
+      return null;
+    }
+    return (T) opt.get().data.copy();
+  }
+
+  /**
+   * CopiedInfo.
+   *
+   * @param <T> type
+   */
+  public class CopiedInfo<T extends Copiable> {
+
+    /**
+     * copied timestamp mills.
+     */
+    public long copiedTimestampMills;
+
+    /**
+     * copied data.
+     */
+    public Copiable<T> data;
+
+    /**
+     * get copied timestamp mills.
+     *
+     * @return copied timestamp mills
+     */
+    public long getCopiedTimestampMills() {
+      return copiedTimestampMills;
+    }
   }
 }
