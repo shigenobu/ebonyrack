@@ -230,7 +230,6 @@ public class Columns extends JPanel {
           var transferable = clipboard.getContents(table);
           if (transferable != null) {
             try {
-              var model = (DefaultTableModel) table.getModel();
               var selectedRow = table.getSelectedRow();
               var columnCount = table.getColumnCount();
               var pasteStr = (String) transferable.getTransferData(DataFlavor.stringFlavor);
@@ -239,7 +238,7 @@ public class Columns extends JPanel {
                   .filter(r -> !Utils.isNullOrEmpty(r))
                   .toList();
               for (int i = 0; i < rows.size(); i++) {
-                model.insertRow(selectedRow, new Object[columnCount]);
+                tableModel.insertRow(selectedRow, new Object[columnCount]);
               }
               for (int i = 0; i < rows.size(); i++) {
                 var cols = Arrays.stream(rows.get(i).split("\t"))

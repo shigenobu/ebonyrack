@@ -127,4 +127,13 @@ public class DbSequence extends Entity {
   public String getTipText() {
     return sequenceName;
   }
+
+  /**
+   * get sequence name for sort.
+   *
+   * @return sequence name
+   */
+  public String getSequenceNameForSort() {
+    return sequenceName;
+  }
 }
