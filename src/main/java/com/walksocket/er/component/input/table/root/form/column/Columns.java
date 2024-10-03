@@ -235,14 +235,12 @@ public class Columns extends JPanel {
               var pasteStr = (String) transferable.getTransferData(DataFlavor.stringFlavor);
               pasteStr = pasteStr.replace("\r", "");
               var rows = Arrays.stream(pasteStr.split("\n"))
-                  .filter(r -> !Utils.isNullOrEmpty(r))
                   .toList();
               for (int i = 0; i < rows.size(); i++) {
                 tableModel.insertRow(selectedRow, new Object[columnCount]);
               }
               for (int i = 0; i < rows.size(); i++) {
                 var cols = Arrays.stream(rows.get(i).split("\t"))
-                    .filter(c -> !Utils.isNullOrEmpty(c))
                     .toList();
                 var colLimit = cols.size();
                 if (colLimit > columnCount) {

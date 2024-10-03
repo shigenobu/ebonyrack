@@ -2,7 +2,6 @@ package com.walksocket.er.component.edit.sequences.root;
 
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogMedium;
-import com.walksocket.er.Utils;
 import com.walksocket.er.component.edit.sequences.Root;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
@@ -20,18 +19,15 @@ import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -72,11 +68,6 @@ public class Form extends JPanel {
   private final DefaultTableModel tableModel;
 
   /**
-   * text field search sequence name.
-   */
-  private final JTextField textFieldSearchSequenceName = new JTextField(20);
-
-  /**
    * Constructor.
    *
    * @param root root
@@ -87,22 +78,6 @@ public class Form extends JPanel {
 
     // layout
     setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-
-    // panel - input
-    var panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    add(panel1);
-
-    var labelSearchSequenceName = new JLabel("(Search) Sequence name:");
-    panel1.add(labelSearchSequenceName);
-    textFieldSearchSequenceName.addKeyListener(new KeyAdapter() {
-
-      @Override
-      public void keyReleased(KeyEvent e) {
-        var sequenceName = Utils.getString(textFieldSearchSequenceName);
-        loadTable(sequenceName);
-      }
-    });
-    panel1.add(textFieldSearchSequenceName);
 
     // table
     var panelTable = new JPanel();
@@ -164,11 +139,9 @@ public class Form extends JPanel {
               var pasteStr = (String) transferable.getTransferData(DataFlavor.stringFlavor);
               pasteStr = pasteStr.replace("\r", "");
               var rows = Arrays.stream(pasteStr.split("\n"))
-                  .filter(r -> !Utils.isNullOrEmpty(r))
                   .toList();
               for (int i = 0; i < rows.size(); i++) {
                 var cols = Arrays.stream(rows.get(i).split("\t"))
-                    .filter(c -> !Utils.isNullOrEmpty(c))
                     .toList();
                 var colLimit = cols.size();
                 if (colLimit > columnCount) {
@@ -201,16 +174,6 @@ public class Form extends JPanel {
    * load table.
    */
   private void loadTable() {
-    textFieldSearchSequenceName.setText("");
-    loadTable(null);
-  }
-
-  /**
-   * load table.
-   *
-   * @param sequenceName sequenceName
-   */
-  private void loadTable(String sequenceName) {
     tableModel.setRowCount(0);
 
     var ctxSequenceList = Bucket.getInstance().getBucketSequence().ctxSequenceList;
@@ -220,10 +183,6 @@ public class Form extends JPanel {
         .map(s -> s.dbSequence)
         .sorted(Comparator.comparing(DbSequence::getSequenceNameForSort))
         .collect(Collectors.toList())) {
-      if (!Utils.isNullOrEmpty(sequenceName) && !dbSequence.sequenceName.startsWith(sequenceName)) {
-        continue;
-      }
-
       tableModel.setRowCount(i + 1);
 
       table.setValueAt(dbSequence.sequenceId, i, 0);

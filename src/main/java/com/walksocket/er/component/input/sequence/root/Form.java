@@ -240,6 +240,26 @@ public class Form extends JPanel {
           if (!Word.isValid(tmp.sequenceName)) {
             throw new Exception("Invalid 'Sequence name'.");
           }
+          if (!Utils.isNullOrEmpty(tmp.startValue) && !Utils.isNumber(
+              tmp.startValue)) {
+            throw new Exception("Must be number 'Start value'.");
+          }
+          if (!Utils.isNullOrEmpty(tmp.minimumValue) && !Utils.isNumber(
+              tmp.minimumValue)) {
+            throw new Exception("Must be number 'Minimum value'.");
+          }
+          if (!Utils.isNullOrEmpty(tmp.maximumValue) && !Utils.isNumber(
+              tmp.maximumValue)) {
+            throw new Exception("Must be number 'Maximum value'.");
+          }
+          if (!Utils.isNullOrEmpty(tmp.incrementValue) && !Utils.isNumber(
+              tmp.incrementValue)) {
+            throw new Exception("Must be number 'Increment value'.");
+          }
+          if (!Utils.isNullOrEmpty(tmp.cacheSize) && !Utils.isNumber(
+              tmp.cacheSize)) {
+            throw new Exception("Must be number 'Cache size'.");
+          }
 
           if (Utils.isNullOrEmpty(tmp.cycle)) {
             tmp.cycle = Cycle.NOCYCLE_VALUE;
