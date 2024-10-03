@@ -2,6 +2,7 @@ package com.walksocket.er.sqlite.bucket;
 
 import com.walksocket.er.Log;
 import com.walksocket.er.Pos;
+import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.Connection;
 import com.walksocket.er.sqlite.Entity;
 import com.walksocket.er.sqlite.ImportSequence;
@@ -235,6 +236,44 @@ public class BucketSequence {
       ctxSequenceList.add(ctxSequence);
 
       return ctxSequence;
+
+    } catch (Exception e) {
+      con.rollback();
+      Log.error(e);
+
+      throw e;
+    }
+  }
+
+  /**
+   * save bulk.
+   *
+   * @param newDbSequenceList new db sequence list
+   * @throws Exception
+   */
+  public void saveBulk(List<DbSequence> newDbSequenceList) throws Exception {
+    try {
+      con.begin();
+
+      // database
+      for (var newDbSequence : newDbSequenceList) {
+        con.executeUpdate(newDbSequence);
+      }
+
+      con.commit();
+
+      // memory
+      for (var newDbSequence : newDbSequenceList) {
+        var opt = Bucket.getInstance().getBucketSequence()
+            .ctxSequenceList
+            .stream()
+            .filter(c -> c.dbSequence.sequenceId.equals(newDbSequence.sequenceId))
+            .findFirst();
+        if (!opt.isPresent()) {
+          throw new Exception("Not found sequence.");
+        }
+        opt.get().dbSequence = newDbSequence;
+      }
 
     } catch (Exception e) {
       con.rollback();

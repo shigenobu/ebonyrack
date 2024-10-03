@@ -2,6 +2,8 @@ package com.walksocket.er.component.edit.sequences.root;
 
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogMedium;
+import com.walksocket.er.Utils;
+import com.walksocket.er.Word;
 import com.walksocket.er.component.edit.sequences.Root;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
@@ -16,6 +18,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -23,6 +26,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -66,6 +70,16 @@ public class Form extends JPanel {
    * table model.
    */
   private final DefaultTableModel tableModel;
+
+  /**
+   * button save.
+   */
+  private final JButton buttonSave = new JButton("Save");
+
+  /**
+   * button save and close.
+   */
+  private final JButton buttonSaveAndClose = new JButton("Save and close");
 
   /**
    * Constructor.
@@ -166,6 +180,22 @@ public class Form extends JPanel {
     sp.setPreferredSize(new Dimension(DialogMedium.WIDTH - 40 + 30, DialogMedium.HEIGHT / 10 * 8));
     panelTable.add(sp);
 
+    // button
+    var panelButton = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    panelButton.setPreferredSize(new Dimension(DialogMedium.WIDTH - 20, DialogMedium.HEIGHT / 10));
+    panelButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+    add(panelButton);
+    buttonSave.addActionListener(actionEvent -> {
+      save();
+    });
+    panelButton.add(buttonSave);
+    buttonSaveAndClose.addActionListener(actionEvent -> {
+      if (save()) {
+        root.getEditSequences().dispose();
+      }
+    });
+    panelButton.add(buttonSaveAndClose);
+
     // load
     loadTable();
   }
@@ -196,5 +226,75 @@ public class Form extends JPanel {
 
       i++;
     }
+  }
+
+  /**
+   * save.
+   *
+   * @return if true, ok
+   */
+  private boolean save() {
+    try {
+      var newDbSequenceList = new ArrayList<DbSequence>();
+      for (int i = 0; i < table.getRowCount(); i++) {
+        var newDbSequence = new DbSequence();
+        newDbSequence.sequenceId = Utils.getString(table.getValueAt(i, 0));
+        newDbSequence.sequenceName = Utils.getString(table.getValueAt(i, 1));
+        newDbSequence.startValue = Utils.getString(table.getValueAt(i, 2));
+        newDbSequence.minimumValue = Utils.getString(table.getValueAt(i, 3));
+        newDbSequence.maximumValue = Utils.getString(table.getValueAt(i, 4));
+        newDbSequence.incrementValue = Utils.getString(table.getValueAt(i, 5));
+        newDbSequence.cacheSize = Utils.getString(table.getValueAt(i, 6));
+        newDbSequence.cycle = Utils.getString(table.getValueAt(i, 7));
+
+        if (Utils.isNullOrEmpty(newDbSequence.sequenceName)) {
+          throw new Exception("Required 'Sequence name'.");
+        }
+        if (!Word.isValid(newDbSequence.sequenceName)) {
+          throw new Exception("Invalid 'Sequence name'.");
+        }
+        if (!Utils.isNullOrEmpty(newDbSequence.startValue) && !Utils.isNumber(
+            newDbSequence.startValue)) {
+          throw new Exception("Must be number 'Start value'.");
+        }
+        if (!Utils.isNullOrEmpty(newDbSequence.minimumValue) && !Utils.isNumber(
+            newDbSequence.minimumValue)) {
+          throw new Exception("Must be number 'Minimum value'.");
+        }
+        if (!Utils.isNullOrEmpty(newDbSequence.maximumValue) && !Utils.isNumber(
+            newDbSequence.maximumValue)) {
+          throw new Exception("Must be number 'Maximum value'.");
+        }
+        if (!Utils.isNullOrEmpty(newDbSequence.incrementValue) && !Utils.isNumber(
+            newDbSequence.incrementValue)) {
+          throw new Exception("Must be number 'Increment value'.");
+        }
+        if (!Utils.isNullOrEmpty(newDbSequence.cacheSize) && !Utils.isNumber(
+            newDbSequence.cacheSize)) {
+          throw new Exception("Must be number 'Cache size'.");
+        }
+
+        if (Utils.isNullOrEmpty(newDbSequence.cycle)) {
+          newDbSequence.cycle = Cycle.NOCYCLE_VALUE;
+        }
+
+        newDbSequenceList.add(newDbSequence);
+      }
+
+      // save
+      Bucket.getInstance().getBucketSequence().saveBulk(newDbSequenceList);
+      root.getEditSequences().changeState();
+
+      // load
+      loadTable();
+
+      return true;
+
+    } catch (Exception e) {
+      Log.error(e);
+      JOptionPane.showMessageDialog(this, e.getMessage());
+    }
+
+    return false;
   }
 }
