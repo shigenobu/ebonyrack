@@ -1317,4 +1317,96 @@ public class BucketTable {
       throw e;
     }
   }
+
+  /**
+   * save bulk.
+   *
+   * @param newDbTableList          new db table list
+   * @param newDbTableGroupList     new db table group list
+   * @param newDbTablePartitionList new db table partition list
+   * @throws Exception
+   */
+  public void saveBulk(List<DbTable> newDbTableList, List<DbTableGroup> newDbTableGroupList,
+      List<DbTablePartition> newDbTablePartitionList)
+      throws Exception {
+    try {
+      con.begin();
+
+      // database
+      for (var newDbTable : newDbTableList) {
+        // auto increment
+        if (!Utils.isNullOrEmpty(newDbTable.autoIncrementValue)) {
+          for (var ctxTable : Bucket.getInstance().getBucketTable().ctxTableList) {
+            if (!ctxTable.dbTable.tableId.equals(newDbTable.tableId)) {
+              continue;
+            }
+            boolean existsAutoIncrement = false;
+            for (var dbTableColumn : ctxTable.dbTableColumnList.stream()
+                .filter(d -> d.tableId.equals(newDbTable.tableId))
+                .collect(Collectors.toList())) {
+              var opt = Bucket.getInstance().getBucketDict().dbDictColumnList.stream()
+                  .filter(d -> d.dictColumnId.equals(dbTableColumn.dictColumnId))
+                  .filter(d -> !Utils.isNullOrEmpty(d.autoIncrementDefinition))
+                  .findFirst();
+              if (opt.isPresent()) {
+                existsAutoIncrement = true;
+                break;
+              }
+            }
+            if (!existsAutoIncrement) {
+              throw new Exception("Undefined auto increment column.");
+            }
+          }
+        }
+        con.executeUpdate(newDbTable);
+      }
+      con.execute("DELETE FROM DbTableGroup");
+      for (var newDbTableGroup : newDbTableGroupList) {
+        con.executeInsert(newDbTableGroup);
+      }
+      con.execute("DELETE FROM DbTablePartition");
+      for (var newDbTablePartition : newDbTablePartitionList) {
+        con.executeInsert(newDbTablePartition);
+      }
+
+      con.commit();
+
+      // memory
+      for (var newDbTable : newDbTableList) {
+        var opt = Bucket.getInstance().getBucketTable()
+            .ctxTableList
+            .stream()
+            .filter(c -> c.dbTable.tableId.equals(newDbTable.tableId))
+            .findFirst();
+        if (!opt.isPresent()) {
+          throw new Exception("Not found table.");
+        }
+        opt.get().dbTable = newDbTable;
+        opt.get().dbTableGroup = null;
+        opt.get().dbTablePartition = null;
+      }
+      for (var newDbTableGroup : newDbTableGroupList) {
+        var opt = Bucket.getInstance().getBucketTable()
+            .ctxTableList
+            .stream()
+            .filter(c -> c.dbTable.tableId.equals(newDbTableGroup.tableId))
+            .findFirst();
+        opt.get().dbTableGroup = newDbTableGroup;
+      }
+      for (var newDbTablePartition : newDbTablePartitionList) {
+        var opt = Bucket.getInstance().getBucketTable()
+            .ctxTableList
+            .stream()
+            .filter(c -> c.dbTable.tableId.equals(newDbTablePartition.tableId))
+            .findFirst();
+        opt.get().dbTablePartition = newDbTablePartition;
+      }
+
+    } catch (Exception e) {
+      con.rollback();
+      Log.error(e);
+
+      throw e;
+    }
+  }
 }

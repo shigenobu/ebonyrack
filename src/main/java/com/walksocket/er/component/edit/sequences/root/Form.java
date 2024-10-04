@@ -129,9 +129,9 @@ public class Form extends JPanel {
 
       // cycle
       if (i == 7) {
-        var comboBoxNotNull = new JComboBox(
+        var comboBoxCycle = new JComboBox(
             new DefaultComboBoxModel(Cycle.getCycleListForColumn().toArray()));
-        tc.setCellEditor(new DefaultCellEditor(comboBoxNotNull));
+        tc.setCellEditor(new DefaultCellEditor(comboBoxCycle));
       }
     }
     table.addKeyListener(new KeyAdapter() {
@@ -157,13 +157,13 @@ public class Form extends JPanel {
               for (int i = 0; i < rows.size(); i++) {
                 var cols = Arrays.stream(rows.get(i).split("\t"))
                     .toList();
-                var colLimit = cols.size();
-                if (colLimit > columnCount) {
-                  colLimit = columnCount;
-                }
-                for (int j = 1; j < colLimit; j++) {
+                for (int j = 1; j < columnCount; j++) {
                   if (i + selectedRow < rowCount) {
-                    table.setValueAt(cols.get(j), i + selectedRow, j);
+                    var value = "";
+                    if (cols.size() > j) {
+                      value = cols.get(j);
+                    }
+                    table.setValueAt(value, i + selectedRow, j);
                   }
                 }
               }

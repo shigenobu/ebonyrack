@@ -340,7 +340,9 @@ public class Main extends JFrame {
     menuEdit.addSeparator();
     var menuItemEditTables = new JMenuItem("Edit tables");
     menuItemEditTables.addActionListener(actionEvent -> {
-
+      var editTables = new EditTables(main);
+      editTables.setModal(true);
+      editTables.setVisible(true);
     });
     menuEdit.add(menuItemEditTables);
     var menuItemEditSequences = new JMenuItem("Edit sequences");

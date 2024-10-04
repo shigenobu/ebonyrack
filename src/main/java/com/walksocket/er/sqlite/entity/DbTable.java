@@ -138,4 +138,13 @@ public class DbTable extends Entity {
   public String getTipText() {
     return String.format("%s", getShowTableName());
   }
+
+  /**
+   * get table name for sort.
+   *
+   * @return table name
+   */
+  public String getTableNameForSort() {
+    return tableName;
+  }
 }
