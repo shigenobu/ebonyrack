@@ -1360,10 +1360,45 @@ public class BucketTable {
         }
         con.executeUpdate(newDbTable);
       }
+
       con.execute("DELETE FROM DbTableGroup");
       for (var newDbTableGroup : newDbTableGroupList) {
+        var dbDictGroup = Bucket.getInstance().getBucketDict().dbDictGroupList.stream()
+            .filter(d -> d.dictGroupId.equals(newDbTableGroup.dictGroupId))
+            .findFirst()
+            .get();
+        var groupDictColumnIdList = Bucket.getInstance()
+            .getBucketDict().dbDictGroupColumnList.stream()
+            .filter(d -> d.dictGroupId.equals(dbDictGroup.dictGroupId))
+            .map(d -> d.dictColumnId)
+            .collect(Collectors.toList());
+        var groupColumnNameList = Bucket.getInstance().getBucketDict().dbDictColumnList.stream()
+            .filter(d -> groupDictColumnIdList.contains(d.dictColumnId))
+            .map(d -> d.columnName)
+            .collect(Collectors.toList());
+
+        for (var ctxTable : Bucket.getInstance().getBucketTable().ctxTableList) {
+          if (!ctxTable.dbTable.tableId.equals(newDbTableGroup.tableId)) {
+            continue;
+          }
+          var dictColumnIdList = ctxTable.dbTableColumnList.stream()
+              .filter(d -> d.tableId.equals(newDbTableGroup.tableId))
+              .map(d -> d.dictColumnId)
+              .collect(Collectors.toList());
+          var columnNameList = Bucket.getInstance().getBucketDict().dbDictColumnList.stream()
+              .filter(d -> dictColumnIdList.contains(d.dictColumnId))
+              .map(d -> d.columnName)
+              .collect(Collectors.toList());
+
+          for (var columnName : columnNameList) {
+            if (groupColumnNameList.contains(columnName)) {
+              throw new Exception("Duplicate column name.");
+            }
+          }
+        }
         con.executeInsert(newDbTableGroup);
       }
+
       con.execute("DELETE FROM DbTablePartition");
       for (var newDbTablePartition : newDbTablePartitionList) {
         con.executeInsert(newDbTablePartition);
