@@ -252,6 +252,7 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
           getWorkspace().getSelectingRange()
               .movingStart(note, new Point(e.getX() + panelSide.getWidth(), e.getY()));
         } else {
+          getWorkspace().getSelectingRange().clearAllMovers();
           movingStart(new Point(e.getX() + panelSide.getWidth(), e.getY()));
         }
       }
@@ -275,20 +276,11 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
             }
           } else {
             for (var c : getConnectors()) {
-              c.zFirst(note, ErConnectorColor.FOCUSED_COLOR);
+              c.zFirst(note, ErConnectorColor.SELECTED_COLOR);
             }
           }
-          for (var m : getWorkspace().getSelectingRange().getAllMovers()) {
-            var me = (ErConnectorEndpoint) m;
-            me.zFirst(me.getBorder());
-          }
-          note.zFirst(note.getBorder());
           return;
         }
-        for (var c : getConnectors()) {
-          c.zFirst(note, ErConnectorColor.FOCUSED_COLOR);
-        }
-        note.zFirst(ErConnectorColor.FOCUSED_BORDER);
 
         // moving
         if (getWorkspace().getSelectingRange().isSelecting(note)) {

@@ -142,6 +142,7 @@ public class ErConnector extends JPanel {
     addFocusListener(new FocusAdapter() {
       @Override
       public void focusGained(FocusEvent e) {
+        Log.trace(String.format("focus gained: %s", connector));
         if (src != null) {
           src.zFirst(ErConnectorColor.SELECTED_BORDER);
           if (relation) {

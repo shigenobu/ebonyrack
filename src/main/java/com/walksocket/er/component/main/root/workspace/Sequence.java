@@ -154,6 +154,7 @@ public class Sequence extends ErConnectorEndpoint {
         if (getWorkspace().getSelectingRange().isSelecting(sequence)) {
           getWorkspace().getSelectingRange().movingStart(sequence, e.getPoint());
         } else {
+          getWorkspace().getSelectingRange().clearAllMovers();
           movingStart(e.getPoint());
         }
       }
@@ -177,20 +178,11 @@ public class Sequence extends ErConnectorEndpoint {
             }
           } else {
             for (var c : getConnectors()) {
-              c.zFirst(sequence, ErConnectorColor.FOCUSED_COLOR);
+              c.zFirst(sequence, ErConnectorColor.SELECTED_COLOR);
             }
           }
-          for (var m : getWorkspace().getSelectingRange().getAllMovers()) {
-            var me = (ErConnectorEndpoint) m;
-            me.zFirst(me.getBorder());
-          }
-          sequence.zFirst(sequence.getBorder());
           return;
         }
-        for (var c : getConnectors()) {
-          c.zFirst(sequence, ErConnectorColor.FOCUSED_COLOR);
-        }
-        sequence.zFirst(ErConnectorColor.FOCUSED_BORDER);
 
         // moving
         if (getWorkspace().getSelectingRange().isSelecting(sequence)) {

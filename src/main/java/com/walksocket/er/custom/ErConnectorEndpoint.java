@@ -46,6 +46,7 @@ public abstract class ErConnectorEndpoint extends ErMover {
     addFocusListener(new FocusAdapter() {
       @Override
       public void focusGained(FocusEvent e) {
+        Log.trace(String.format("focus gained: %s", endpoint));
         for (var c : connectors) {
           c.zFirst(endpoint, ErConnectorColor.SELECTED_COLOR);
         }

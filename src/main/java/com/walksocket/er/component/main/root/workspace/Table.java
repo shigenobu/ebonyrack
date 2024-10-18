@@ -313,6 +313,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
         if (getWorkspace().getSelectingRange().isSelecting(table)) {
           getWorkspace().getSelectingRange().movingStart(table, e.getPoint());
         } else {
+          getWorkspace().getSelectingRange().clearAllMovers();
           movingStart(e.getPoint());
         }
       }
@@ -336,20 +337,11 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
             }
           } else {
             for (var c : getConnectors()) {
-              c.zFirst(table, ErConnectorColor.FOCUSED_COLOR);
+              c.zFirst(table, ErConnectorColor.SELECTED_COLOR);
             }
           }
-          for (var m : getWorkspace().getSelectingRange().getAllMovers()) {
-            var me = (ErConnectorEndpoint) m;
-            me.zFirst(me.getBorder());
-          }
-          table.zFirst(table.getBorder());
           return;
         }
-        for (var c : getConnectors()) {
-          c.zFirst(table, ErConnectorColor.FOCUSED_COLOR);
-        }
-        table.zFirst(ErConnectorColor.FOCUSED_BORDER);
 
         // moving
         if (getWorkspace().getSelectingRange().isSelecting(table)) {
