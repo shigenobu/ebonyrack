@@ -237,13 +237,23 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
           return;
         }
 
+        // selecting
+        if (e.isShiftDown()) {
+          return;
+        }
+
         // change cursor
         var cursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
         panelSubject.setCursor(cursor);
 
         // moving
         // plus side width
-        movingStart(new Point(e.getX() + panelSide.getWidth(), e.getY()));
+        if (getWorkspace().getSelectingRange().isSelecting(note)) {
+          getWorkspace().getSelectingRange()
+              .movingStart(note, new Point(e.getX() + panelSide.getWidth(), e.getY()));
+        } else {
+          movingStart(new Point(e.getX() + panelSide.getWidth(), e.getY()));
+        }
       }
 
       @Override
@@ -257,8 +267,36 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
           return;
         }
 
+        // selecting
+        if (e.isShiftDown()) {
+          if (getWorkspace().getSelectingRange().setOrUnsetMover(note)) {
+            for (var c : getConnectors()) {
+              c.zRestore(note);
+            }
+          } else {
+            for (var c : getConnectors()) {
+              c.zFirst(note, ErConnectorColor.FOCUSED_COLOR);
+            }
+          }
+          for (var m : getWorkspace().getSelectingRange().getAllMovers()) {
+            var me = (ErConnectorEndpoint) m;
+            me.zFirst(me.getBorder());
+          }
+          note.zFirst(note.getBorder());
+          return;
+        }
+        for (var c : getConnectors()) {
+          c.zFirst(note, ErConnectorColor.FOCUSED_COLOR);
+        }
+        note.zFirst(ErConnectorColor.FOCUSED_BORDER);
+
         // moving
-        movingEnd();
+        if (getWorkspace().getSelectingRange().isSelecting(note)) {
+          getWorkspace().getSelectingRange().movingEnd();
+        } else {
+          movingEnd();
+          getWorkspace().getSelectingRange().clearAllMovers();
+        }
 
         // reverse cursor
         var cursor = Cursor.getDefaultCursor();
@@ -476,6 +514,9 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
       panelFooter.setSize(
           new Dimension(w - BORDER_SIZE * 2 - panelSide.getWidth(), panelFooter.getHeight()));
       note.setSize(new Dimension(w, h));
+
+      // selecting
+      resizeSelectingPanel();
 
       // subject
       textFieldSubject.setSize(

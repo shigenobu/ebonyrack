@@ -169,6 +169,9 @@ public class Workspace extends ErConnectorPositioned {
         // focus
         workspace.requestFocusInWindow();
 
+        // clear
+        getSelectingRange().clearAllMovers();
+
         // menu
         if (e.isPopupTrigger() || SwingUtilities.isRightMouseButton(e)) {
           doPop(e);
@@ -179,6 +182,9 @@ public class Workspace extends ErConnectorPositioned {
       public void mouseReleased(MouseEvent e) {
         // focus
         workspace.requestFocusInWindow();
+
+        // clear
+        getSelectingRange().clearAllMovers();
 
         // menu
         if (e.isPopupTrigger() || SwingUtilities.isRightMouseButton(e)) {
@@ -684,7 +690,7 @@ public class Workspace extends ErConnectorPositioned {
   /**
    * reorder.
    */
-  private void reorder() {
+  public void reorder() {
     removeAll();
 
     // note

@@ -175,6 +175,9 @@ public class Main extends JFrame {
     menuFile.addSeparator();
     var menuItemExportDdl = new JMenuItem("Export ddl");
     menuItemExportDdl.addActionListener(actionEvent -> {
+      // reset
+      resetWorkspace();
+
       var exportDdl = new ExportDdl(main, cfgProject);
       exportDdl.setModal(true);
       exportDdl.setVisible(true);
@@ -182,6 +185,9 @@ public class Main extends JFrame {
     menuFile.add(menuItemExportDdl);
     var menuItemExportImage = new JMenuItem("Export image");
     menuItemExportImage.addActionListener(actionEvent -> {
+      // reset
+      resetWorkspace();
+
       Workspace workspace = root.getWorkspace();
 
       // chooser
@@ -252,7 +258,11 @@ public class Main extends JFrame {
     menuFile.add(menuItemExportImage);
     var menuItemExportHtml = new JMenuItem("Export html");
     menuItemExportHtml.addActionListener(actionEvent -> {
+      // reset
+      resetWorkspace();
+
       Workspace workspace = root.getWorkspace();
+
       // chooser
       var format = "html";
       var dotFormat = "." + format;
@@ -321,6 +331,9 @@ public class Main extends JFrame {
     menuFile.add(menuItemExportHtml);
     var menuItemExportTableClass = new JMenuItem("Export table class");
     menuItemExportTableClass.addActionListener(actionEvent -> {
+      // reset
+      resetWorkspace();
+
       var exportTableClass = new ExportTableClass(main, cfgProject);
       exportTableClass.setModal(true);
       exportTableClass.setVisible(true);
@@ -672,6 +685,15 @@ public class Main extends JFrame {
       return null;
     }
     return (T) opt.get().data.copy();
+  }
+
+  /**
+   * reset workspace.
+   */
+  private void resetWorkspace() {
+    root.getWorkspace().getSelectingRange().clearAllMovers();
+    root.getWorkspace().reorder();
+    root.getWorkspace().requestFocusInWindow();
   }
 
   /**

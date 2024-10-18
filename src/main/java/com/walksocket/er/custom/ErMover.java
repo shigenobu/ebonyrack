@@ -46,6 +46,11 @@ public abstract class ErMover extends JPanel {
   protected int rangeUnit = Pos.DEFAULT_UNIT;
 
   /**
+   * selecting panel.
+   */
+  private final JPanel selectingPanel = new JPanel();
+
+  /**
    * Constructor.
    *
    * @param parent parent
@@ -135,4 +140,27 @@ public abstract class ErMover extends JPanel {
    * @param y y
    */
   protected abstract void movingComplete(int x, int y);
+
+  /**
+   * add selecting panel.
+   */
+  public void addSelectingPanel() {
+    selectingPanel.setSize(getSize());
+    selectingPanel.setBorder(ErConnectorColor.SELECTING_BORDER);
+    add(selectingPanel);
+  }
+
+  /**
+   * resize selecting panel.
+   */
+  public void resizeSelectingPanel() {
+    selectingPanel.setSize(getSize());
+  }
+
+  /**
+   * remove selecting panel.
+   */
+  public void removeSelectingPanel() {
+    remove(selectingPanel);
+  }
 }

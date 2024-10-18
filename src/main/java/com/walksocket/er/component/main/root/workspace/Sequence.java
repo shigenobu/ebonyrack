@@ -7,6 +7,7 @@ import com.walksocket.er.component.ShowDdl;
 import com.walksocket.er.component.main.root.Workspace;
 import com.walksocket.er.custom.ErColorChooser;
 import com.walksocket.er.custom.ErConnector;
+import com.walksocket.er.custom.ErConnectorColor;
 import com.walksocket.er.custom.ErConnectorEndpoint;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.context.CtxSequence;
@@ -140,12 +141,21 @@ public class Sequence extends ErConnectorEndpoint {
           return;
         }
 
+        // selecting
+        if (e.isShiftDown()) {
+          return;
+        }
+
         // change cursor
         var cursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
         panelName.setCursor(cursor);
 
         // moving
-        movingStart(e.getPoint());
+        if (getWorkspace().getSelectingRange().isSelecting(sequence)) {
+          getWorkspace().getSelectingRange().movingStart(sequence, e.getPoint());
+        } else {
+          movingStart(e.getPoint());
+        }
       }
 
       @Override
@@ -159,8 +169,36 @@ public class Sequence extends ErConnectorEndpoint {
           return;
         }
 
+        // selecting
+        if (e.isShiftDown()) {
+          if (getWorkspace().getSelectingRange().setOrUnsetMover(sequence)) {
+            for (var c : getConnectors()) {
+              c.zRestore(sequence);
+            }
+          } else {
+            for (var c : getConnectors()) {
+              c.zFirst(sequence, ErConnectorColor.FOCUSED_COLOR);
+            }
+          }
+          for (var m : getWorkspace().getSelectingRange().getAllMovers()) {
+            var me = (ErConnectorEndpoint) m;
+            me.zFirst(me.getBorder());
+          }
+          sequence.zFirst(sequence.getBorder());
+          return;
+        }
+        for (var c : getConnectors()) {
+          c.zFirst(sequence, ErConnectorColor.FOCUSED_COLOR);
+        }
+        sequence.zFirst(ErConnectorColor.FOCUSED_BORDER);
+
         // moving
-        movingEnd();
+        if (getWorkspace().getSelectingRange().isSelecting(sequence)) {
+          getWorkspace().getSelectingRange().movingEnd();
+        } else {
+          movingEnd();
+          getWorkspace().getSelectingRange().clearAllMovers();
+        }
 
         // reverse cursor
         var cursor = Cursor.getDefaultCursor();

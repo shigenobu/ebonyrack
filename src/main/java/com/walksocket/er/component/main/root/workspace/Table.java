@@ -10,6 +10,7 @@ import com.walksocket.er.component.ShowTableClass;
 import com.walksocket.er.component.main.root.Workspace;
 import com.walksocket.er.custom.ErColorChooser;
 import com.walksocket.er.custom.ErConnector;
+import com.walksocket.er.custom.ErConnectorColor;
 import com.walksocket.er.custom.ErConnectorEndpoint;
 import com.walksocket.er.custom.ErConnectorEndpointRelation;
 import com.walksocket.er.definition.AutoIncrement;
@@ -299,12 +300,21 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
           return;
         }
 
+        // selecting
+        if (e.isShiftDown()) {
+          return;
+        }
+
         // change cursor
         var cursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
         panelTable.setCursor(cursor);
 
         // moving
-        movingStart(e.getPoint());
+        if (getWorkspace().getSelectingRange().isSelecting(table)) {
+          getWorkspace().getSelectingRange().movingStart(table, e.getPoint());
+        } else {
+          movingStart(e.getPoint());
+        }
       }
 
       @Override
@@ -318,8 +328,36 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
           return;
         }
 
+        // selecting
+        if (e.isShiftDown()) {
+          if (getWorkspace().getSelectingRange().setOrUnsetMover(table)) {
+            for (var c : getConnectors()) {
+              c.zRestore(table);
+            }
+          } else {
+            for (var c : getConnectors()) {
+              c.zFirst(table, ErConnectorColor.FOCUSED_COLOR);
+            }
+          }
+          for (var m : getWorkspace().getSelectingRange().getAllMovers()) {
+            var me = (ErConnectorEndpoint) m;
+            me.zFirst(me.getBorder());
+          }
+          table.zFirst(table.getBorder());
+          return;
+        }
+        for (var c : getConnectors()) {
+          c.zFirst(table, ErConnectorColor.FOCUSED_COLOR);
+        }
+        table.zFirst(ErConnectorColor.FOCUSED_BORDER);
+
         // moving
-        movingEnd();
+        if (getWorkspace().getSelectingRange().isSelecting(table)) {
+          getWorkspace().getSelectingRange().movingEnd();
+        } else {
+          movingEnd();
+          getWorkspace().getSelectingRange().clearAllMovers();
+        }
 
         // reverse cursor
         var cursor = Cursor.getDefaultCursor();
