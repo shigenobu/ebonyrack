@@ -43,13 +43,13 @@ public class Copyright extends JPanel {
       add(panel2);
 
       var labelFont = new ErLinkLabel(
-          "<html><font color='white'><small>Font <u>Mplus1-Regular</u></small>.</font></html>",
+          "<html><font color='white'>Font <u>Mplus1-Regular</u>.</font></html>",
           new URI("https://mplusfonts.github.io/")
       );
       panel2.add(labelFont);
 
       var labelLookAndFeel = new ErLinkLabel(
-          "<html><font color='white'><small>Look and Feel <u>FlatLaf</u></small>.</font></html>",
+          "<html><font color='white'>Look and Feel <u>FlatLaf</u>.</font></html>",
           new URI("https://www.formdev.com/flatlaf/")
       );
       panel2.add(labelLookAndFeel);

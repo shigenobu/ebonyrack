@@ -1,4 +1,4 @@
-// Generated from MariaDBParser.g4 by ANTLR 4.13.1
+// Generated from MariaDBParser.g4 by ANTLR 4.13.2
 package com.walksocket.antlr4;
 
 import org.antlr.v4.runtime.ParserRuleContext;

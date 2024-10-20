@@ -3,13 +3,14 @@ package com.walksocket.er.sqlite;
 import com.walksocket.er.Json;
 import com.walksocket.er.Log;
 import com.walksocket.er.Value;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.List;
 
 /**
  * Entity.
  */
-public abstract class Entity implements Cloneable, Value {
+public abstract class Entity implements Value {
 
   /**
    * convert entity.
@@ -23,10 +24,11 @@ public abstract class Entity implements Cloneable, Value {
   public static <T extends Entity> T convertEntity(Record record, Class<T> cls)
       throws SQLException {
     try {
-      var entity = cls.newInstance();
+      var entity = cls.getDeclaredConstructor().newInstance();
       entity.bind(record);
       return entity;
-    } catch (InstantiationException | IllegalAccessException e) {
+    } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+             InvocationTargetException e) {
       Log.error(e);
       throw new SQLException("Fault to convert entity.");
     }

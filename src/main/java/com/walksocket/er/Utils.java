@@ -22,7 +22,7 @@ public class Utils {
    * @return if null or empty, true
    */
   public static boolean isNullOrEmpty(Object src) {
-    return src == null || src.toString().equals("");
+    return src == null || src.toString().isEmpty();
   }
 
   /**
@@ -32,7 +32,7 @@ public class Utils {
    * @return if null or empty, true
    */
   public static boolean isNullOrEmpty(String src) {
-    return src == null || src.equals("");
+    return src == null || src.isEmpty();
   }
 
   /**
@@ -62,7 +62,7 @@ public class Utils {
    * @return if null or empty, true
    */
   public static <T> boolean isNullOrEmpty(Collection<T> src) {
-    return src == null || src.size() == 0;
+    return src == null || src.isEmpty();
   }
 
   /**
@@ -93,7 +93,7 @@ public class Utils {
    * @return degree at unit
    */
   public static int floorDegree(int src, int unit) {
-    return (int) ((Math.floor(src / unit)) * unit);
+    return (int) ((Math.floor((double) src / unit)) * unit);
   }
 
   /**
@@ -132,6 +132,7 @@ public class Utils {
     try {
       return Integer.parseInt(src);
     } catch (NumberFormatException e) {
+      Log.error(e);
     }
     return 0;
   }
@@ -142,7 +143,7 @@ public class Utils {
    * @return random string
    */
   public static String randomString() {
-    return RandomStringUtils.randomAlphanumeric(32).toLowerCase();
+    return RandomStringUtils.secure().nextAlphanumeric(32).toLowerCase();
   }
 
   /**
