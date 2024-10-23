@@ -157,6 +157,8 @@ public class Workspace extends ErConnectorPositioned {
           } else if (copied instanceof CtxNote) {
             pasteNote(x, y);
           }
+        } else if (e.getKeyCode() == KeyEvent.VK_F && e.isControlDown()) {
+          // search
         }
       }
     });
