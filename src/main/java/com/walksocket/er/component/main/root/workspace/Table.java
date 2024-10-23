@@ -407,6 +407,23 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
   }
 
   /**
+   * get show column name list.
+   *
+   * @return show column name list
+   */
+  public List<String> getShowColumnNameList() {
+    var showColumnNameList = new ArrayList<String>();
+    var dbDictColumnList = Bucket.getInstance().getBucketDict().dbDictColumnList;
+    for (var dbTableColumn : ctxTable.dbTableColumnList) {
+      var dbDictColumn = dbDictColumnList.stream()
+          .filter(d -> d.dictColumnId.equals(dbTableColumn.dictColumnId))
+          .findFirst().get();
+      showColumnNameList.add(dbDictColumn.getShowColumnName());
+    }
+    return showColumnNameList;
+  }
+
+  /**
    * redraw.
    */
   public void redraw() {

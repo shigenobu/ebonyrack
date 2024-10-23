@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>${title}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+      href="https://fonts.googleapis.com/css2?family=M+PLUS+1+Code:wght@100..700&family=M+PLUS+1:wght@100..900&display=swap"
+      rel="stylesheet">
   <style>
   #foreach($css in $cssList)
       ${ErTemplateUtils.nonEscape($css)}
@@ -49,12 +54,28 @@
              height="${imageHeight}"/>
         #foreach($table in $tables)
             #set($ctxTable = $table.getCtxTable())
+            #set($tableNameX = $table.getX() + 26)
+            #set($tableNameY = $table.getY() + 25)
+          <text x="${tableNameX}" y="${tableNameY}" font-size="11"
+                fill-opacity="0">${ctxTable.dbTable.getShowTableName()}</text>
+            #set($idx = 0)
+            #foreach($showColumnName in $table.getShowColumnNameList())
+                #set($columnNameX = $tableNameX + 20)
+                #set($columnNameY = $tableNameY + $idx * 22 + 33)
+              <text x="${columnNameX}" y="${columnNameY}" font-size="11"
+                    fill-opacity="0">${showColumnName}</text>
+                #set($idx = $idx + 1)
+            #end
           <rect id="table-${ctxTable.dbTable.tableId}" x="${table.getX()}" y="${table.getY()}"
                 width="${table.getWidth()}" height="${table.getHeight()}" fill="red"
                 fill-opacity="0" stroke="red" stroke-opacity="0"/>
         #end
         #foreach($sequence in $sequences)
             #set($ctxSequence = $sequence.getCtxSequence())
+            #set($sequenceNameX = $sequence.getX() + 26)
+            #set($sequenceNameY = $sequence.getY() + 23)
+          <text x="${sequenceNameX}" y="${sequenceNameY}" font-size="11"
+                fill-opacity="0">${ctxSequence.dbSequence.sequenceName}</text>
           <rect id="sequence-${ctxSequence.dbSequence.sequenceId}" x="${sequence.getX()}"
                 y="${sequence.getY()}" width="${sequence.getWidth()}"
                 height="${sequence.getHeight()}" fill="red" fill-opacity="0" stroke="red"
@@ -62,6 +83,18 @@
         #end
         #foreach($note in $notes)
             #set($ctxNote = $note.getCtxNote())
+            #set($subjectX = $note.getX() + 17)
+            #set($subjectY = $note.getY() + 20)
+          <text x="${subjectX}" y="${subjectY}" font-size="11"
+                fill-opacity="0">${ctxNote.dbNote.subject}</text>
+            #set($idx = 0)
+            #foreach($b in $ctxNote.dbNote.body.split("\n"))
+                #set($bodyX = $subjectX)
+                #set($bodyY = $subjectY + $idx * 17 + 36)
+              <text x="${bodyX}" y="${bodyY}" font-size="11"
+                    fill-opacity="0">${b}</text>
+                #set($idx = $idx + 1)
+            #end
           <rect id="note-${ctxNote.dbNote.noteId}" x="${note.getX()}" y="${note.getY()}"
                 width="${note.getWidth()}" height="${note.getHeight()}" fill="red" fill-opacity="0"
                 stroke="red" stroke-opacity="0"/>
