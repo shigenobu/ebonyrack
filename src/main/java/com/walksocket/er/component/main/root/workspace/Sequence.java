@@ -2,6 +2,7 @@ package com.walksocket.er.component.main.root.workspace;
 
 import com.walksocket.er.Const;
 import com.walksocket.er.Log;
+import com.walksocket.er.Utils;
 import com.walksocket.er.component.InputSequence;
 import com.walksocket.er.component.ShowDdl;
 import com.walksocket.er.component.main.root.Workspace;
@@ -11,10 +12,13 @@ import com.walksocket.er.custom.ErConnectorColor;
 import com.walksocket.er.custom.ErConnectorEndpoint;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.context.CtxSequence;
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -105,12 +109,46 @@ public class Sequence extends ErConnectorEndpoint {
         if (e.getKeyCode() == KeyEvent.VK_C && e.isControlDown()) {
           // copy
           workspace.getRoot().getMain().setCopied(ctxSequence, CtxSequence.class);
+        } else if (e.getKeyCode() == KeyEvent.VK_F && e.isControlDown()) {
+          // search
+          workspace.showSearchTextDialog();
+        } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+          // clear
+          workspace.clearSearchText();
         }
       }
     });
 
     // sequence
-    panelName = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    panelName = new JPanel(new FlowLayout(FlowLayout.CENTER)) {
+      @Override
+      protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        // search
+        var searchText = workspace.getSearchText();
+        if (Utils.isNullOrEmpty(searchText)) {
+          return;
+        }
+        var targetText = labelSequenceName.getText();
+        var startPos = targetText.indexOf(searchText);
+        if (startPos < 0) {
+          return;
+        }
+        var endPos = startPos + searchText.length();
+
+        var metrics = labelSequenceName.getFontMetrics(labelSequenceName.getFont());
+        String start = targetText.substring(0, startPos);
+        String text = targetText.substring(startPos, endPos);
+        int startX = 5 + metrics.stringWidth(start);
+        int startY = 8;
+        int width = metrics.stringWidth(text);
+        int height = metrics.getHeight();
+
+        g.setColor(Color.YELLOW);
+        g.fillRect(startX, startY, width, height);
+      }
+    };
     panelName.setLocation(new Point(BORDER_SIZE, BORDER_SIZE));
     panelName.setSize(new Dimension(getWidth() - BORDER_SIZE * 2, getHeight() - BORDER_SIZE * 2));
     panelName.setBackground(new Color(ctxSequence.dbSequenceOption.color));
@@ -315,7 +353,36 @@ public class Sequence extends ErConnectorEndpoint {
   }
 
   @Override
+  protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+
+    // search
+    var searchText = workspace.getSearchText();
+    if (Utils.isNullOrEmpty(searchText)) {
+      return;
+    }
+    var targetText = labelSequenceName.getText();
+    var startPos = targetText.indexOf(searchText);
+    if (startPos < 0) {
+      var g2 = (Graphics2D) g;
+      AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f);
+      g2.setComposite(ac);
+    }
+  }
+
+  @Override
   public String toString() {
+    var searchText = workspace.getSearchText();
+    if (Utils.isNullOrEmpty(searchText)) {
+      return ctxSequence.dbSequence.sequenceName;
+    }
+
+    var targetText = labelSequenceName.getText();
+    var startPos = targetText.indexOf(searchText);
+    if (startPos < 0) {
+      return String.format("<html><font color=#dcdcdc>%s</font></html>",
+          ctxSequence.dbSequence.sequenceName);
+    }
     return ctxSequence.dbSequence.sequenceName;
   }
 

@@ -14,6 +14,7 @@ import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.context.CtxNote;
 import com.walksocket.er.sqlite.entity.DbNoteConnectorSequence;
 import com.walksocket.er.sqlite.entity.DbNoteConnectorTable;
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -111,12 +112,12 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
   /**
    * text field subject.
    */
-  private final JTextField textFieldSubject = new JTextField();
+  private final JTextField textFieldSubject;
 
   /**
    * text area body.
    */
-  private final JTextArea textAreaBody = new JTextArea();
+  private final JTextArea textAreaBody;
 
   /**
    * resizing.
@@ -157,6 +158,12 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
         if (e.getKeyCode() == KeyEvent.VK_C && e.isControlDown()) {
           // copy
           workspace.getRoot().getMain().setCopied(ctxNote, CtxNote.class);
+        } else if (e.getKeyCode() == KeyEvent.VK_F && e.isControlDown()) {
+          // search
+          workspace.showSearchTextDialog();
+        } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+          // clear
+          workspace.clearSearchText();
         }
       }
     });
@@ -300,6 +307,35 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
       }
     });
     add(panelSubject);
+    textFieldSubject = new JTextField() {
+      @Override
+      protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        // search
+        var searchText = workspace.getSearchText();
+        if (Utils.isNullOrEmpty(searchText)) {
+          return;
+        }
+        var targetText = textFieldSubject.getText();
+        var startPos = targetText.indexOf(searchText);
+        if (startPos < 0) {
+          return;
+        }
+        var endPos = startPos + searchText.length();
+
+        var metrics = textFieldSubject.getFontMetrics(textFieldSubject.getFont());
+        String start = targetText.substring(0, startPos);
+        String text = targetText.substring(startPos, endPos);
+        int startX = metrics.stringWidth(start);
+        int startY = 0;
+        int width = metrics.stringWidth(text);
+        int height = metrics.getHeight();
+
+        g.setColor(new Color(255, 255, 0, 100));
+        g.fillRect(startX, startY, width, height);
+      }
+    };
     textFieldSubject.addFocusListener(new FocusAdapter() {
 
       @Override
@@ -355,6 +391,38 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
       }
     });
     add(panelBody);
+    textAreaBody = new JTextArea() {
+      @Override
+      protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        // search
+        var searchText = workspace.getSearchText();
+        if (Utils.isNullOrEmpty(searchText)) {
+          return;
+        }
+        var targetTextList = textAreaBody.getText().split("\n");
+        for (int i = 0; i < targetTextList.length; i++) {
+          var targetText = targetTextList[i];
+          var startPos = targetText.indexOf(searchText);
+          if (startPos < 0) {
+            continue;
+          }
+          var endPos = startPos + searchText.length();
+
+          var metrics = textAreaBody.getFontMetrics(textAreaBody.getFont());
+          String start = targetText.substring(0, startPos);
+          String text = targetText.substring(startPos, endPos);
+          int startX = metrics.stringWidth(start);
+          int startY = i * 17;
+          int width = metrics.stringWidth(text);
+          int height = metrics.getHeight();
+
+          g.setColor(new Color(255, 255, 0, 100));
+          g.fillRect(startX, startY, width, height);
+        }
+      }
+    };
     textAreaBody.addFocusListener(new FocusAdapter() {
 
       @Override
@@ -678,8 +746,50 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
   }
 
   @Override
+  protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+
+    // search
+    var searchText = workspace.getSearchText();
+    if (Utils.isNullOrEmpty(searchText)) {
+      return;
+    }
+    var targetText = textFieldSubject.getText();
+    var startPos = targetText.indexOf(searchText);
+    if (startPos >= 0) {
+      return;
+    }
+    targetText = textAreaBody.getText();
+    startPos = targetText.indexOf(searchText);
+    if (startPos >= 0) {
+      return;
+    }
+
+    var g2 = (Graphics2D) g;
+    AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f);
+    g2.setComposite(ac);
+  }
+
+  @Override
   public String toString() {
-    return ctxNote.dbNote.subject;
+    var searchText = workspace.getSearchText();
+    if (Utils.isNullOrEmpty(searchText)) {
+      return ctxNote.dbNote.subject;
+    }
+
+    var targetText = textFieldSubject.getText();
+    var startPos = targetText.indexOf(searchText);
+    if (startPos >= 0) {
+      return ctxNote.dbNote.subject;
+    }
+    targetText = textAreaBody.getText();
+    startPos = targetText.indexOf(searchText);
+    if (startPos >= 0) {
+      return ctxNote.dbNote.subject;
+    }
+
+    return String.format("<html><font color=#dcdcdc>%s</font></html>",
+        ctxNote.dbNote.subject);
   }
 
   /**

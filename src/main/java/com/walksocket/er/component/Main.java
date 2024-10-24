@@ -453,6 +453,7 @@ public class Main extends JFrame {
       @Override
       protected void done() {
         dialogLoading.dispose();
+        root.getWorkspace().requestFocusInWindow();
       }
     }).execute();
     dialogLoading.setModal(true);
@@ -694,6 +695,7 @@ public class Main extends JFrame {
     root.getWorkspace().getSelectingRange().clearAllMovers();
     root.getWorkspace().reorder();
     root.getWorkspace().requestFocusInWindow();
+    root.getWorkspace().clearSearchText();
   }
 
   /**

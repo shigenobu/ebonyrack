@@ -19,6 +19,7 @@ import com.walksocket.er.definition.NotNull;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.context.CtxTable;
 import com.walksocket.er.sqlite.entity.DbDictColumn;
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -264,12 +265,46 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
         if (e.getKeyCode() == KeyEvent.VK_C && e.isControlDown()) {
           // copy
           workspace.getRoot().getMain().setCopied(ctxTable, CtxTable.class);
+        } else if (e.getKeyCode() == KeyEvent.VK_F && e.isControlDown()) {
+          // search
+          workspace.showSearchTextDialog();
+        } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+          // clear
+          workspace.clearSearchText();
         }
       }
     });
 
     // table
-    panelTable = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    panelTable = new JPanel(new FlowLayout(FlowLayout.CENTER)) {
+      @Override
+      protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        // search
+        var searchText = workspace.getSearchText();
+        if (Utils.isNullOrEmpty(searchText)) {
+          return;
+        }
+        var targetText = labelTableName.getText();
+        var startPos = targetText.indexOf(searchText);
+        if (startPos < 0) {
+          return;
+        }
+        var endPos = startPos + searchText.length();
+
+        var metrics = labelTableName.getFontMetrics(labelTableName.getFont());
+        String start = targetText.substring(0, startPos);
+        String text = targetText.substring(startPos, endPos);
+        int startX = 5 + metrics.stringWidth(start);
+        int startY = 10;
+        int width = metrics.stringWidth(text);
+        int height = metrics.getHeight();
+
+        g.setColor(Color.YELLOW);
+        g.fillRect(startX, startY, width, height);
+      }
+    };
     panelTable.setLocation(new Point(BORDER_SIZE, BORDER_SIZE));
     panelTable.setSize(new Dimension(getWidth() - BORDER_SIZE * 2, 36));
     panelTable.setBackground(new Color(ctxTable.dbTableOption.color));
@@ -558,7 +593,35 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
         p2.setPreferredSize(new Dimension(w - 110, ph));
         p.add(p2);
         var showColumnName = dbDictColumn.getShowColumnName();
-        var textFieldColumnName = new JTextField();
+        var textFieldColumnName = new JTextField() {
+          @Override
+          protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            // search
+            var searchText = workspace.getSearchText();
+            if (Utils.isNullOrEmpty(searchText)) {
+              return;
+            }
+            var targetText = getText();
+            var startPos = targetText.indexOf(searchText);
+            if (startPos < 0) {
+              return;
+            }
+            var endPos = startPos + searchText.length();
+
+            var metrics = getFontMetrics(getFont());
+            String start = targetText.substring(0, startPos);
+            String text = targetText.substring(startPos, endPos);
+            int startX = metrics.stringWidth(start);
+            int startY = 2;
+            int width = metrics.stringWidth(text);
+            int height = metrics.getHeight();
+
+            g.setColor(new Color(255, 255, 0, 100));
+            g.fillRect(startX, startY, width, height);
+          }
+        };
         textFieldColumnName.setText(showColumnName);
         textFieldColumnName.setEditable(false);
         textFieldColumnName.setBackground(null);
@@ -788,8 +851,62 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
   }
 
   @Override
+  protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+
+    // search
+    var searchText = workspace.getSearchText();
+    if (Utils.isNullOrEmpty(searchText)) {
+      return;
+    }
+    var targetText = labelTableName.getText();
+    var startPos = targetText.indexOf(searchText);
+    if (startPos >= 0) {
+      return;
+    }
+
+    var dbDictColumnList = Bucket.getInstance().getBucketDict().dbDictColumnList;
+    for (var dbTableColumn : ctxTable.dbTableColumnList) {
+      var dbDictColumn = dbDictColumnList.stream()
+          .filter(d -> d.dictColumnId.equals(dbTableColumn.dictColumnId)).findFirst().get();
+      targetText = dbDictColumn.getShowColumnName();
+      startPos = targetText.indexOf(searchText);
+      if (startPos >= 0) {
+        return;
+      }
+    }
+
+    var g2 = (Graphics2D) g;
+    AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f);
+    g2.setComposite(ac);
+  }
+
+  @Override
   public String toString() {
-    return ctxTable.dbTable.getShowTableName();
+    var searchText = workspace.getSearchText();
+    if (Utils.isNullOrEmpty(searchText)) {
+      return ctxTable.dbTable.getShowTableName();
+    }
+
+    var targetText = labelTableName.getText();
+    var startPos = targetText.indexOf(searchText);
+    if (startPos >= 0) {
+      return ctxTable.dbTable.getShowTableName();
+    }
+
+    var dbDictColumnList = Bucket.getInstance().getBucketDict().dbDictColumnList;
+    for (var dbTableColumn : ctxTable.dbTableColumnList) {
+      var dbDictColumn = dbDictColumnList.stream()
+          .filter(d -> d.dictColumnId.equals(dbTableColumn.dictColumnId)).findFirst().get();
+      targetText = dbDictColumn.getShowColumnName();
+      startPos = targetText.indexOf(searchText);
+      if (startPos >= 0) {
+        return ctxTable.dbTable.getShowTableName();
+      }
+    }
+
+    return String.format("<html><font color=#dcdcdc>%s</font></html>",
+        ctxTable.dbTable.getShowTableName());
   }
 
   /**

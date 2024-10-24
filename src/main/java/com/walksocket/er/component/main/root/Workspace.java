@@ -118,6 +118,11 @@ public class Workspace extends ErConnectorPositioned {
   private final Set<ErConnector> positionedConnectorsTableToTable = new HashSet<>();
 
   /**
+   * search text.
+   */
+  private Object searchText;
+
+  /**
    * Constructor.
    *
    * @param root       root
@@ -159,6 +164,10 @@ public class Workspace extends ErConnectorPositioned {
           }
         } else if (e.getKeyCode() == KeyEvent.VK_F && e.isControlDown()) {
           // search
+          showSearchTextDialog();
+        } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+          // clear
+          clearSearchText();
         }
       }
     });
@@ -1292,5 +1301,38 @@ public class Workspace extends ErConnectorPositioned {
       Log.error(e);
       JOptionPane.showMessageDialog(getRoot(), e.getMessage());
     }
+  }
+
+  /**
+   * show search text dialog.
+   */
+  public void showSearchTextDialog() {
+    searchText = JOptionPane.showInputDialog(
+        getRoot(),
+        "Enter text",
+        "Search",
+        JOptionPane.PLAIN_MESSAGE,
+        null,
+        null,
+        searchText);
+  }
+
+  /**
+   * get search text.
+   *
+   * @return search text
+   */
+  public String getSearchText() {
+    if (!Utils.isNullOrEmpty(searchText)) {
+      return searchText.toString();
+    }
+    return "";
+  }
+
+  /**
+   * clear search text.
+   */
+  public void clearSearchText() {
+    searchText = null;
   }
 }
