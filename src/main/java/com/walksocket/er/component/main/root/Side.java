@@ -7,6 +7,8 @@ import com.walksocket.er.component.main.root.workspace.Table;
 import com.walksocket.er.config.CfgProject;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Comparator;
@@ -114,6 +116,19 @@ public class Side extends JPanel {
     treeNode.add(treeNodeSequence);
     treeNode.add(treeNodeNote);
     tree = new JTree(treeModel);
+    tree.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyPressed(KeyEvent e) {
+        var treePath = tree.getSelectionPath();
+        if (treePath == null) {
+          return;
+        }
+        var component = moveToComponent(treePath);
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+          component.requestFocusInWindow();
+        }
+      }
+    });
     tree.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
@@ -127,36 +142,50 @@ public class Side extends JPanel {
           return;
         }
         tree.setSelectionPath(treePath);
+        var component = moveToComponent(treePath);
 
-        var tmpNode = treePath.getLastPathComponent();
-        if (tmpNode != null && tmpNode instanceof DefaultMutableTreeNode node) {
-          var tmpObject = node.getUserObject();
-          if (tmpObject != null) {
-            JScrollPane sp = null;
-            if (tmpObject instanceof Table table) {
-              sp = (JScrollPane) table.getWorkspace().getParent().getParent();
-            } else if (tmpObject instanceof Sequence sequence) {
-              sp = (JScrollPane) sequence.getWorkspace().getParent().getParent();
-            } else if (tmpObject instanceof Note note) {
-              sp = (JScrollPane) note.getWorkspace().getParent().getParent();
-            }
-
-            if (sp != null) {
-              // move
-              var component = (JPanel) tmpObject;
-              var bw = sp.getHorizontalScrollBar();
-              var bh = sp.getVerticalScrollBar();
-              bw.setValue(component.getX());
-              bh.setValue(component.getY());
-
-              // focus
-              component.requestFocusInWindow();
-            }
-          }
+        // focus
+        if (e.getClickCount() >= 2) {
+          component.requestFocusInWindow();
         }
       }
     });
     add(tree);
+  }
+
+  /**
+   * movie to component.
+   *
+   * @param treePath treePath
+   * @return panel
+   */
+  public JPanel moveToComponent(TreePath treePath) {
+    var tmpNode = treePath.getLastPathComponent();
+    if (tmpNode != null && tmpNode instanceof DefaultMutableTreeNode node) {
+      var tmpObject = node.getUserObject();
+      if (tmpObject != null) {
+        JScrollPane sp = null;
+        if (tmpObject instanceof Table table) {
+          sp = (JScrollPane) table.getWorkspace().getParent().getParent();
+        } else if (tmpObject instanceof Sequence sequence) {
+          sp = (JScrollPane) sequence.getWorkspace().getParent().getParent();
+        } else if (tmpObject instanceof Note note) {
+          sp = (JScrollPane) note.getWorkspace().getParent().getParent();
+        }
+
+        if (sp != null) {
+          // move
+          var component = (JPanel) tmpObject;
+          var bw = sp.getHorizontalScrollBar();
+          var bh = sp.getVerticalScrollBar();
+          bw.setValue(component.getX());
+          bh.setValue(component.getY());
+
+          return component;
+        }
+      }
+    }
+    return null;
   }
 
   /**
@@ -195,6 +224,16 @@ public class Side extends JPanel {
   }
 
   /**
+   * notify selection table.
+   *
+   * @param table table
+   */
+  public void notifySelectionTable(Table table) {
+    var node = childrenTable.get(table);
+    tree.setSelectionPath(new TreePath(node.getPath()));
+  }
+
+  /**
    * reload table.
    */
   public void reloadTable() {
@@ -224,7 +263,7 @@ public class Side extends JPanel {
   }
 
   /**
-   * notify remove sequence
+   * notify remove sequence.
    *
    * @param sequence sequence
    */
@@ -232,6 +271,16 @@ public class Side extends JPanel {
     childrenSequence.remove(sequence);
 
     reloadSequence();
+  }
+
+  /**
+   * notify selection sequence.
+   *
+   * @param sequence sequence
+   */
+  public void notifySelectionSequence(Sequence sequence) {
+    var node = childrenSequence.get(sequence);
+    tree.setSelectionPath(new TreePath(node.getPath()));
   }
 
   /**
@@ -272,6 +321,16 @@ public class Side extends JPanel {
     childrenNote.remove(note);
 
     reloadNote();
+  }
+
+  /**
+   * notify selection note.
+   *
+   * @param note note
+   */
+  public void notifySelectionNote(Note note) {
+    var node = childrenNote.get(note);
+    tree.setSelectionPath(new TreePath(node.getPath()));
   }
 
   /**

@@ -746,6 +746,11 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
   }
 
   @Override
+  public void focusGainedComplete() {
+    workspace.notifySelectionNote(this);
+  }
+
+  @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
 

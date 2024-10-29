@@ -353,6 +353,11 @@ public class Sequence extends ErConnectorEndpoint {
   }
 
   @Override
+  public void focusGainedComplete() {
+    workspace.notifySelectionSequence(this);
+  }
+
+  @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
 

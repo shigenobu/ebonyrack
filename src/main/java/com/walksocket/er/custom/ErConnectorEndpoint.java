@@ -51,6 +51,9 @@ public abstract class ErConnectorEndpoint extends ErMover {
           c.zFirst(endpoint, ErConnectorColor.SELECTED_COLOR);
         }
         zFirst(ErConnectorColor.FOCUSED_BORDER);
+
+        // complete
+        focusGainedComplete();
       }
 
       @Override
@@ -59,6 +62,9 @@ public abstract class ErConnectorEndpoint extends ErMover {
         for (var c : connectors) {
           c.zRestore(endpoint);
         }
+
+        // complete
+        focusLostComplete();
       }
     });
     addMouseListener(new MouseAdapter() {
@@ -187,4 +193,16 @@ public abstract class ErConnectorEndpoint extends ErMover {
    * @param mouseEvent mouseEvent
    */
   public abstract void showPopupMenu(MouseEvent mouseEvent);
+
+  /**
+   * focus gained complete.
+   */
+  public void focusGainedComplete() {
+  }
+
+  /**
+   * focus lost complete.
+   */
+  public void focusLostComplete() {
+  }
 }

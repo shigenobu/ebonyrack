@@ -1335,4 +1335,31 @@ public class Workspace extends ErConnectorPositioned {
   public void clearSearchText() {
     searchText = null;
   }
+
+  /**
+   * notify selection table.
+   *
+   * @param table table
+   */
+  public void notifySelectionTable(Table table) {
+    side.notifySelectionTable(table);
+  }
+
+  /**
+   * notify selection sequence.
+   *
+   * @param sequence sequence
+   */
+  public void notifySelectionSequence(Sequence sequence) {
+    side.notifySelectionSequence(sequence);
+  }
+
+  /**
+   * notify selection note.
+   *
+   * @param note note
+   */
+  public void notifySelectionNote(Note note) {
+    side.notifySelectionNote(note);
+  }
 }

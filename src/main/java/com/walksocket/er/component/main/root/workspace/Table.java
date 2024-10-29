@@ -851,6 +851,11 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
   }
 
   @Override
+  public void focusGainedComplete() {
+    workspace.notifySelectionTable(this);
+  }
+
+  @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
 
