@@ -606,6 +606,7 @@ public class ErConnector extends JPanel {
     @Override
     public void mouseReleased(MouseEvent e) {
       // focus
+      positioned.getSelectingRange().clearAllMovers();
       connector.requestFocusInWindow();
 
       if (e.isPopupTrigger()) {
