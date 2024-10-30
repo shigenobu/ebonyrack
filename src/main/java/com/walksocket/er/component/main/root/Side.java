@@ -5,6 +5,7 @@ import com.walksocket.er.component.main.root.workspace.Note;
 import com.walksocket.er.component.main.root.workspace.Sequence;
 import com.walksocket.er.component.main.root.workspace.Table;
 import com.walksocket.er.config.CfgProject;
+import com.walksocket.er.custom.ErConnectorEndpoint;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.KeyAdapter;
@@ -123,9 +124,10 @@ public class Side extends JPanel {
         if (treePath == null) {
           return;
         }
-        var component = moveToComponent(treePath);
-        if (component != null && e.getKeyCode() == KeyEvent.VK_ENTER) {
-          component.requestFocusInWindow();
+        var endpoint = moveToEndpoint(treePath);
+        if (endpoint != null && e.getKeyCode() == KeyEvent.VK_ENTER) {
+          workspace.getSelectingRange().clearAllMovers();
+          endpoint.requestFocusInWindow();
         }
       }
     });
@@ -142,11 +144,12 @@ public class Side extends JPanel {
           return;
         }
         tree.setSelectionPath(treePath);
-        var component = moveToComponent(treePath);
+        var endpoint = moveToEndpoint(treePath);
 
         // focus
-        if (component != null && e.getClickCount() >= 2) {
-          component.requestFocusInWindow();
+        if (endpoint != null && e.getClickCount() >= 2) {
+          workspace.getSelectingRange().clearAllMovers();
+          endpoint.requestFocusInWindow();
         }
       }
     });
@@ -154,12 +157,12 @@ public class Side extends JPanel {
   }
 
   /**
-   * movie to component.
+   * movie to endpoint.
    *
    * @param treePath treePath
-   * @return panel
+   * @return endpoint
    */
-  public JPanel moveToComponent(TreePath treePath) {
+  public ErConnectorEndpoint moveToEndpoint(TreePath treePath) {
     var tmpNode = treePath.getLastPathComponent();
     if (tmpNode != null && tmpNode instanceof DefaultMutableTreeNode node) {
       var tmpObject = node.getUserObject();
@@ -173,15 +176,14 @@ public class Side extends JPanel {
           sp = (JScrollPane) note.getWorkspace().getParent().getParent();
         }
 
-        if (sp != null) {
+        if (sp != null && tmpObject instanceof ErConnectorEndpoint endpoint) {
           // move
-          var component = (JPanel) tmpObject;
           var bw = sp.getHorizontalScrollBar();
           var bh = sp.getVerticalScrollBar();
-          bw.setValue(component.getX());
-          bh.setValue(component.getY());
+          bw.setValue(endpoint.getX());
+          bh.setValue(endpoint.getY());
 
-          return component;
+          return endpoint;
         }
       }
     }

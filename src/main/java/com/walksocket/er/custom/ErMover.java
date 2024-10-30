@@ -3,6 +3,7 @@ package com.walksocket.er.custom;
 import com.walksocket.er.Date;
 import com.walksocket.er.Pos;
 import com.walksocket.er.Utils;
+import java.awt.Color;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.ActionListener;
@@ -56,6 +57,9 @@ public abstract class ErMover extends JPanel {
    * @param parent parent
    */
   public ErMover(JPanel parent) {
+    // selecting panel
+    selectingPanel.setBackground(Color.WHITE);
+
     // moving
     var endpoint = this;
     ActionListener movingListener = actionEvent -> {
