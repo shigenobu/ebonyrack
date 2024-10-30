@@ -124,7 +124,7 @@ public class Side extends JPanel {
           return;
         }
         var component = moveToComponent(treePath);
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+        if (component != null && e.getKeyCode() == KeyEvent.VK_ENTER) {
           component.requestFocusInWindow();
         }
       }
@@ -145,7 +145,7 @@ public class Side extends JPanel {
         var component = moveToComponent(treePath);
 
         // focus
-        if (e.getClickCount() >= 2) {
+        if (component != null && e.getClickCount() >= 2) {
           component.requestFocusInWindow();
         }
       }
