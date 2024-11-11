@@ -277,10 +277,7 @@ public class ErConnector extends JPanel {
         var xx = sx;
         var yy = a * xx + b;
         var p = new JPanel();
-        if (a < 0) {
-          yy -= 20;
-        }
-        p.setBounds(xx, (int) yy, 20, 20);
+        p.setBounds(xx - 10, (int) yy - 10, 20, 20);
         lines.add(p);
 
         sx += dx;
@@ -292,11 +289,11 @@ public class ErConnector extends JPanel {
       while (sy != ey) {
         var yy = sy;
         var xx = (yy - b) / a;
-        var p = new JPanel();
-        if (a < 0) {
-          yy -= 20;
+        if (Double.isInfinite(a)) {
+          xx = sx;
         }
-        p.setBounds((int) xx, yy, 20, 20);
+        var p = new JPanel();
+        p.setBounds((int) xx - 10, yy - 10, 20, 20);
         lines.add(p);
 
         sy += dy;
@@ -347,6 +344,7 @@ public class ErConnector extends JPanel {
     for (var line : lines) {
       line.setOpaque(false);
       line.setBackground(new Color(0, 0, 0, 0));
+//      line.setBackground(new Color(255, 0, 0, 10));
       add(line);
       line.addMouseListener(adapter);
     }
