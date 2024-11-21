@@ -591,10 +591,19 @@ public class Main extends JFrame {
       dialogNoteList.add(data);
     }
 
+    // font
+    var fontData = "";
+    try (var stream = App.class.getClassLoader()
+        .getResourceAsStream("font/Mplus1-Regular.otf")) {
+      var fontBytes = stream.readAllBytes();
+      fontData = Base64.getEncoder().encodeToString(fontBytes);
+    }
+
     // main
     var mainTemplate = getTemplate("html/main.vm");
     mainTemplate.assign("title", Const.TITLE);
     mainTemplate.assign("name", cfgProject.name);
+    mainTemplate.assign("fontData", fontData);
     mainTemplate.assign("cssList", cssList);
     mainTemplate.assign("jsList", jsList);
     mainTemplate.assign("imageData", imageData);

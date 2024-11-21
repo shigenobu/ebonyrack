@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>${title}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-      href="https://fonts.googleapis.com/css2?family=M+PLUS+1+Code:wght@100..700&family=M+PLUS+1:wght@100..900&display=swap"
-      rel="stylesheet">
   <style>
-  #foreach($css in $cssList)
-      ${ErTemplateUtils.nonEscape($css)}
-  #end
+    @font-face {
+      font-family: "M PLUS 1";
+      src: url("data:application/x-font-otf; charset=utf-8; base64,${fontData}") format("opentype");
+    }
+        #foreach($css in $cssList)
+            ${ErTemplateUtils.nonEscape($css)}
+        #end
   </style>
 </head>
 <body>
