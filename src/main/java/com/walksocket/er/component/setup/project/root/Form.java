@@ -80,6 +80,9 @@ public class Form extends JPanel {
     this.cfgProject = cfgProject;
     var form = this;
 
+    // if not new, not editable
+    var editable = Utils.isNullOrEmpty(cfgProject.name);
+
     // panel - name
     var panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
     panel1.setPreferredSize(new Dimension(DialogSmall.WIDTH - 20, DialogSmall.HEIGHT / 10));
@@ -94,6 +97,7 @@ public class Form extends JPanel {
       }
     });
     textFieldName.setText(cfgProject.name);
+    textFieldName.setEnabled(editable);
     panel1.add(textFieldName);
 
     // panel - db path
@@ -103,37 +107,40 @@ public class Form extends JPanel {
     labelDbPath.setPreferredSize(
         new Dimension(DialogSmall.WIDTH / 4, DialogSmall.HEIGHT / 10));
     panel2.add(labelDbPath);
-    textFieldDbPath.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        var dir = Env.getHome();
-        var dbName = Utils.getString(textFieldName);
-        if (Utils.isNullOrEmpty(dbName)) {
-          dbName = "database";
-        }
-        var file = dbName + Connection.DB_PATH_PREFIX;
-        Log.trace(cfgProject.dbPath);
-        if (!Utils.isNullOrEmpty(cfgProject.dbPath) && (new File(cfgProject.dbPath)).exists()) {
-          file = Paths.get(cfgProject.dbPath).toAbsolutePath().toString();
-          dir = Paths.get(cfgProject.dbPath).getParent().toAbsolutePath().toString();
-          Log.trace(dir);
-        }
-        var chooser = new JFileChooser(dir);
-        chooser.setAcceptAllFileFilterUsed(false);
-        chooser.setFileFilter(new FileNameExtensionFilter("*" + Connection.DB_PATH_PREFIX,
-            Connection.DB_PATH_PREFIX.substring(1)));
-        chooser.setSelectedFile(new File(file));
-        var result = chooser.showSaveDialog(form);
-        if (result == JFileChooser.APPROVE_OPTION) {
-          var dbPath = chooser.getSelectedFile().getAbsolutePath();
-          if (!dbPath.endsWith(Connection.DB_PATH_PREFIX)) {
-            dbPath += Connection.DB_PATH_PREFIX;
+    if (editable) {
+      textFieldDbPath.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+          var dir = Env.getHome();
+          var dbName = Utils.getString(textFieldName);
+          if (Utils.isNullOrEmpty(dbName)) {
+            dbName = "database";
           }
-          textFieldDbPath.setText(dbPath);
+          var file = dbName + Connection.DB_PATH_PREFIX;
+          Log.trace(cfgProject.dbPath);
+          if (!Utils.isNullOrEmpty(cfgProject.dbPath) && (new File(cfgProject.dbPath)).exists()) {
+            file = Paths.get(cfgProject.dbPath).toAbsolutePath().toString();
+            dir = Paths.get(cfgProject.dbPath).getParent().toAbsolutePath().toString();
+            Log.trace(dir);
+          }
+          var chooser = new JFileChooser(dir);
+          chooser.setAcceptAllFileFilterUsed(false);
+          chooser.setFileFilter(new FileNameExtensionFilter("*" + Connection.DB_PATH_PREFIX,
+              Connection.DB_PATH_PREFIX.substring(1)));
+          chooser.setSelectedFile(new File(file));
+          var result = chooser.showSaveDialog(form);
+          if (result == JFileChooser.APPROVE_OPTION) {
+            var dbPath = chooser.getSelectedFile().getAbsolutePath();
+            if (!dbPath.endsWith(Connection.DB_PATH_PREFIX)) {
+              dbPath += Connection.DB_PATH_PREFIX;
+            }
+            textFieldDbPath.setText(dbPath);
+          }
         }
-      }
-    });
+      });
+    }
     textFieldDbPath.setText(cfgProject.dbPath);
+    textFieldDbPath.setEnabled(editable);
     panel2.add(textFieldDbPath);
 
     // panel - mini size
