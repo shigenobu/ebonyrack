@@ -173,16 +173,6 @@ public class Main extends JFrame {
     });
     menuFile.add(menuItemCloseProject);
     menuFile.addSeparator();
-    var menuItemExportDdl = new JMenuItem("Export ddl");
-    menuItemExportDdl.addActionListener(actionEvent -> {
-      // reset
-      resetWorkspace();
-
-      var exportDdl = new ExportDdl(main, cfgProject);
-      exportDdl.setModal(true);
-      exportDdl.setVisible(true);
-    });
-    menuFile.add(menuItemExportDdl);
     var menuItemExportImage = new JMenuItem("Export image");
     menuItemExportImage.addActionListener(actionEvent -> {
       // reset
@@ -329,6 +319,16 @@ public class Main extends JFrame {
       }
     });
     menuFile.add(menuItemExportHtml);
+    var menuItemExportDdl = new JMenuItem("Export ddl");
+    menuItemExportDdl.addActionListener(actionEvent -> {
+      // reset
+      resetWorkspace();
+
+      var exportDdl = new ExportDdl(main, cfgProject);
+      exportDdl.setModal(true);
+      exportDdl.setVisible(true);
+    });
+    menuFile.add(menuItemExportDdl);
     var menuItemExportTableClass = new JMenuItem("Export table class");
     menuItemExportTableClass.addActionListener(actionEvent -> {
       // reset
