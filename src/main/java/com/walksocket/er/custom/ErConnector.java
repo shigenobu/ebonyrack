@@ -97,6 +97,11 @@ public class ErConnector extends JPanel {
   private Color lineColor = ErConnectorColor.DEFAULT_COLOR;
 
   /**
+   * set duplicate relation index.
+   */
+  private final int setDuplicateRelationIndex;
+
+  /**
    * Constructor.
    *
    * @param positioned positioned
@@ -110,6 +115,8 @@ public class ErConnector extends JPanel {
     this.src = src;
     this.dst = dst;
     this.lineStyle = lineStyle;
+    this.setDuplicateRelationIndex = src.getConnectors().stream()
+        .filter(c -> c.relation && c.src == src && c.dst == dst).toList().size();
     this.adapter = new ErConnectorMouseAdapter(this);
 
     // layout
@@ -362,6 +369,10 @@ public class ErConnector extends JPanel {
    * @return connection point
    */
   private Point getConnectionPoint(ErConnectorEndpoint e1, ErConnectorEndpoint e2) {
+    Log.trace(
+        String.format("setDuplicateRelationIndex:%s (%s -> %s)",
+            setDuplicateRelationIndex, e1, e2));
+
     var e1Cx = e1.getX() + e1.getWidth() / 2;
     var e1Cy = e1.getY() + e1.getHeight() / 2;
     var e2Cx = e2.getX() + e2.getWidth() / 2;
@@ -379,7 +390,11 @@ public class ErConnector extends JPanel {
       var y = e1.getY();
       var x = -(b * y + c) / a;
       if (e1.getX() <= x && x <= e1.getX() + e1.getWidth()) {
-        return new Point(x, y);
+        var mayX = relation ? x + setDuplicateRelationIndex * 20 : x;
+        if (mayX > e1.getX() + e1.getWidth()) {
+          mayX = x;
+        }
+        return new Point(mayX, y);
       }
     }
     // right
@@ -387,7 +402,11 @@ public class ErConnector extends JPanel {
       var x = e1.getX() + e1.getWidth();
       var y = -(a * x + c) / b;
       if (e1.getY() <= y && y <= e1.getY() + e1.getHeight()) {
-        return new Point(x, y);
+        var mayY = y + setDuplicateRelationIndex * 20;
+        if (mayY > e1.getY() + e1.getHeight()) {
+          mayY = y;
+        }
+        return new Point(x, mayY);
       }
     }
     // bottom
@@ -395,7 +414,11 @@ public class ErConnector extends JPanel {
       double y = e1.getY() + e1.getHeight();
       var x = -(b * y + c) / a;
       if (e1.getX() <= x && x <= e1.getX() + e1.getWidth()) {
-        return new Point((int) x, (int) y);
+        var mayX = x + setDuplicateRelationIndex * 20;
+        if (mayX > e1.getX() + e1.getWidth()) {
+          mayX = x;
+        }
+        return new Point((int) mayX, (int) y);
       }
     }
     // left
@@ -403,7 +426,11 @@ public class ErConnector extends JPanel {
       var x = e1.getX();
       var y = -(a * x + c) / b;
       if (e1.getY() <= y && y <= e1.getY() + e1.getHeight()) {
-        return new Point(x, y);
+        var mayY = y + setDuplicateRelationIndex * 20;
+        if (mayY > e1.getY() + e1.getHeight()) {
+          mayY = y;
+        }
+        return new Point(x, mayY);
       }
     }
 

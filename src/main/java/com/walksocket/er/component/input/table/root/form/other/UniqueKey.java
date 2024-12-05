@@ -164,6 +164,9 @@ public class UniqueKey extends JPanel {
       table.setValueAt(tmpUniqueKey.indexComment, i, 2);
       table.setValueAt(tmpUniqueKey.indexType, i, 3);
     }
+    if (tableModel.getRowCount() < 3) {
+      tableModel.setRowCount(3);
+    }
   }
 
   /**

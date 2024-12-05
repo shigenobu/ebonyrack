@@ -108,6 +108,9 @@ public class Check extends JPanel {
       table.setValueAt(tmpCheck.constraintName, i, 0);
       table.setValueAt(tmpCheck.expression, i, 1);
     }
+    if (tableModel.getRowCount() < 3) {
+      tableModel.setRowCount(3);
+    }
   }
 
   /**

@@ -61,6 +61,11 @@ public class Column extends JPanel {
     tab.addTab("columns", columns);
     tab.addTab("group", group);
     tab.addTab("partition", partition);
+    tab.addChangeListener(changeEvent -> {
+      ctxTable.getCtxStateTabTable().setLastSelectedColumnTabIndex(tab.getSelectedIndex());
+    });
+    var tabIndex = ctxTable.getCtxStateTabTable().getLastSelectedColumnTabIndex();
+    tab.setSelectedIndex(tabIndex);
     add(tab);
   }
 

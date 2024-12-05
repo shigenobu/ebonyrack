@@ -618,6 +618,47 @@ public class BucketTable {
           if (opt.isPresent()) {
             throw new Exception("Generated column is not foreign key.");
           }
+
+          // check seq index 1
+          if (!dbTableForeignKeyColumn.seqInIndex.equals("1")) {
+            continue;
+          }
+          Log.trace(String.format("column:%s", dbTableForeignKeyColumn));
+          var isFirst = false;
+          if (!isFirst) {
+            isFirst = ctxInnerPrimaryKey.dbTablePrimaryKeyColumnList.stream()
+                .filter(c -> c.seqInIndex.equals("1"))
+                .filter(c -> c.dictColumnId.equals(dbTableForeignKeyColumn.dictColumnId))
+                .findFirst()
+                .isPresent();
+          }
+          if (!isFirst) {
+            for (var ctxInnerUniqueKey : ctxInnerUniqueKeyList) {
+              isFirst = ctxInnerUniqueKey.dbTableUniqueKeyColumnList.stream()
+                  .filter(c -> c.seqInIndex.equals("1"))
+                  .filter(c -> c.dictColumnId.equals(dbTableForeignKeyColumn.dictColumnId))
+                  .findFirst()
+                  .isPresent();
+              if (isFirst) {
+                break;
+              }
+            }
+          }
+          if (!isFirst) {
+            for (var ctxInnerKey : ctxInnerKeyList) {
+              isFirst = ctxInnerKey.dbTableKeyColumnList.stream()
+                  .filter(c -> c.seqInIndex.equals("1"))
+                  .filter(c -> c.dictColumnId.equals(dbTableForeignKeyColumn.dictColumnId))
+                  .findFirst()
+                  .isPresent();
+              if (isFirst) {
+                break;
+              }
+            }
+          }
+          if (!isFirst) {
+            throw new Exception("First key column is need for foreign key.");
+          }
         }
       }
 

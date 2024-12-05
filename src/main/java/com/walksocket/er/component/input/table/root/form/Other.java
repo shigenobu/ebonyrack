@@ -88,6 +88,11 @@ public class Other extends JPanel {
     tab.addTab("key", key);
     tab.addTab("foreign key", foreignKey);
     tab.addTab("check", check);
+    tab.addChangeListener(changeEvent -> {
+      ctxTable.getCtxStateTabTable().setLastSelectedOtherTabIndex(tab.getSelectedIndex());
+    });
+    var tabIndex = ctxTable.getCtxStateTabTable().getLastSelectedOtherTabIndex();
+    tab.setSelectedIndex(tabIndex);
     add(tab);
   }
 

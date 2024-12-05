@@ -164,6 +164,9 @@ public class Key extends JPanel {
       table.setValueAt(tmpKey.indexComment, i, 2);
       table.setValueAt(tmpKey.indexType, i, 3);
     }
+    if (tableModel.getRowCount() < 3) {
+      tableModel.setRowCount(3);
+    }
   }
 
   /**

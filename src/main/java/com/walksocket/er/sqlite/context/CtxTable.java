@@ -9,6 +9,7 @@ import com.walksocket.er.sqlite.context.inner.CtxInnerForeignKey;
 import com.walksocket.er.sqlite.context.inner.CtxInnerKey;
 import com.walksocket.er.sqlite.context.inner.CtxInnerPrimaryKey;
 import com.walksocket.er.sqlite.context.inner.CtxInnerUniqueKey;
+import com.walksocket.er.sqlite.context.state.CtxStateTabTable;
 import com.walksocket.er.sqlite.entity.DbTable;
 import com.walksocket.er.sqlite.entity.DbTableCheck;
 import com.walksocket.er.sqlite.entity.DbTableColumn;
@@ -72,6 +73,11 @@ public class CtxTable implements Value, Copiable<CtxTable> {
    * dbTableCheckList.
    */
   public List<DbTableCheck> dbTableCheckList = new ArrayList<>();
+
+  /**
+   * ctxStateTabTable.
+   */
+  private final CtxStateTabTable ctxStateTabTable = new CtxStateTabTable();
 
   @Override
   public CtxTable copy() {
@@ -139,5 +145,14 @@ public class CtxTable implements Value, Copiable<CtxTable> {
     }
 
     return newCtxTable;
+  }
+
+  /**
+   * get ctx state tab table.
+   *
+   * @return ctx state tab table
+   */
+  public CtxStateTabTable getCtxStateTabTable() {
+    return ctxStateTabTable;
   }
 }

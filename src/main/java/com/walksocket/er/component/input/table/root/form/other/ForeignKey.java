@@ -222,6 +222,9 @@ public class ForeignKey extends JPanel {
       table.setValueAt(tmpForeignKey.onDelete, i, 6);
       table.setValueAt(tmpForeignKey.relationship, i, 7);
     }
+    if (tableModel.getRowCount() < 3) {
+      tableModel.setRowCount(3);
+    }
   }
 
   /**

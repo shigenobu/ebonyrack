@@ -227,7 +227,6 @@ create table if not exists DbTableForeignKey
     relationship     text,
     primary key (tableId, seq),
     unique (tableId, keyName),
-    unique (tableId, referenceTableId),
     unique (constraintName),
     foreign key (tableId) references DbTable (tableId) on delete cascade,
     foreign key (referenceTableId) references DbTable (tableId)

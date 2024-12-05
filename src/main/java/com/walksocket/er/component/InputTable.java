@@ -28,6 +28,11 @@ public class InputTable extends ErDialog {
     super();
     this.table = table;
 
+    // reset tab
+    table.getCtxTable().getCtxStateTabTable().resetLastSelectedBaseTabIndex();
+    table.getCtxTable().getCtxStateTabTable().resetLastSelectedColumnTabIndex();
+    table.getCtxTable().getCtxStateTabTable().resetLastSelectedOtherTabIndex();
+
     // pos
     var b = table.getWorkspace().getRoot().getMain().getGraphicsConfiguration().getBounds();
     var x = (b.getWidth() - DialogLarge.WIDTH) / 2 + b.getX();

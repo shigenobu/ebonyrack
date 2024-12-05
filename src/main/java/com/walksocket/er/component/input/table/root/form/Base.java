@@ -30,6 +30,11 @@ public class Base extends JPanel {
     // tab
     var tab = new JTabbedPane();
     tab.addTab("table", table);
+    tab.addChangeListener(changeEvent -> {
+      ctxTable.getCtxStateTabTable().setLastSelectedBaseTabIndex(tab.getSelectedIndex());
+    });
+    var tabIndex = ctxTable.getCtxStateTabTable().getLastSelectedBaseTabIndex();
+    tab.setSelectedIndex(tabIndex);
     add(tab);
   }
 
