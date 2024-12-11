@@ -455,7 +455,8 @@ public class Form extends JPanel {
 
         var t = Tmp.createTmpKey(dbTableKey, dbTableKeyColumnList, dbDictColumnList);
         if (t.columnKeyOptionList.size() > 0) {
-          vTmpKeyList.add(t);
+          // Fit to Mysql 8.4 why non-unique key is not referenced.
+//          vTmpKeyList.add(t);
         }
       }
     }
