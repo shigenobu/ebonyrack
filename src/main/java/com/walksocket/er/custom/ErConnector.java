@@ -116,7 +116,8 @@ public class ErConnector extends JPanel {
     this.dst = dst;
     this.lineStyle = lineStyle;
     this.setDuplicateRelationIndex = src.getConnectors().stream()
-        .filter(c -> c.relation && c.src == src && c.dst == dst).toList().size();
+        .filter(c -> c.relation && (c.src == src && c.dst == dst || c.src == dst && c.dst == src))
+        .toList().size();
     this.adapter = new ErConnectorMouseAdapter(this);
 
     // layout
