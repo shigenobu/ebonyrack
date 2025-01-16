@@ -31,6 +31,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -93,9 +94,19 @@ public class Form extends JPanel {
   private final DefaultTableModel tableModel;
 
   /**
+   * label table.
+   */
+  private final JLabel labelTable = new JLabel("Table:");
+
+  /**
    * label reference table.
    */
   private final JLabel labelReferenceTable = new JLabel("Reference table:");
+
+  /**
+   * text field table.
+   */
+  private final JTextField textFieldTable = new JTextField(80);
 
   /**
    * combo box reference table.
@@ -141,6 +152,12 @@ public class Form extends JPanel {
     // panel - table
     var panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
     add(panel1);
+    panel1.add(labelTable);
+    var selfTableName = dbTableList.stream().filter(d -> d.tableName.startsWith("(*)")).findFirst()
+        .get().getShowTableName();
+    textFieldTable.setText(selfTableName);
+    textFieldTable.setEditable(false);
+    panel1.add(textFieldTable);
 
     var rowCount = tmpColumnList.size();
     var columnNames = columnNameWidthMaps.keySet().toArray();
@@ -151,6 +168,8 @@ public class Form extends JPanel {
       }
     };
 
+    var panel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    add(panel2);
     var range = new ArrayList<String>();
     range.add("");
     range.addAll(IntStream.rangeClosed(1, rowCount).boxed().map(String::valueOf)
@@ -172,7 +191,7 @@ public class Form extends JPanel {
     }
     var sp = new JScrollPane(table);
     sp.setPreferredSize(new Dimension(DialogMedium.WIDTH - 40 + 30, DialogMedium.HEIGHT / 10 * 3));
-    panel1.add(sp);
+    panel2.add(sp);
 
     // tmp column list, tmpForeignKey
     for (int i = 0; i < tmpColumnList.size(); i++) {
@@ -277,7 +296,7 @@ public class Form extends JPanel {
     // set
     if (!Utils.isNullOrEmpty(tmpForeignKey.referenceTableName)) {
       var dt = dbTableList.stream()
-          .filter(d -> tmpForeignKey.referenceTableName.startsWith(d.tableName))
+          .filter(d -> tmpForeignKey.referenceTableName.equals(d.tableName))
           .findFirst()
           .get();
       comboBoxReferenceTable.setSelectedItem(dt.getShowTableName());
