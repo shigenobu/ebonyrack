@@ -6,6 +6,7 @@ import com.walksocket.er.component.input.columnname.Root;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.sqlite.Bucket;
+import com.walksocket.er.sqlite.entity.DbDictColumn;
 import com.walksocket.er.sqlite.tmp.TmpColumn;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -166,14 +167,14 @@ public class Form extends JPanel {
     var dbDictColumnList = Bucket.getInstance().getBucketDict().dbDictColumnList;
 
     var tmpColumnForDictList = dbDictColumnList.stream()
-        .sorted(Comparator.comparing(t -> t.columnName))
-        .sorted(Comparator.comparing(t -> t.columnComment))
+        .sorted(Comparator.comparing(DbDictColumn::getColumnNameForSort)
+            .thenComparing(DbDictColumn::getColumnCommentForSort))
         .collect(Collectors.toList());
     if (!Utils.isNullOrEmpty(columName)) {
       tmpColumnForDictList = dbDictColumnList.stream()
           .filter(c -> c.columnName.startsWith(columName))
-          .sorted(Comparator.comparing(t -> t.columnName))
-          .sorted(Comparator.comparing(t -> t.columnComment))
+          .sorted(Comparator.comparing(DbDictColumn::getColumnNameForSort)
+              .thenComparing(DbDictColumn::getColumnCommentForSort))
           .collect(Collectors.toList());
     }
     for (int i = 0; i < tmpColumnForDictList.size(); i++) {

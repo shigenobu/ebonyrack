@@ -1,5 +1,7 @@
 package com.walksocket.er.component.input.foreignkey.root;
 
+import com.walksocket.er.Json;
+import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
 import com.walksocket.er.custom.ErHeaderFormatter;
@@ -545,20 +547,26 @@ public class Form extends JPanel {
 
       columnForeignKeyOptionList.add(columnForeignKeyOption);
     }
+    Log.trace(
+        String.format("columnNameWithFirstKey:%s", Json.toJsonString(columnNameWithFirstKey)));
+    Log.trace(String.format("columnForeignKeyOptionList:%s",
+        Json.toJsonString(columnForeignKeyOptionList)));
 
     // first key check
     if (columnForeignKeyOptionList.size() > 0) {
       var cf = columnForeignKeyOptionList.stream()
-          .sorted(Comparator.comparing(t -> Integer.parseInt(t.seqInIndex)))
-          .sorted(Comparator.comparing(t -> t.columnName))
+          .sorted(Comparator.comparing(ColumnForeignKeyOption::getSeqInIndexForSort)
+              .thenComparing(ColumnForeignKeyOption::getColumnNameForSort))
           .findFirst()
           .get();
+      Log.trace(String.format("cf:%s", Json.toJsonString(cf)));
       var firstKey = columnNameWithFirstKey.get(cf.columnName);
       if (Utils.isNullOrEmpty(firstKey)) {
         // force clear
         forceClear = true;
       }
     }
+    Log.trace(String.format("forceClear:%s", forceClear));
 
     // other
     var referenceTable = Utils.getString(comboBoxReferenceTable.getSelectedItem());
@@ -593,20 +601,26 @@ public class Form extends JPanel {
 
       referenceColumnForeignKeyOptionList.add(referenceColumnForeignKeyOption);
     }
+    Log.trace(String.format("referenceColumnNameWithFirstKey:%s",
+        Json.toJsonString(referenceColumnNameWithFirstKey)));
+    Log.trace(String.format("referenceColumnForeignKeyOptionList:%s",
+        Json.toJsonString(referenceColumnForeignKeyOptionList)));
 
     // first key check
     if (referenceColumnForeignKeyOptionList.size() > 0) {
       var cf = referenceColumnForeignKeyOptionList.stream()
-          .sorted(Comparator.comparing(t -> Integer.parseInt(t.seqInIndex)))
-          .sorted(Comparator.comparing(t -> t.columnName))
+          .sorted(Comparator.comparing(ColumnForeignKeyOption::getSeqInIndexForSort)
+              .thenComparing(ColumnForeignKeyOption::getColumnNameForSort))
           .findFirst()
           .get();
+      Log.trace(String.format("cf:%s", Json.toJsonString(cf)));
       var firstKey = referenceColumnNameWithFirstKey.get(cf.columnName);
       if (Utils.isNullOrEmpty(firstKey)) {
         // force clear
         forceClear = true;
       }
     }
+    Log.trace(String.format("forceClear:%s", forceClear));
 
     // -----
     // self

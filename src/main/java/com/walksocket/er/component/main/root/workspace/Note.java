@@ -62,7 +62,7 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
   /**
    * max width.
    */
-  private static final int MAX_WIDTH = 300;
+  private static final int MAX_WIDTH = 600;
 
   /**
    * min height.
@@ -72,7 +72,7 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
   /**
    * max height.
    */
-  private static final int MAX_HEIGHT = 300;
+  private static final int MAX_HEIGHT = 600;
 
   /**
    * border size.
