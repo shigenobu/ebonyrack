@@ -93,22 +93,21 @@ public class Env {
     var f = new File(getHome(), "template");
     if (!f.exists()) {
       f.mkdir();
-
-      var sampleFileNameList = new ArrayList<String>();
-      sampleFileNameList.add("Sample.txt.vm");
-      sampleFileNameList.add("Sample.java.vm");
-      sampleFileNameList.add("__SampleMacro.vm");
-      for (var sampleFileName : sampleFileNameList) {
-        var sampleFile = new File(f, sampleFileName);
-        if (!sampleFile.exists()) {
-          try {
-            var stream = App.class.getClassLoader()
-                .getResourceAsStream(String.format("template/%s", sampleFileName));
-            var data = FileUtils.readString(stream);
-            FileUtils.writeString(new FileOutputStream(sampleFile), data);
-          } catch (IOException e) {
-            Log.error(e);
-          }
+    }
+    var sampleFileNameList = new ArrayList<String>();
+    sampleFileNameList.add("Sample.txt.vm");
+    sampleFileNameList.add("Sample.java.vm");
+    sampleFileNameList.add("__SampleMacro.vm");
+    for (var sampleFileName : sampleFileNameList) {
+      var sampleFile = new File(f, sampleFileName);
+      if (!sampleFile.exists()) {
+        try {
+          var stream = App.class.getClassLoader()
+              .getResourceAsStream(String.format("template/%s", sampleFileName));
+          var data = FileUtils.readString(stream);
+          FileUtils.writeString(new FileOutputStream(sampleFile), data);
+        } catch (IOException e) {
+          Log.error(e);
         }
       }
     }

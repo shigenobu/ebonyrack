@@ -19,6 +19,7 @@ import com.walksocket.er.sqlite.entity.DbDefault;
 import com.walksocket.er.sqlite.entity.DbDictColumnType;
 import com.walksocket.er.sqlite.entity.DbTable;
 import com.walksocket.er.sqlite.entity.DbTableForeignKey;
+import com.walksocket.er.sqlite.tmp.TmpColumn;
 import com.walksocket.er.sqlite.tmp.TmpForeignKey;
 import com.walksocket.er.sqlite.tmp.TmpKey;
 import com.walksocket.er.template.ErTemplate;
@@ -675,17 +676,20 @@ public class Bucket {
         dbDictColumnTypeList,
         dbDictColumnList
     );
+    List<TmpColumn> tmpGroupColumnList = new ArrayList<>();
     if (ctxTable.dbTableGroup != null) {
       // group column
-      tmpColumnList.addAll(Tmp.createTmpGroupColumnList(
+      tmpGroupColumnList = Tmp.createTmpGroupColumnList(
           ctxTable.dbTableGroup,
           dbDictColumnTypeList,
           dbDictColumnList,
           dbDictGroupList,
           dbDictGroupColumnList
-      ));
+      );
+      tmpColumnList.addAll(tmpGroupColumnList);
     }
     template.assign("tmpColumnList", tmpColumnList);
+    template.assign("tmpGroupColumnList", tmpGroupColumnList);
 
     // primary
     TmpKey tmpPrimaryKey = null;

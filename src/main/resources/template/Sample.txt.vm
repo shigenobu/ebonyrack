@@ -102,6 +102,25 @@ column \$tmpColumnList
 #end
 
 ====================
+column \$tmpGroupColumnList
+====================
+#set($i = 1)
+#foreach($tmpColumn in $tmpGroupColumnList)
+    ${i} ----------
+    columnName: ${tmpColumn.columnName}
+    columnComment: ${tmpColumn.columnComment}
+    columnType: ${tmpColumn.columnType}
+    notNullValue: ${tmpColumn.notNullValue}
+    charsetValue: ${tmpColumn.charsetValue}
+    collateValue: ${tmpColumn.collateValue}
+    defaultValue: ${tmpColumn.defaultValue}
+    onUpdate: ${tmpColumn.onUpdate}
+    autoIncrementDefinition: ${tmpColumn.autoIncrementDefinition}
+    option: ${tmpColumn.option}
+    #set($i = $i + 1)
+#end
+
+====================
 ddl \$ddl
 ====================
 ${ddl}
