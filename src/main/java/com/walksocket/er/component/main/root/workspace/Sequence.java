@@ -294,12 +294,11 @@ public class Sequence extends ErConnectorEndpoint {
     if (otherEndpoint == null) {
       return;
     }
-    if (otherEndpoint instanceof Note) {
+    if (otherEndpoint instanceof Note note) {
       workspace.removeConnectorFromNoteToSequence(connector);
 
       try {
         // remove
-        var note = (Note) otherEndpoint;
         var opt = Bucket.getInstance().getBucketConnector().dbNoteConnectorSequenceList.stream()
             .filter(c -> c.noteId.equals(note.getCtxNote().dbNote.noteId) && c.sequenceId.equals(
                 getCtxSequence().dbSequence.sequenceId))

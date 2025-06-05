@@ -663,12 +663,11 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
     if (otherEndpoint == null) {
       return;
     }
-    if (otherEndpoint instanceof Table) {
+    if (otherEndpoint instanceof Table table) {
       getWorkspace().removeConnectorFromNoteToTable(connector);
 
       try {
         // remove
-        var table = (Table) otherEndpoint;
         var opt = Bucket.getInstance().getBucketConnector().dbNoteConnectorTableList.stream()
             .filter(c -> c.noteId.equals(ctxNote.dbNote.noteId) && c.tableId.equals(
                 table.getCtxTable().dbTable.tableId))
@@ -681,12 +680,11 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
         Log.error(e);
         JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
       }
-    } else if (otherEndpoint instanceof Sequence) {
+    } else if (otherEndpoint instanceof Sequence sequence) {
       getWorkspace().removeConnectorFromNoteToSequence(connector);
 
       try {
         // remove
-        var sequence = (Sequence) otherEndpoint;
         var opt = Bucket.getInstance().getBucketConnector().dbNoteConnectorSequenceList.stream()
             .filter(c -> c.noteId.equals(ctxNote.dbNote.noteId) && c.sequenceId.equals(
                 sequence.getCtxSequence().dbSequence.sequenceId))

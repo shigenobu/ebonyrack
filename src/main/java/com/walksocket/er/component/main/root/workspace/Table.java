@@ -768,12 +768,11 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
     if (otherEndpoint == null) {
       return;
     }
-    if (otherEndpoint instanceof Note) {
+    if (otherEndpoint instanceof Note note) {
       workspace.removeConnectorFromNoteToTable(connector);
 
       try {
         // remove
-        var note = (Note) otherEndpoint;
         var opt = Bucket.getInstance().getBucketConnector().dbNoteConnectorTableList.stream()
             .filter(c -> c.noteId.equals(note.getCtxNote().dbNote.noteId) && c.tableId.equals(
                 getCtxTable().dbTable.tableId))

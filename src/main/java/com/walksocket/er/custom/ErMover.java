@@ -86,17 +86,17 @@ public abstract class ErMover extends JPanel {
       if (y > Pos.MAX) {
         y = Pos.MAX;
       }
-      var nx = Utils.floorDegree(x, rangeUnit);
-      var ny = Utils.floorDegree(y, rangeUnit);
+      var newNx = Utils.floorDegree(x, rangeUnit);
+      var newNy = Utils.floorDegree(y, rangeUnit);
+      this.nx = newNx;
+      this.ny = newNy;
 
-      if (Math.abs(endpoint.getX() - nx) < rangeUnit
-          && Math.abs(endpoint.getY() - ny) < rangeUnit) {
+      if (Math.abs(endpoint.getX() - newNx) < rangeUnit
+          && Math.abs(endpoint.getY() - newNy) < rangeUnit) {
         return;
       }
 
-      movingContinuing(nx, ny);
-      this.nx = nx;
-      this.ny = ny;
+      movingContinuing(newNx, newNy);
     };
     movingTimer = new Timer(100, movingListener);
     movingTimer.setRepeats(true);
