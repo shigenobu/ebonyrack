@@ -1,11 +1,13 @@
 package com.walksocket.er.component.main.root;
 
+import com.walksocket.er.Date;
 import com.walksocket.er.component.main.Root;
 import com.walksocket.er.component.main.root.outline.ViewFrame;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -31,6 +33,11 @@ public class Outline extends JPanel {
    * workspace.
    */
   private Workspace workspace;
+
+  /**
+   * workspace paint manager.
+   */
+  private WorkspacePaintManager workspacePaintManager;
 
   /**
    * Constructor.
@@ -73,13 +80,12 @@ public class Outline extends JPanel {
     if (workspace == null) {
       return;
     }
-    var rect = workspace.getBounds();
-    var captureImage =
-        new BufferedImage(rect.width, rect.height,
-            BufferedImage.TYPE_INT_ARGB);
-    var cg = captureImage.getGraphics();
-    workspace.printComponents(cg);
-    cg.dispose();
+    if (workspacePaintManager == null) {
+      return;
+    }
+    var lastCaptureImageInfo = workspacePaintManager.getLastCaptureImageInfo();
+    var rect = lastCaptureImageInfo.rect;
+    var captureImage = lastCaptureImageInfo.image;
 
     var w = getWidth();
     double wRatio = (double) getWidth() / (double) rect.width;
@@ -120,6 +126,62 @@ public class Outline extends JPanel {
    */
   public void setWorkspace(Workspace workspace) {
     this.workspace = workspace;
+    this.workspacePaintManager = new WorkspacePaintManager();
     viewFrame.setWorkspace(workspace);
+  }
+
+  /**
+   * WorkspacePaintManager.
+   */
+  public class WorkspacePaintManager {
+
+    /**
+     * last capture image info.
+     */
+    private final CaptureImageInfo lastCaptureImageInfo = new CaptureImageInfo();
+
+    /**
+     * get last capture image info.
+     *
+     * @return capture image info
+     */
+    public CaptureImageInfo getLastCaptureImageInfo() {
+      var now = Date.timestampMillis();
+
+      if (now - lastCaptureImageInfo.lastTimestampMillis >= 500) {
+        lastCaptureImageInfo.lastTimestampMillis = now;
+
+        lastCaptureImageInfo.rect = workspace.getBounds();
+        lastCaptureImageInfo.image =
+            new BufferedImage(lastCaptureImageInfo.rect.width, lastCaptureImageInfo.rect.height,
+                BufferedImage.TYPE_INT_ARGB);
+        var cg = lastCaptureImageInfo.image.getGraphics();
+        workspace.printComponents(cg);
+        cg.dispose();
+      }
+
+      return lastCaptureImageInfo;
+    }
+
+    /**
+     * CaptureImageInfo.
+     */
+    public class CaptureImageInfo {
+
+      /**
+       * last timestamp millis.
+       */
+      public long lastTimestampMillis;
+
+      /**
+       * image.
+       */
+      public BufferedImage image;
+
+      /**
+       * rect.
+       */
+      public Rectangle rect;
+    }
   }
 }
