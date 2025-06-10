@@ -1,7 +1,7 @@
 package com.walksocket.er.component;
 
 import com.walksocket.er.Const;
-import com.walksocket.er.Size.DialogSmall;
+import com.walksocket.er.Size.DialogExport;
 import com.walksocket.er.component.export.ddl.Root;
 import com.walksocket.er.config.CfgProject;
 import com.walksocket.er.custom.ErDialog;
@@ -33,13 +33,13 @@ public class ExportDdl extends ErDialog {
 
     // pos
     var b = main.getGraphicsConfiguration().getBounds();
-    var x = (b.getWidth() - DialogSmall.WIDTH) / 2 + b.getX();
-    var y = (b.getHeight() - DialogSmall.HEIGHT) / 2 + b.getY();
+    var x = (b.getWidth() - DialogExport.WIDTH) / 2 + b.getX();
+    var y = (b.getHeight() - DialogExport.HEIGHT) / 2 + b.getY();
 
     // init
     setTitle(String.format("%s - export ddl", Const.TITLE));
     setLocation(new Point((int) x, (int) y));
-    setMinimumSize(new Dimension(DialogSmall.WIDTH, DialogSmall.HEIGHT));
+    setMinimumSize(new Dimension(DialogExport.WIDTH, DialogExport.HEIGHT));
     setResizable(false);
     setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     addWindowListener(new WindowAdapter() {

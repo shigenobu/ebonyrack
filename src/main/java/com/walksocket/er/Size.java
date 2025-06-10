@@ -164,4 +164,20 @@ public class Size {
      */
     public static final int HEIGHT = 768;
   }
+
+  /**
+   * DialogExport.
+   */
+  public static class DialogExport {
+
+    /**
+     * width.
+     */
+    public static final int WIDTH = 720;
+
+    /**
+     * height.
+     */
+    public static final int HEIGHT = 768;
+  }
 }

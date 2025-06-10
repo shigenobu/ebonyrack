@@ -1,13 +1,15 @@
 package com.walksocket.er.component.export.ddl;
 
 import com.walksocket.er.Config;
+import com.walksocket.er.Date;
 import com.walksocket.er.FileUtils;
 import com.walksocket.er.Log;
-import com.walksocket.er.Size.DialogSmall;
+import com.walksocket.er.Size.DialogExport;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.ExportDdl;
 import com.walksocket.er.component.export.ddl.root.Form;
 import com.walksocket.er.config.CfgProject;
+import com.walksocket.er.config.CfgProjectDdlHistory;
 import com.walksocket.er.custom.ErLinkLabel;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.tmp.TmpDdl;
@@ -17,14 +19,13 @@ import java.awt.FlowLayout;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * Root.
@@ -59,57 +60,52 @@ public class Root extends JPanel {
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
     // panel - form
-    form = new Form();
-    form.setPreferredSize(new Dimension(DialogSmall.WIDTH - 20, DialogSmall.HEIGHT / 10 * 9));
+    form = new Form(cfgProject);
+    form.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20 * 19));
     form.setAlignmentX(Component.LEFT_ALIGNMENT);
     add(form);
 
     // panel - button
     var panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    panel.setPreferredSize(new Dimension(DialogSmall.WIDTH - 20, DialogSmall.HEIGHT / 10));
+    panel.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20));
     panel.setAlignmentX(Component.LEFT_ALIGNMENT);
     add(panel);
     buttonOk.addActionListener(actionEvent -> {
       try {
-        // chooser
-        var format = "sql";
-        var dotFormat = "." + format;
-        var dir = System.getProperty("user.home");
-        var file = String.format("%s%s", cfgProject.name, dotFormat);
-        var lastDdlSavePath = cfgProject.lastDdlSavePath;
-        if (!Utils.isNullOrEmpty(lastDdlSavePath)) {
-          dir = new File(lastDdlSavePath).getParent();
-          file = new File(lastDdlSavePath).getName();
-        }
-        var chooser = new JFileChooser(dir);
-        chooser.setAcceptAllFileFilterUsed(false);
-        chooser.setFileFilter(new FileNameExtensionFilter("*" + dotFormat,
-            format));
-        chooser.setSelectedFile(new File(file));
-        var result = chooser.showSaveDialog(this);
-        if (result == JFileChooser.APPROVE_OPTION) {
-          var fileName = chooser.getSelectedFile().getAbsolutePath();
-          if (!fileName.endsWith(dotFormat)) {
-            fileName += dotFormat;
-          }
+        // ddl
+        var result = form.getResult().getTmpList().get(0);
+        var ddl = getDdl(result);
+        var f = new File(result.savePath);
+        FileUtils.writeString(new FileOutputStream(f), ddl);
 
-          // ddl
-          var ddl = getDdl(form.getResult().getTmpList().get(0));
-          var f = new File(fileName);
-          FileUtils.writeString(new FileOutputStream(f), ddl);
+        var newHistory = new CfgProjectDdlHistory();
+        newHistory.exported = Date.now();
+        newHistory.ddl = result;
 
-          cfgProject.lastDdlSavePath = f.getAbsolutePath();
-          Config.save();
+        var newHistories = new ArrayList<CfgProjectDdlHistory>();
+        newHistories.add(newHistory);
+        newHistories.addAll(cfgProject.ddlHistories);
 
-          JOptionPane.showMessageDialog(
-              this,
-              new ErLinkLabel(
-                  String.format("<html>At: <a>%s</a></html>", f.getAbsolutePath()),
-                  new URI(String.format("file://%s", f.getAbsolutePath()))
-              ),
-              "Saved ddl",
-              JOptionPane.INFORMATION_MESSAGE);
-        }
+        var sortedHistories = newHistories
+            .stream()
+            .sorted(Comparator.comparing(h -> h.exported, Comparator.reverseOrder()))
+            .distinct()
+            .limit(10)
+            .toList();
+        cfgProject.ddlHistories = sortedHistories;
+        cfgProject.lastDdlSavePath = f.getAbsolutePath();
+        Config.save();
+
+        JOptionPane.showMessageDialog(
+            this,
+            new ErLinkLabel(
+                String.format("<html>At: <a>%s</a></html>", f.getAbsolutePath()),
+                new URI(String.format("file://%s", f.getAbsolutePath()))
+            ),
+            "Saved ddl",
+            JOptionPane.INFORMATION_MESSAGE);
+
+        form.reloadTable();
       } catch (Exception e) {
         Log.error(e);
         JOptionPane.showMessageDialog(this, e.getMessage());

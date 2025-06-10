@@ -1,5 +1,6 @@
 package com.walksocket.er.sqlite.tmp;
 
+import com.walksocket.er.Utils;
 import com.walksocket.er.sqlite.Tmp;
 import com.walksocket.er.template.ErTemplateUtils;
 import java.util.ArrayList;
@@ -102,6 +103,25 @@ public class TmpTableClass implements Tmp {
    * convert file extension value.
    */
   public String convertFileExtensionValue;
+
+  /**
+   * save path.
+   */
+  public String savePath;
+
+  /**
+   * get hash.
+   *
+   * @return hash
+   */
+  public String getHash() {
+    return Utils.getHash(String.format("%s-%s-%s-%s-%s-%s-%s-%s",
+        templateValue,
+        filterTableActionCommand, filterTableValue,
+        convertFilePrefixValue, convertFileNameValue, convertFileSuffixValue,
+        convertFileExtensionValue,
+        savePath));
+  }
 
   /**
    * get final file name.

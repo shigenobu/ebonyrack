@@ -1,5 +1,6 @@
 package com.walksocket.er.sqlite.tmp;
 
+import com.walksocket.er.Utils;
 import com.walksocket.er.sqlite.Tmp;
 
 /**
@@ -66,4 +67,22 @@ public class TmpDdl implements Tmp {
    * filter table value.
    */
   public String filterTableValue;
+
+  /**
+   * save path.
+   */
+  public String savePath;
+
+  /**
+   * get hash.
+   *
+   * @return hash
+   */
+  public String getHash() {
+    return Utils.getHash(String.format("%s-%s-%s-%s-%s-%s-%s-%s-%s",
+        schemaValue,
+        selectedSequence, filterSequenceActionCommand, filterSequenceValue,
+        selectedTable, selectedForeignKey, filterTableActionCommand, filterTableValue,
+        savePath));
+  }
 }

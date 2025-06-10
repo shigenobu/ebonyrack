@@ -2,14 +2,15 @@ package com.walksocket.er.component.export.tableclass;
 
 import com.walksocket.er.Config;
 import com.walksocket.er.Const;
+import com.walksocket.er.Date;
 import com.walksocket.er.Env;
 import com.walksocket.er.FileUtils;
 import com.walksocket.er.Log;
-import com.walksocket.er.Size.DialogSmall;
-import com.walksocket.er.Utils;
+import com.walksocket.er.Size.DialogExport;
 import com.walksocket.er.component.ExportTableClass;
 import com.walksocket.er.component.export.tableclass.root.Form;
 import com.walksocket.er.config.CfgProject;
+import com.walksocket.er.config.CfgProjectTableClassHistory;
 import com.walksocket.er.custom.ErLinkLabel;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.tmp.TmpTableClass;
@@ -22,11 +23,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -63,47 +64,51 @@ public class Root extends JPanel {
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
     // panel - form
-    form = new Form();
-    form.setPreferredSize(new Dimension(DialogSmall.WIDTH - 20, DialogSmall.HEIGHT / 10 * 9));
+    form = new Form(cfgProject);
+    form.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20 * 19));
     form.setAlignmentX(Component.LEFT_ALIGNMENT);
     add(form);
 
     // panel - button
     var panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    panel.setPreferredSize(new Dimension(DialogSmall.WIDTH - 20, DialogSmall.HEIGHT / 10));
+    panel.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20));
     panel.setAlignmentX(Component.LEFT_ALIGNMENT);
     add(panel);
     buttonOk.addActionListener(actionEvent -> {
       try {
-        var tmpTableClass = form.getResult().getTmpList().get(0);
-        if (Utils.isNullOrEmpty(tmpTableClass.templateValue)) {
-          return;
-        }
+        // table class
+        var result = form.getResult().getTmpList().get(0);
+        var f = new File(result.savePath);
+        saveTableClass(f, result);
 
-        // chooser
-        var dir = new File(System.getProperty("user.home"));
-        var lastTableClassSaveDir = cfgProject.lastTableClassSaveDir;
-        if (!Utils.isNullOrEmpty(lastTableClassSaveDir)) {
-          dir = new File(lastTableClassSaveDir);
-        }
-        var chooser = new JFileChooser(dir);
-        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        var result = chooser.showSaveDialog(this);
-        if (result == JFileChooser.APPROVE_OPTION) {
-          var f = chooser.getSelectedFile();
-          saveTableClass(f, tmpTableClass);
-          cfgProject.lastTableClassSaveDir = f.getAbsolutePath();
-          Config.save();
+        var newHistory = new CfgProjectTableClassHistory();
+        newHistory.exported = Date.now();
+        newHistory.tableClass = result;
 
-          JOptionPane.showMessageDialog(
-              this,
-              new ErLinkLabel(
-                  String.format("<html>At: <a>%s</a></html>", f.getAbsolutePath()),
-                  new URI(String.format("file://%s", f.getAbsolutePath()))
-              ),
-              "Saved table class",
-              JOptionPane.INFORMATION_MESSAGE);
-        }
+        var newHistories = new ArrayList<CfgProjectTableClassHistory>();
+        newHistories.add(newHistory);
+        newHistories.addAll(cfgProject.tableClassHistories);
+
+        var sortedHistories = newHistories
+            .stream()
+            .sorted(Comparator.comparing(h -> h.exported, Comparator.reverseOrder()))
+            .distinct()
+            .limit(20)
+            .toList();
+        cfgProject.tableClassHistories = sortedHistories;
+        cfgProject.lastTableClassSaveDir = f.getAbsolutePath();
+        Config.save();
+
+        JOptionPane.showMessageDialog(
+            this,
+            new ErLinkLabel(
+                String.format("<html>At: <a>%s</a></html>", f.getAbsolutePath()),
+                new URI(String.format("file://%s", f.getAbsolutePath()))
+            ),
+            "Saved table class",
+            JOptionPane.INFORMATION_MESSAGE);
+
+        form.reloadTable();
       } catch (Exception e) {
         Log.error(e);
         JOptionPane.showMessageDialog(this, e.getMessage());

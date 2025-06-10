@@ -1,5 +1,8 @@
 package com.walksocket.er.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * CfgProject.
  */
@@ -59,4 +62,14 @@ public class CfgProject {
    * pos.
    */
   public CfgProjectPos pos = new CfgProjectPos();
+
+  /**
+   * ddl histories.
+   */
+  public List<CfgProjectDdlHistory> ddlHistories = new ArrayList<>();
+
+  /**
+   * table class histories.
+   */
+  public List<CfgProjectTableClassHistory> tableClassHistories = new ArrayList<>();
 }

@@ -1,25 +1,67 @@
 package com.walksocket.er.component.export.tableclass.root;
 
+import com.walksocket.er.Config;
 import com.walksocket.er.Env;
-import com.walksocket.er.Size.DialogSmall;
+import com.walksocket.er.Size.DialogExport;
 import com.walksocket.er.Utils;
+import com.walksocket.er.config.CfgProject;
+import com.walksocket.er.custom.ErDottedUnderlineBorder;
+import com.walksocket.er.custom.ErHeaderFormatter;
+import com.walksocket.er.custom.ErHeaderFormatter.Type;
+import com.walksocket.er.custom.ErUnderlineBorder;
 import com.walksocket.er.sqlite.TmpResult;
 import com.walksocket.er.sqlite.tmp.TmpTableClass;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Point;
 import java.awt.event.ItemEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * Form.
  */
 public class Form extends JPanel {
+
+  /**
+   * separator.
+   */
+  private static final String SEPARATOR = " / ";
+
+  /**
+   * column name and width maps.
+   */
+  private static final Map<String, Integer> columnNameWidthMaps = new LinkedHashMap<>();
+
+  static {
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Exported", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Template", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("TFilter", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("FPrefix", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("FName", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("FSuffix", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("FExtension", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Save path", Type.ordinal), 200);
+  }
+
+  /**
+   * cfg project.
+   */
+  private final CfgProject cfgProject;
 
   /**
    * label template.
@@ -104,31 +146,63 @@ public class Form extends JPanel {
   private final JTextField textFieldFileExtensionConverter = new JTextField(4);
 
   /**
-   * Constructor.
+   * label save path.
    */
-  public Form() {
-    // panel - template
-    var panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    panel1.setPreferredSize(new Dimension(DialogSmall.WIDTH - 20, DialogSmall.HEIGHT / 10));
-    add(panel1);
+  private final JLabel labelSavePath = new JLabel("Save path:");
 
-    var panel1innerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    panel1innerLeft.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 5, DialogSmall.HEIGHT / 10));
-    panel1.add(panel1innerLeft);
+  /**
+   * text field save path.
+   */
+  private final JTextField textFieldSavePath = new JTextField(30);
+
+  /**
+   * label choose from history.
+   */
+  private final JLabel labelChooseFromHistory = new JLabel("Choose from history:");
+
+  /**
+   * table.
+   */
+  private final JTable table;
+
+  /**
+   * table model.
+   */
+  private final DefaultTableModel tableModel;
+
+  /**
+   * button remove.
+   */
+  private final JButton buttonRemove = new JButton("Remove row");
+
+  /**
+   * Constructor.
+   *
+   * @param cfgProject cfgProject
+   */
+  public Form(CfgProject cfgProject) {
+    this.cfgProject = cfgProject;
+    var form = this;
+
+    // panel - template
+    var panelTemplate = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    panelTemplate.setPreferredSize(
+        new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20));
+    add(panelTemplate);
+
+    var panelTemplateInnerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 2));
+    panelTemplateInnerLeft.setPreferredSize(
+        new Dimension(DialogExport.WIDTH / 5, DialogExport.HEIGHT / 20));
+    panelTemplate.add(panelTemplateInnerLeft);
 
     labelTemplate.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 5, DialogSmall.HEIGHT / 10));
-    panel1innerLeft.add(labelTemplate);
+        new Dimension(DialogExport.WIDTH / 5, DialogExport.HEIGHT / 20));
+    panelTemplateInnerLeft.add(labelTemplate);
 
-    var panel1innerRight = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    panel1innerRight.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 5 * 3, DialogSmall.HEIGHT / 10));
-    panel1.add(panel1innerRight);
-
-    var emptyPanel1 = new JPanel();
-    emptyPanel1.setPreferredSize(new Dimension(DialogSmall.WIDTH / 5 * 3, DialogSmall.HEIGHT / 50));
-    panel1innerRight.add(emptyPanel1);
+    var panelTemplateInnerRight = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 10));
+    panelTemplateInnerRight.setPreferredSize(
+        new Dimension(DialogExport.WIDTH / 5 * 3, DialogExport.HEIGHT / 20));
+    panelTemplate.add(panelTemplateInnerRight);
 
     var templateDir = new File(Env.getTemplateDir());
     for (var file : templateDir.listFiles()) {
@@ -137,35 +211,41 @@ public class Form extends JPanel {
       }
     }
     comboBoxTemplate.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 4, comboBoxTemplate.getFont().getSize() * 2));
+        new Dimension(DialogExport.WIDTH / 4, comboBoxTemplate.getFont().getSize() * 2));
     textFieldFileExtensionConverter.setText(getExtension(Utils.getString(comboBoxTemplate)));
     comboBoxTemplate.addActionListener(actionEvent -> {
       textFieldFileExtensionConverter.setText(getExtension(Utils.getString(comboBoxTemplate)));
     });
-    panel1innerRight.add(comboBoxTemplate);
+    panelTemplateInnerRight.add(comboBoxTemplate);
+
+    var borderPanel1 = new JPanel();
+    borderPanel1.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, 10));
+    borderPanel1.setBorder(new ErDottedUnderlineBorder());
+    add(borderPanel1);
 
     // panel - table
-    var panel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    panel2.setPreferredSize(new Dimension(DialogSmall.WIDTH - 20, DialogSmall.HEIGHT / 10 * 6));
-    add(panel2);
+    var panelTable = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    panelTable.setPreferredSize(
+        new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20 * 4));
+    add(panelTable);
 
-    var panel2innerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    panel2innerLeft.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 5, DialogSmall.HEIGHT / 10 * 6));
-    panel2.add(panel2innerLeft);
+    var panelTableInnerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    panelTableInnerLeft.setPreferredSize(
+        new Dimension(DialogExport.WIDTH / 5, DialogExport.HEIGHT / 20 * 4));
+    panelTable.add(panelTableInnerLeft);
 
     labelTable.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 5, DialogSmall.HEIGHT / 10));
-    panel2innerLeft.add(labelTable);
+        new Dimension(DialogExport.WIDTH / 5, DialogExport.HEIGHT / 20));
+    panelTableInnerLeft.add(labelTable);
 
-    var panel2innerRight = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    panel2innerRight.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 5 * 3, DialogSmall.HEIGHT / 10 * 6));
-    panel2.add(panel2innerRight);
+    var panelTableInnerRight = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
+    panelTableInnerRight.setPreferredSize(
+        new Dimension(DialogExport.WIDTH / 5 * 3, DialogExport.HEIGHT / 20 * 4));
+    panelTable.add(panelTableInnerRight);
 
     labelFilterTable.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 5 * 3, DialogSmall.HEIGHT / 10));
-    panel2innerRight.add(labelFilterTable);
+        new Dimension(DialogExport.WIDTH / 5 * 3, DialogExport.HEIGHT / 20));
+    panelTableInnerRight.add(labelFilterTable);
 
     radioButtonTableFilterNone.addItemListener(itemEvent -> {
       if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
@@ -182,27 +262,219 @@ public class Form extends JPanel {
     buttonGroupTableFilter.add(radioButtonTableFilterContains);
     buttonGroupTableFilter.add(radioButtonTableFilterStartWith);
     buttonGroupTableFilter.add(radioButtonTableFilterEndWith);
-    panel2innerRight.add(radioButtonTableFilterNone);
-    panel2innerRight.add(radioButtonTableFilterContains);
-    panel2innerRight.add(radioButtonTableFilterStartWith);
-    panel2innerRight.add(radioButtonTableFilterEndWith);
+    panelTableInnerRight.add(radioButtonTableFilterNone);
+    panelTableInnerRight.add(radioButtonTableFilterContains);
+    panelTableInnerRight.add(radioButtonTableFilterStartWith);
+    panelTableInnerRight.add(radioButtonTableFilterEndWith);
     textFieldTableFilter.setEditable(false);
-    panel2innerRight.add(textFieldTableFilter);
+    panelTableInnerRight.add(textFieldTableFilter);
 
     var emptyPanel2 = new JPanel();
-    emptyPanel2.setPreferredSize(new Dimension(DialogSmall.WIDTH / 5 * 3, 0));
-    panel2innerRight.add(emptyPanel2);
+    emptyPanel2.setPreferredSize(new Dimension(DialogExport.WIDTH / 5 * 3, 0));
+    panelTableInnerRight.add(emptyPanel2);
 
     labelConvertFileName.setPreferredSize(
-        new Dimension(DialogSmall.WIDTH / 5 * 3, DialogSmall.HEIGHT / 10));
-    panel2innerRight.add(labelConvertFileName);
+        new Dimension(DialogExport.WIDTH / 5 * 3, DialogExport.HEIGHT / 20));
+    panelTableInnerRight.add(labelConvertFileName);
 
-    panel2innerRight.add(textFieldFilePrefixConverter);
-    panel2innerRight.add(comboBoxFileNameConverter);
-    panel2innerRight.add(textFieldFileSuffixConverter);
+    panelTableInnerRight.add(textFieldFilePrefixConverter);
+    panelTableInnerRight.add(comboBoxFileNameConverter);
+    panelTableInnerRight.add(textFieldFileSuffixConverter);
 
     textFieldFileExtensionConverter.setEditable(false);
-    panel2innerRight.add(textFieldFileExtensionConverter);
+    panelTableInnerRight.add(textFieldFileExtensionConverter);
+
+    var borderPanel2 = new JPanel();
+    borderPanel2.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, 10));
+    borderPanel2.setBorder(new ErDottedUnderlineBorder());
+    add(borderPanel2);
+
+    // panel - save path
+    var panelSavePath = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    panelSavePath.setPreferredSize(
+        new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20));
+    add(panelSavePath);
+
+    var panelSavePathInnerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 2));
+    panelSavePathInnerLeft.setPreferredSize(
+        new Dimension(DialogExport.WIDTH / 5, DialogExport.HEIGHT / 20));
+    panelSavePath.add(panelSavePathInnerLeft);
+
+    labelSavePath.setPreferredSize(
+        new Dimension(DialogExport.WIDTH / 5, DialogExport.HEIGHT / 20));
+    panelSavePathInnerLeft.add(labelSavePath);
+
+    var panelSavePathInnerRight = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 10));
+    panelSavePathInnerRight.setPreferredSize(
+        new Dimension(DialogExport.WIDTH / 5 * 3, DialogExport.HEIGHT / 20));
+    panelSavePath.add(panelSavePathInnerRight);
+
+    textFieldSavePath.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        // chooser
+        var dir = System.getProperty("user.home");
+        var tableClassPath = Utils.getString(textFieldSavePath);
+        if (!Utils.isNullOrEmpty(tableClassPath)) {
+          dir = new File(tableClassPath).getAbsolutePath();
+        } else {
+          var lastTableClassSaveDir = cfgProject.lastTableClassSaveDir;
+          if (!Utils.isNullOrEmpty(lastTableClassSaveDir)) {
+            dir = new File(lastTableClassSaveDir).getAbsolutePath();
+          }
+        }
+        var chooser = new JFileChooser(dir);
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        var result = chooser.showSaveDialog(form);
+        if (result == JFileChooser.APPROVE_OPTION) {
+          var dirName = chooser.getSelectedFile().getAbsolutePath();
+          textFieldSavePath.setText(dirName);
+        }
+      }
+    });
+
+    panelSavePathInnerRight.add(textFieldSavePath);
+
+    var borderPanel3 = new JPanel();
+    borderPanel3.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, 10));
+    borderPanel3.setBorder(new ErUnderlineBorder());
+    add(borderPanel3);
+
+    // panel - choose from history
+    var panelChooseFromHistory = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    panelChooseFromHistory.setPreferredSize(
+        new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20 * 10));
+    add(panelChooseFromHistory);
+
+    labelChooseFromHistory.setPreferredSize(
+        new Dimension(DialogExport.WIDTH / 5, DialogExport.HEIGHT / 20 - 10));
+    panelChooseFromHistory.add(labelChooseFromHistory);
+
+    var columnNames = columnNameWidthMaps.keySet().toArray();
+    tableModel = new DefaultTableModel(columnNames, 0) {
+      @Override
+      public boolean isCellEditable(int row, int column) {
+        return false;
+      }
+    };
+
+    var widthList = columnNameWidthMaps.values().toArray(new Integer[columnNameWidthMaps.size()]);
+    table = new JTable(tableModel);
+    table.putClientProperty("terminateEditOnFocusLost", true);
+    table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
+      var tc = table.getColumnModel().getColumn(i);
+      tc.setPreferredWidth(widthList[i]);
+    }
+    table.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        Point pt = e.getPoint();
+        int r = table.rowAtPoint(pt);
+        if (r >= 0) {
+          // template
+          var template = Utils.getString(table.getValueAt(r, 1));
+          comboBoxTemplate.setSelectedItem(template);
+
+          // table filter
+          var tableFilter = TmpTableClass.FILTER_NONE;
+          var tableFilterValue = "";
+          var tableFilterComplex = Utils.getString(table.getValueAt(r, 2));
+          var tableFilterPos = tableFilterComplex.indexOf(SEPARATOR);
+          if (tableFilterPos >= 0) {
+            tableFilter = tableFilterComplex.substring(0, tableFilterPos);
+            tableFilterValue = tableFilterComplex.substring(tableFilterPos + SEPARATOR.length());
+          }
+          switch (tableFilter) {
+            case TmpTableClass.FILTER_NONE:
+              radioButtonTableFilterNone.setSelected(true);
+              break;
+            case TmpTableClass.FILTER_CONTAINS:
+              radioButtonTableFilterContains.setSelected(true);
+              break;
+            case TmpTableClass.FILTER_START_WITH:
+              radioButtonTableFilterStartWith.setSelected(true);
+              break;
+            case TmpTableClass.FILTER_END_WITH:
+              radioButtonTableFilterEndWith.setSelected(true);
+              break;
+          }
+          textFieldTableFilter.setText(tableFilterValue);
+
+          // prefix
+          textFieldFilePrefixConverter.setText(Utils.getString(table.getValueAt(r, 3)));
+
+          // filename
+          comboBoxFileNameConverter.setSelectedItem(Utils.getString(table.getValueAt(r, 4)));
+
+          // suffix
+          textFieldFileSuffixConverter.setText(Utils.getString(table.getValueAt(r, 5)));
+
+          // extension
+          textFieldFileExtensionConverter.setText(Utils.getString(table.getValueAt(r, 6)));
+
+          // save path
+          textFieldSavePath.setText(Utils.getString(table.getValueAt(r, 7)));
+        }
+      }
+    });
+    var sp = new JScrollPane(table);
+    sp.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20 * 8));
+    panelChooseFromHistory.add(sp);
+
+    // button remove
+    var panelRemove = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 10));
+    panelChooseFromHistory.add(panelRemove);
+    buttonRemove.addActionListener(actionEvent -> {
+      var selectedRow = table.getSelectedRow();
+      if (selectedRow >= 0) {
+        var selected = Utils.getString(table.getValueAt(selectedRow, 0));
+        var newHistories = cfgProject.tableClassHistories.stream()
+            .filter(h -> !h.exported.equals(selected))
+            .toList();
+        cfgProject.tableClassHistories = newHistories;
+        Config.save();
+
+        tableModel.removeRow(selectedRow);
+      }
+    });
+    panelRemove.add(buttonRemove);
+
+    var borderPanel5 = new JPanel();
+    borderPanel5.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, 10));
+    borderPanel5.setBorder(new ErUnderlineBorder());
+    add(borderPanel5);
+
+    // reload
+    reloadTable();
+  }
+
+  /**
+   * reload table.
+   */
+  public void reloadTable() {
+    tableModel.setRowCount(0);
+
+    for (int i = 0; i < cfgProject.tableClassHistories.size(); i++) {
+      tableModel.setRowCount(i + 1);
+
+      var history = cfgProject.tableClassHistories.get(i);
+      table.setValueAt(history.exported, i, 0);
+      table.setValueAt(history.tableClass.templateValue, i, 1);
+
+      var tFilter = history.tableClass.filterTableActionCommand;
+      if (!Utils.isNullOrEmpty(history.tableClass.filterTableValue)) {
+        tFilter += String.format("%s%s", SEPARATOR, history.tableClass.filterTableValue);
+      }
+      table.setValueAt(tFilter, i, 2);
+
+      table.setValueAt(history.tableClass.convertFilePrefixValue, i, 3);
+      table.setValueAt(history.tableClass.convertFileNameValue, i, 4);
+      table.setValueAt(history.tableClass.convertFileSuffixValue, i, 5);
+      table.setValueAt(history.tableClass.convertFileExtensionValue, i, 6);
+
+      table.setValueAt(history.tableClass.savePath, i, 7);
+    }
   }
 
   /**
@@ -239,10 +511,19 @@ public class Form extends JPanel {
     tmpTableClass.convertFileNameValue = Utils.getString(comboBoxFileNameConverter);
     tmpTableClass.convertFileSuffixValue = Utils.getString(textFieldFileSuffixConverter);
     tmpTableClass.convertFileExtensionValue = Utils.getString(textFieldFileExtensionConverter);
+    tmpTableClass.savePath = Utils.getString(textFieldSavePath);
 
     return new TmpResult<TmpTableClass>(tmpTableClass) {
       @Override
       protected void validate() throws Exception {
+        for (var tmp : tmpList) {
+          if (Utils.isNullOrEmpty(tmp.templateValue)) {
+            throw new Exception("Required 'Template'.");
+          }
+          if (Utils.isNullOrEmpty(tmp.savePath)) {
+            throw new Exception("Required 'Save path'.");
+          }
+        }
       }
     };
   }
