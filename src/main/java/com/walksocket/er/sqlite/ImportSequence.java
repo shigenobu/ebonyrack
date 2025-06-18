@@ -2,6 +2,7 @@ package com.walksocket.er.sqlite;
 
 import com.walksocket.antlr4.MariaDBLexer;
 import com.walksocket.antlr4.MariaDBParser;
+import com.walksocket.er.Log;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.main.root.workspace.Sequence;
 import com.walksocket.er.parse.SequenceListener;
@@ -40,6 +41,15 @@ public class ImportSequence {
     this.con = con;
   }
 
+  /***
+   * add existing sequences.
+   *
+   * @param sequenceNames sequenceNames
+   */
+  public void addExistingSequences(List<String> sequenceNames) {
+    createdSequenceNames.addAll(sequenceNames);
+  }
+
   /**
    * create sequence and get.
    *
@@ -52,6 +62,8 @@ public class ImportSequence {
       return null;
     }
 
+    // parse
+    Log.trace(ddl);
     var stream = CharStreams.fromString(ddl);
     var lexer = new MariaDBLexer(stream);
     var tokens = new CommonTokenStream(lexer);

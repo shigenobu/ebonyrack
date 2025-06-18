@@ -7,6 +7,7 @@ import com.walksocket.er.definition.NotNull;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.Connection;
 import com.walksocket.er.sqlite.Entity;
+import com.walksocket.er.sqlite.ImportForeignKey;
 import com.walksocket.er.sqlite.ImportTable;
 import com.walksocket.er.sqlite.context.CtxTable;
 import com.walksocket.er.sqlite.context.inner.CtxInnerForeignKey;
@@ -1324,6 +1325,10 @@ public class BucketTable {
       con.begin();
 
       var importTable = new ImportTable(con);
+      importTable.addExistingTables(
+          Bucket.getInstance().getBucketTable().ctxTableList.stream()
+              .map(c -> c.dbTable.tableName)
+              .collect(Collectors.toList()));
       var ctxTable = importTable.createTableAndGet(ddl);
       if (ctxTable == null) {
         throw new Exception("Fault to import table.");
@@ -1350,6 +1355,44 @@ public class BucketTable {
       ctxTableList.add(ctxTable);
 
       return ctxTable;
+
+    } catch (Exception e) {
+      con.rollback();
+      Log.error(e);
+
+      throw e;
+    }
+  }
+
+  /**
+   * import from foreign key ddl.
+   *
+   * @param ddl ddl
+   * @return ctx
+   * @throws Exception
+   */
+  public CtxInnerForeignKey importFromForeignKeyDdl(String ddl) throws Exception {
+    try {
+      // database
+      con.begin();
+
+      var importForeignKey = new ImportForeignKey(con);
+      var ctxInnerForeignKey = importForeignKey.createForeignKeyAndGet(
+          ddl,
+          Bucket.getInstance().getBucketDict().dbDictColumnList);
+      if (ctxInnerForeignKey == null) {
+        throw new Exception("Fault to import foreign key.");
+      }
+      con.commit();
+
+      // memory
+      ctxTableList.stream()
+          .filter(c -> c.dbTable.tableId.equals(ctxInnerForeignKey.dbTableForeignKey.tableId))
+          .findFirst()
+          .get()
+          .ctxInnerForeignKeyList.add(ctxInnerForeignKey);
+
+      return ctxInnerForeignKey;
 
     } catch (Exception e) {
       con.rollback();

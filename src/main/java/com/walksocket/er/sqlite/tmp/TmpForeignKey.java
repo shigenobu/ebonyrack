@@ -13,6 +13,14 @@ import java.util.stream.Collectors;
 public class TmpForeignKey implements Tmp, Value {
 
   /**
+   * tableName.
+   * <pre>
+   *   only when written by parse
+   * </pre>
+   */
+  public String tableName;
+
+  /**
    * constraintName.
    */
   public String constraintName;

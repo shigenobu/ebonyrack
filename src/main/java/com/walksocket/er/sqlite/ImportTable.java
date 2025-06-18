@@ -2,6 +2,7 @@ package com.walksocket.er.sqlite;
 
 import com.walksocket.antlr4.MariaDBLexer;
 import com.walksocket.antlr4.MariaDBParser;
+import com.walksocket.er.Log;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.main.root.workspace.Table;
 import com.walksocket.er.parse.TableListener;
@@ -86,6 +87,15 @@ public class ImportTable {
     }
   }
 
+  /***
+   * add existing tables.
+   *
+   * @param tableNames tableNames
+   */
+  public void addExistingTables(List<String> tableNames) {
+    newTableNames.addAll(tableNames);
+  }
+
   /**
    * create table and get.
    *
@@ -99,6 +109,7 @@ public class ImportTable {
     }
 
     // parse
+    Log.trace(ddl);
     var stream = CharStreams.fromString(ddl);
     var lexer = new MariaDBLexer(stream);
     var tokens = new CommonTokenStream(lexer);
@@ -129,9 +140,6 @@ public class ImportTable {
     var dbTable = new DbTable();
     dbTable.tableId = Utils.randomString();
     dbTable.tableName = tmpTable.tableName;
-    if (!Utils.isNullOrEmpty(tmpTable.tableComment)) {
-      dbTable.tableComment = tmpTable.tableComment;
-    }
     if (!Utils.isNullOrEmpty(tmpTable.tableComment)) {
       dbTable.tableComment = tmpTable.tableComment;
     }

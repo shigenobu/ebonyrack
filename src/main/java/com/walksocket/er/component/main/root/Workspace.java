@@ -6,6 +6,7 @@ import com.walksocket.er.Date;
 import com.walksocket.er.Log;
 import com.walksocket.er.Pos;
 import com.walksocket.er.Utils;
+import com.walksocket.er.component.ImpForeignKey;
 import com.walksocket.er.component.ImpSequence;
 import com.walksocket.er.component.ImpTable;
 import com.walksocket.er.component.main.Root;
@@ -1143,6 +1144,15 @@ public class Workspace extends ErConnectorPositioned {
         impSequence.setVisible(true);
       });
       add(menuItemImportSequence);
+
+      // import foreign key
+      var menuItemImportForeignKey = new JMenuItem("Import foreign key");
+      menuItemImportForeignKey.addActionListener(actionEvent -> {
+        var impForeignKey = new ImpForeignKey(workspace);
+        impForeignKey.setModal(true);
+        impForeignKey.setVisible(true);
+      });
+      add(menuItemImportForeignKey);
     }
   }
 
@@ -1185,6 +1195,44 @@ public class Workspace extends ErConnectorPositioned {
       // add
       var sequence = new Sequence(this, newCtxSequence);
       addSequence(sequence);
+
+      return true;
+
+    } catch (Exception e) {
+      Log.error(e);
+      JOptionPane.showMessageDialog(getRoot(), e.getMessage());
+    }
+
+    return false;
+  }
+
+  /**
+   * complete foreign key ddl.
+   *
+   * @param ddl ddl
+   * @return if success
+   */
+  public boolean completeForeignKeyDdl(String ddl) {
+    try {
+      var newCtxInnerForeignKey = Bucket.getInstance().getBucketTable()
+          .importFromForeignKeyDdl(ddl);
+
+      var src = positionedTables.stream()
+          .filter(t -> t.getCtxTable().dbTable.tableId.equals(
+              newCtxInnerForeignKey.dbTableForeignKey.tableId))
+          .findFirst()
+          .get();
+      var dst = positionedTables.stream()
+          .filter(t -> t.getCtxTable().dbTable.tableId.equals(
+              newCtxInnerForeignKey.dbTableForeignKey.referenceTableId))
+          .findFirst()
+          .get();
+
+      src.redraw();
+      dst.redraw();
+      var connector = new ErConnector(this, src, dst, LineStyle.SIMPLE);
+      addConnectorFromTableToTable(connector);
+      resetConnectorTableToTable(src);
 
       return true;
 

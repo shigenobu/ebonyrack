@@ -14,6 +14,7 @@ import java.awt.Point;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * BucketSequence.
@@ -218,6 +219,10 @@ public class BucketSequence {
       con.begin();
 
       var importSequence = new ImportSequence(con);
+      importSequence.addExistingSequences(
+          Bucket.getInstance().getBucketSequence().ctxSequenceList.stream()
+              .map(s -> s.dbSequence.sequenceName)
+              .collect(Collectors.toList()));
       var ctxSequence = importSequence.createSequenceAndGet(ddl);
       if (ctxSequence == null) {
         throw new Exception("Fault to import sequence.");

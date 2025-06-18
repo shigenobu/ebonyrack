@@ -241,6 +241,28 @@ public class Dump {
         dbTableOption.posY = maxY + (y + 1) * 20 + y * 300;
         con.executeInsert(dbTableOption);
       }
+
+      // foreign key
+      var importForeignKey = new ImportForeignKey(con);
+      var ddlForeignKeyList = parseAlterTable(path);
+      var dbDictColumnList = new ArrayList<DbDictColumn>();
+      if (ddlForeignKeyList.size() > 0) {
+        var sql = "SELECT * FROM DbDictColumn";
+        var records = con.getRecords(sql);
+        for (var record : records) {
+          var dbDictColumn = Entity.convertEntity(record, DbDictColumn.class);
+          dbDictColumnList.add(dbDictColumn);
+        }
+      }
+      for (int i = 0; i < ddlForeignKeyList.size(); i++) {
+        var ddl = ddlForeignKeyList.get(i);
+
+        var ctxInnerForeignKey = importForeignKey.createForeignKeyAndGet(ddl, dbDictColumnList);
+        if (ctxInnerForeignKey == null) {
+          continue;
+        }
+      }
+
       con.commit();
       return true;
     } catch (Exception e) {
@@ -301,6 +323,44 @@ public class Dump {
       var builder = new StringBuilder();
       while ((data = reader.readLine()) != null) {
         if (data.toLowerCase().startsWith("create table")) {
+          processing = true;
+        }
+        if (processing) {
+          var pos = data.indexOf("--");
+          if (pos >= 0) {
+            data = data.substring(0, pos);
+          }
+          builder.append(data);
+
+          if (data.endsWith(";")) {
+            processing = false;
+            var ddl = builder.toString();
+            ddlList.add(ddl);
+            Log.trace(ddl);
+            builder = new StringBuilder();
+          }
+        }
+      }
+    }
+    return ddlList;
+  }
+
+
+  /**
+   * parse alter table.
+   *
+   * @param path path
+   * @return ddl list
+   * @throws IOException
+   */
+  public static List<String> parseAlterTable(String path) throws IOException {
+    var ddlList = new ArrayList<String>();
+    try (var reader = new BufferedReader(new FileReader(path))) {
+      String data;
+      boolean processing = false;
+      var builder = new StringBuilder();
+      while ((data = reader.readLine()) != null) {
+        if (data.toLowerCase().startsWith("alter table")) {
           processing = true;
         }
         if (processing) {
