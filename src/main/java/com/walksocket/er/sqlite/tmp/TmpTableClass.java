@@ -32,6 +32,11 @@ public class TmpTableClass implements Tmp {
   public static final String FILTER_END_WITH = "End with";
 
   /**
+   * filter contains in list.
+   */
+  public static final String FILTER_CONTAINS_IN_LIST = "Contains in list";
+
+  /**
    * file name converter raw.
    */
   public static final String FILE_NAME_CONVERTER_RAW = "raw";

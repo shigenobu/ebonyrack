@@ -6,6 +6,7 @@ import com.walksocket.er.Utils;
 import com.walksocket.er.definition.NotNull;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.Connection;
+import com.walksocket.er.sqlite.Dump;
 import com.walksocket.er.sqlite.Entity;
 import com.walksocket.er.sqlite.ImportForeignKey;
 import com.walksocket.er.sqlite.ImportTable;
@@ -1316,45 +1317,56 @@ public class BucketTable {
    *
    * @param ddl   ddl
    * @param point point
-   * @return ctx
+   * @return ctx list
    * @throws Exception
    */
-  public CtxTable importFromDdl(String ddl, Point point) throws Exception {
+  public List<CtxTable> importFromDdl(String ddl, Point point) throws Exception {
     try {
       // database
       con.begin();
 
-      var importTable = new ImportTable(con);
-      importTable.addExistingTables(
-          Bucket.getInstance().getBucketTable().ctxTableList.stream()
-              .map(c -> c.dbTable.tableName)
-              .collect(Collectors.toList()));
-      var ctxTable = importTable.createTableAndGet(ddl);
-      if (ctxTable == null) {
-        throw new Exception("Fault to import table.");
+      var offset = 0;
+      var newCtxTableList = new ArrayList<CtxTable>();
+      var ddlList = Dump.parseCreateTable(ddl);
+      for (var d : ddlList) {
+        var importTable = new ImportTable(con);
+        importTable.addExistingTables(
+            Bucket.getInstance().getBucketTable().ctxTableList.stream()
+                .map(c -> c.dbTable.tableName)
+                .collect(Collectors.toList()));
+        var ctxTable = importTable.createTableAndGet(d);
+        if (ctxTable == null) {
+          throw new Exception("Fault to import table.");
+        }
+
+        // dict
+        Bucket.getInstance().getBucketDict().dbDictColumnTypeList.addAll(
+            importTable.getNewDbDictColumnTypeList());
+        Bucket.getInstance().getBucketDict().dbDictColumnList.addAll(
+            importTable.getNewDbDictColumnList());
+        Bucket.getInstance().getBucketDict().dbDictPartitionList.addAll(
+            importTable.getNewDbDictPartitionList());
+
+        // DbTableOption
+        var dbTableOption = new DbTableOption();
+        dbTableOption.tableId = ctxTable.dbTable.tableId;
+        dbTableOption.posX = point.x + offset;
+        dbTableOption.posY = point.y + offset;
+        con.executeInsert(dbTableOption);
+        ctxTable.dbTableOption = dbTableOption;
+
+        newCtxTableList.add(ctxTable);
+
+        offset += 50;
       }
-
-      // dict
-      Bucket.getInstance().getBucketDict().dbDictColumnTypeList.addAll(
-          importTable.getNewDbDictColumnTypeList());
-      Bucket.getInstance().getBucketDict().dbDictColumnList.addAll(
-          importTable.getNewDbDictColumnList());
-      Bucket.getInstance().getBucketDict().dbDictPartitionList.addAll(
-          importTable.getNewDbDictPartitionList());
-
-      // DbTableOption
-      var dbTableOption = new DbTableOption();
-      dbTableOption.tableId = ctxTable.dbTable.tableId;
-      dbTableOption.posX = point.x;
-      dbTableOption.posY = point.y;
-      con.executeInsert(dbTableOption);
-      ctxTable.dbTableOption = dbTableOption;
       con.commit();
 
       // memory
-      ctxTableList.add(ctxTable);
+      for (var ctxTable : newCtxTableList) {
+        ctxTableList.add(ctxTable);
+      }
 
-      return ctxTable;
+      return ctxTableList;
 
     } catch (Exception e) {
       con.rollback();
@@ -1368,31 +1380,38 @@ public class BucketTable {
    * import from foreign key ddl.
    *
    * @param ddl ddl
-   * @return ctx
+   * @return ctx list
    * @throws Exception
    */
-  public CtxInnerForeignKey importFromForeignKeyDdl(String ddl) throws Exception {
+  public List<CtxInnerForeignKey> importFromForeignKeyDdl(String ddl) throws Exception {
     try {
       // database
       con.begin();
 
-      var importForeignKey = new ImportForeignKey(con);
-      var ctxInnerForeignKey = importForeignKey.createForeignKeyAndGet(
-          ddl,
-          Bucket.getInstance().getBucketDict().dbDictColumnList);
-      if (ctxInnerForeignKey == null) {
-        throw new Exception("Fault to import foreign key.");
+      var newCtxInnerForeignKeyList = new ArrayList<CtxInnerForeignKey>();
+      var ddlList = Dump.parseAlterTable(ddl);
+      for (var d : ddlList) {
+        var importForeignKey = new ImportForeignKey(con);
+        var ctxInnerForeignKey = importForeignKey.createForeignKeyAndGet(
+            d,
+            Bucket.getInstance().getBucketDict().dbDictColumnList);
+        if (ctxInnerForeignKey == null) {
+          throw new Exception("Fault to import foreign key.");
+        }
+        newCtxInnerForeignKeyList.add(ctxInnerForeignKey);
       }
       con.commit();
 
       // memory
-      ctxTableList.stream()
-          .filter(c -> c.dbTable.tableId.equals(ctxInnerForeignKey.dbTableForeignKey.tableId))
-          .findFirst()
-          .get()
-          .ctxInnerForeignKeyList.add(ctxInnerForeignKey);
+      for (var ctxInnerForeignKey : newCtxInnerForeignKeyList) {
+        ctxTableList.stream()
+            .filter(c -> c.dbTable.tableId.equals(ctxInnerForeignKey.dbTableForeignKey.tableId))
+            .findFirst()
+            .get()
+            .ctxInnerForeignKeyList.add(ctxInnerForeignKey);
+      }
 
-      return ctxInnerForeignKey;
+      return newCtxInnerForeignKeyList;
 
     } catch (Exception e) {
       con.rollback();

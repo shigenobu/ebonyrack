@@ -29,6 +29,11 @@ public class TmpDdl implements Tmp {
   public static final String FILTER_END_WITH = "End with";
 
   /**
+   * filter contains in list.
+   */
+  public static final String FILTER_CONTAINS_IN_LIST = "Contains in list";
+
+  /**
    * schema value.
    */
   public String schemaValue;

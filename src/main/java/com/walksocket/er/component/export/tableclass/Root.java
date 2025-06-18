@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 import javax.swing.BoxLayout;
@@ -140,6 +141,13 @@ public class Root extends JPanel {
       } else if (actionCommand.equals(TmpTableClass.FILTER_END_WITH)
           && !ctxTable.dbTable.tableName.endsWith(filterValue)) {
         continue;
+      } else if (actionCommand.equals(TmpTableClass.FILTER_CONTAINS_IN_LIST)) {
+        var includeList = Arrays.stream(filterValue.split(","))
+            .map(v -> v.trim())
+            .toList();
+        if (!includeList.contains(ctxTable.dbTable.tableName)) {
+          continue;
+        }
       }
 
       if (ctxTable.dbTable == null || ctxTable.dbTable.tableName.startsWith(

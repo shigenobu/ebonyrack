@@ -34,8 +34,8 @@ import com.walksocket.er.sqlite.entity.DbTableUniqueKeyColumn;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -200,7 +200,7 @@ public class Dump {
 
       // sequence
       var importSequence = new ImportSequence(con);
-      var ddlSequenceList = parseCreateSequence(path);
+      var ddlSequenceList = parseCreateSequence(FileUtils.readString(new FileInputStream(path)));
       for (int i = 0; i < ddlSequenceList.size(); i++) {
         var ddl = ddlSequenceList.get(i);
 
@@ -223,7 +223,7 @@ public class Dump {
 
       // table
       var importTable = new ImportTable(con);
-      var ddlTableList = parseCreateTable(path);
+      var ddlTableList = parseCreateTable(FileUtils.readString(new FileInputStream(path)));
       for (int i = 0; i < ddlTableList.size(); i++) {
         var ddl = ddlTableList.get(i);
 
@@ -244,7 +244,7 @@ public class Dump {
 
       // foreign key
       var importForeignKey = new ImportForeignKey(con);
-      var ddlForeignKeyList = parseAlterTable(path);
+      var ddlForeignKeyList = parseAlterTable(FileUtils.readString(new FileInputStream(path)));
       var dbDictColumnList = new ArrayList<DbDictColumn>();
       if (ddlForeignKeyList.size() > 0) {
         var sql = "SELECT * FROM DbDictColumn";
@@ -274,13 +274,13 @@ public class Dump {
   /**
    * parse create sequence.
    *
-   * @param path path
+   * @param ddl ddl
    * @return ddl list
    * @throws IOException
    */
-  public static List<String> parseCreateSequence(String path) throws IOException {
+  public static List<String> parseCreateSequence(String ddl) throws IOException {
     var ddlList = new ArrayList<String>();
-    try (var reader = new BufferedReader(new FileReader(path))) {
+    try (var reader = new BufferedReader(new StringReader(ddl))) {
       String data;
       boolean processing = false;
       var builder = new StringBuilder();
@@ -297,9 +297,9 @@ public class Dump {
 
           if (data.endsWith(";")) {
             processing = false;
-            var ddl = builder.toString();
-            ddlList.add(ddl);
-            Log.trace(ddl);
+            var d = builder.toString();
+            ddlList.add(d);
+            Log.trace(d);
             builder = new StringBuilder();
           }
         }
@@ -311,13 +311,13 @@ public class Dump {
   /**
    * parse create table.
    *
-   * @param path path
+   * @param ddl ddl
    * @return ddl list
    * @throws IOException
    */
-  public static List<String> parseCreateTable(String path) throws IOException {
+  public static List<String> parseCreateTable(String ddl) throws IOException {
     var ddlList = new ArrayList<String>();
-    try (var reader = new BufferedReader(new FileReader(path))) {
+    try (var reader = new BufferedReader(new StringReader(ddl))) {
       String data;
       boolean processing = false;
       var builder = new StringBuilder();
@@ -334,9 +334,9 @@ public class Dump {
 
           if (data.endsWith(";")) {
             processing = false;
-            var ddl = builder.toString();
-            ddlList.add(ddl);
-            Log.trace(ddl);
+            var d = builder.toString();
+            ddlList.add(d);
+            Log.trace(d);
             builder = new StringBuilder();
           }
         }
@@ -349,13 +349,13 @@ public class Dump {
   /**
    * parse alter table.
    *
-   * @param path path
+   * @param ddl ddl
    * @return ddl list
    * @throws IOException
    */
-  public static List<String> parseAlterTable(String path) throws IOException {
+  public static List<String> parseAlterTable(String ddl) throws IOException {
     var ddlList = new ArrayList<String>();
-    try (var reader = new BufferedReader(new FileReader(path))) {
+    try (var reader = new BufferedReader(new StringReader(ddl))) {
       String data;
       boolean processing = false;
       var builder = new StringBuilder();
@@ -372,9 +372,9 @@ public class Dump {
 
           if (data.endsWith(";")) {
             processing = false;
-            var ddl = builder.toString();
-            ddlList.add(ddl);
-            Log.trace(ddl);
+            var d = builder.toString();
+            ddlList.add(d);
+            Log.trace(d);
             builder = new StringBuilder();
           }
         }

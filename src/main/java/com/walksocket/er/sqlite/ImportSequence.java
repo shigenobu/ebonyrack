@@ -27,9 +27,9 @@ public class ImportSequence {
   private final Connection con;
 
   /**
-   * created sequence names.
+   * existing sequence name list.
    */
-  private final List<String> createdSequenceNames = new ArrayList<>();
+  private final List<String> existingSequenceNameList = new ArrayList<>();
 
   /**
    * Constructor.
@@ -47,7 +47,7 @@ public class ImportSequence {
    * @param sequenceNames sequenceNames
    */
   public void addExistingSequences(List<String> sequenceNames) {
-    createdSequenceNames.addAll(sequenceNames);
+    existingSequenceNameList.addAll(sequenceNames);
   }
 
   /**
@@ -58,7 +58,7 @@ public class ImportSequence {
    * @throws SQLException
    */
   public CtxSequence createSequenceAndGet(String ddl) throws SQLException {
-    if (createdSequenceNames.size() > Sequence.MAX_POSITIONED) {
+    if (existingSequenceNameList.size() > Sequence.MAX_POSITIONED) {
       return null;
     }
 
@@ -76,7 +76,7 @@ public class ImportSequence {
     if (Utils.isNullOrEmpty(tmpSequence.sequenceName)) {
       return null;
     }
-    if (createdSequenceNames.contains(tmpSequence.sequenceName)) {
+    if (existingSequenceNameList.contains(tmpSequence.sequenceName)) {
       return null;
     }
 
@@ -105,7 +105,7 @@ public class ImportSequence {
       dbSequence.cycle = tmpSequence.cycle;
     }
     con.executeInsert(dbSequence);
-    createdSequenceNames.add(dbSequence.sequenceName);
+    existingSequenceNameList.add(dbSequence.sequenceName);
     ctxSequence.dbSequence = dbSequence;
 
     return ctxSequence;

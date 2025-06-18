@@ -1165,11 +1165,13 @@ public class Workspace extends ErConnectorPositioned {
    */
   public boolean completeTableDdl(String ddl, Point point) {
     try {
-      var newCtxTable = Bucket.getInstance().getBucketTable().importFromDdl(ddl, point);
+      var newCtxTableList = Bucket.getInstance().getBucketTable().importFromDdl(ddl, point);
 
       // add
-      var table = new Table(this, newCtxTable);
-      addTable(table);
+      for (var newCtxTable : newCtxTableList) {
+        var table = new Table(this, newCtxTable);
+        addTable(table);
+      }
 
       return true;
 
@@ -1190,11 +1192,13 @@ public class Workspace extends ErConnectorPositioned {
    */
   public boolean completeSequenceDdl(String ddl, Point point) {
     try {
-      var newCtxSequence = Bucket.getInstance().getBucketSequence().importFromDdl(ddl, point);
+      var newCtxSequenceList = Bucket.getInstance().getBucketSequence().importFromDdl(ddl, point);
 
       // add
-      var sequence = new Sequence(this, newCtxSequence);
-      addSequence(sequence);
+      for (var newCtxSequence : newCtxSequenceList) {
+        var sequence = new Sequence(this, newCtxSequence);
+        addSequence(sequence);
+      }
 
       return true;
 
@@ -1214,25 +1218,27 @@ public class Workspace extends ErConnectorPositioned {
    */
   public boolean completeForeignKeyDdl(String ddl) {
     try {
-      var newCtxInnerForeignKey = Bucket.getInstance().getBucketTable()
+      var newCtxInnerForeignKeyList = Bucket.getInstance().getBucketTable()
           .importFromForeignKeyDdl(ddl);
 
-      var src = positionedTables.stream()
-          .filter(t -> t.getCtxTable().dbTable.tableId.equals(
-              newCtxInnerForeignKey.dbTableForeignKey.tableId))
-          .findFirst()
-          .get();
-      var dst = positionedTables.stream()
-          .filter(t -> t.getCtxTable().dbTable.tableId.equals(
-              newCtxInnerForeignKey.dbTableForeignKey.referenceTableId))
-          .findFirst()
-          .get();
+      for (var newCtxInnerForeignKey : newCtxInnerForeignKeyList) {
+        var src = positionedTables.stream()
+            .filter(t -> t.getCtxTable().dbTable.tableId.equals(
+                newCtxInnerForeignKey.dbTableForeignKey.tableId))
+            .findFirst()
+            .get();
+        var dst = positionedTables.stream()
+            .filter(t -> t.getCtxTable().dbTable.tableId.equals(
+                newCtxInnerForeignKey.dbTableForeignKey.referenceTableId))
+            .findFirst()
+            .get();
 
-      src.redraw();
-      dst.redraw();
-      var connector = new ErConnector(this, src, dst, LineStyle.SIMPLE);
-      addConnectorFromTableToTable(connector);
-      resetConnectorTableToTable(src);
+        src.redraw();
+        dst.redraw();
+        var connector = new ErConnector(this, src, dst, LineStyle.SIMPLE);
+        addConnectorFromTableToTable(connector);
+        resetConnectorTableToTable(src);
+      }
 
       return true;
 

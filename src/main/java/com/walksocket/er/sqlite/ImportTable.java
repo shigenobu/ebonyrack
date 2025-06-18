@@ -50,9 +50,9 @@ public class ImportTable {
   private int seq;
 
   /**
-   * new table names.
+   * existing table name list.
    */
-  private final List<String> newTableNames = new ArrayList<>();
+  private final List<String> existingTableNameList = new ArrayList<>();
 
   /**
    * new db dict column type list.
@@ -93,7 +93,7 @@ public class ImportTable {
    * @param tableNames tableNames
    */
   public void addExistingTables(List<String> tableNames) {
-    newTableNames.addAll(tableNames);
+    existingTableNameList.addAll(tableNames);
   }
 
   /**
@@ -104,7 +104,7 @@ public class ImportTable {
    * @throws SQLException
    */
   public CtxTable createTableAndGet(String ddl) throws SQLException {
-    if (newTableNames.size() > Table.MAX_POSITIONED) {
+    if (existingTableNameList.size() > Table.MAX_POSITIONED) {
       return null;
     }
 
@@ -129,7 +129,7 @@ public class ImportTable {
     if (Utils.isNullOrEmpty(tmpTable.tableName)) {
       return null;
     }
-    if (newTableNames.contains(tmpTable.tableName)) {
+    if (existingTableNameList.contains(tmpTable.tableName)) {
       return null;
     }
 
@@ -159,7 +159,7 @@ public class ImportTable {
       dbTable.option = tmpTable.option;
     }
     con.executeInsert(dbTable);
-    newTableNames.add(dbTable.tableName);
+    existingTableNameList.add(dbTable.tableName);
     ctxTable.dbTable = dbTable;
 
     // column

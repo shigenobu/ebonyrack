@@ -1,6 +1,8 @@
 package com.walksocket.er.component.export.ddl.root;
 
 import com.walksocket.er.Config;
+import com.walksocket.er.Json;
+import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogExport;
 import com.walksocket.er.Utils;
 import com.walksocket.er.config.CfgProject;
@@ -152,9 +154,15 @@ public class Form extends JPanel {
       TmpDdl.FILTER_END_WITH);
 
   /**
+   * radio button sequence filter contains in list.
+   */
+  private final JRadioButton radioButtonSequenceFilterContainsInList = new JRadioButton(
+      TmpDdl.FILTER_CONTAINS_IN_LIST);
+
+  /**
    * text field sequence filter.
    */
-  private final JTextField textFieldSequenceFilter = new JTextField(30);
+  private final JTextField textFieldSequenceFilter = new JTextField(40);
 
   /**
    * label filter table.
@@ -191,9 +199,15 @@ public class Form extends JPanel {
       TmpDdl.FILTER_END_WITH);
 
   /**
+   * radio button table filter contains in list.
+   */
+  private final JRadioButton radioButtonTableFilterContainsInList = new JRadioButton(
+      TmpDdl.FILTER_CONTAINS_IN_LIST);
+
+  /**
    * text field table filter.
    */
-  private final JTextField textFieldTableFilter = new JTextField(30);
+  private final JTextField textFieldTableFilter = new JTextField(40);
 
   /**
    * label save path.
@@ -306,14 +320,17 @@ public class Form extends JPanel {
     radioButtonSequenceFilterContains.setActionCommand(TmpDdl.FILTER_CONTAINS);
     radioButtonSequenceFilterStartWith.setActionCommand(TmpDdl.FILTER_START_WITH);
     radioButtonSequenceFilterEndWith.setActionCommand(TmpDdl.FILTER_END_WITH);
+    radioButtonSequenceFilterContainsInList.setActionCommand(TmpDdl.FILTER_CONTAINS_IN_LIST);
     buttonGroupSequenceFilter.add(radioButtonSequenceFilterNone);
     buttonGroupSequenceFilter.add(radioButtonSequenceFilterContains);
     buttonGroupSequenceFilter.add(radioButtonSequenceFilterStartWith);
     buttonGroupSequenceFilter.add(radioButtonSequenceFilterEndWith);
+    buttonGroupSequenceFilter.add(radioButtonSequenceFilterContainsInList);
     panelSequenceInnerRight.add(radioButtonSequenceFilterNone);
     panelSequenceInnerRight.add(radioButtonSequenceFilterContains);
     panelSequenceInnerRight.add(radioButtonSequenceFilterStartWith);
     panelSequenceInnerRight.add(radioButtonSequenceFilterEndWith);
+    panelSequenceInnerRight.add(radioButtonSequenceFilterContainsInList);
     textFieldSequenceFilter.setEditable(false);
     panelSequenceInnerRight.add(textFieldSequenceFilter);
 
@@ -389,14 +406,17 @@ public class Form extends JPanel {
     radioButtonTableFilterContains.setActionCommand(TmpDdl.FILTER_CONTAINS);
     radioButtonTableFilterStartWith.setActionCommand(TmpDdl.FILTER_START_WITH);
     radioButtonTableFilterEndWith.setActionCommand(TmpDdl.FILTER_END_WITH);
+    radioButtonTableFilterContainsInList.setActionCommand(TmpDdl.FILTER_CONTAINS_IN_LIST);
     buttonGroupTableFilter.add(radioButtonTableFilterNone);
     buttonGroupTableFilter.add(radioButtonTableFilterContains);
     buttonGroupTableFilter.add(radioButtonTableFilterStartWith);
     buttonGroupTableFilter.add(radioButtonTableFilterEndWith);
+    buttonGroupTableFilter.add(radioButtonTableFilterContainsInList);
     panelTableInnerRight.add(radioButtonTableFilterNone);
     panelTableInnerRight.add(radioButtonTableFilterContains);
     panelTableInnerRight.add(radioButtonTableFilterStartWith);
     panelTableInnerRight.add(radioButtonTableFilterEndWith);
+    panelTableInnerRight.add(radioButtonTableFilterContainsInList);
     textFieldTableFilter.setEditable(false);
     panelTableInnerRight.add(textFieldTableFilter);
 
@@ -533,6 +553,9 @@ public class Form extends JPanel {
             case TmpDdl.FILTER_END_WITH:
               radioButtonSequenceFilterEndWith.setSelected(true);
               break;
+            case TmpDdl.FILTER_CONTAINS_IN_LIST:
+              radioButtonSequenceFilterContainsInList.setSelected(true);
+              break;
           }
           textFieldSequenceFilter.setText(sequenceFilterValue);
 
@@ -573,6 +596,9 @@ public class Form extends JPanel {
               break;
             case TmpDdl.FILTER_END_WITH:
               radioButtonTableFilterEndWith.setSelected(true);
+              break;
+            case TmpDdl.FILTER_CONTAINS_IN_LIST:
+              radioButtonTableFilterContainsInList.setSelected(true);
               break;
           }
           textFieldTableFilter.setText(tableFilterValue);
@@ -675,6 +701,7 @@ public class Form extends JPanel {
       @Override
       protected void validate() throws Exception {
         for (var tmp : tmpList) {
+          Log.trace(Json.toJsonString(tmp));
           if (Utils.isNullOrEmpty(tmp.savePath)) {
             throw new Exception("Required 'Save path'.");
           }

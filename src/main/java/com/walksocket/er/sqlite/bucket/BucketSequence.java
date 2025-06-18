@@ -4,6 +4,7 @@ import com.walksocket.er.Log;
 import com.walksocket.er.Pos;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.Connection;
+import com.walksocket.er.sqlite.Dump;
 import com.walksocket.er.sqlite.Entity;
 import com.walksocket.er.sqlite.ImportSequence;
 import com.walksocket.er.sqlite.context.CtxSequence;
@@ -210,37 +211,48 @@ public class BucketSequence {
    *
    * @param ddl   ddl
    * @param point point
-   * @return ctx
+   * @return ctx list
    * @throws Exception
    */
-  public CtxSequence importFromDdl(String ddl, Point point) throws Exception {
+  public List<CtxSequence> importFromDdl(String ddl, Point point) throws Exception {
     try {
       // database
       con.begin();
 
-      var importSequence = new ImportSequence(con);
-      importSequence.addExistingSequences(
-          Bucket.getInstance().getBucketSequence().ctxSequenceList.stream()
-              .map(s -> s.dbSequence.sequenceName)
-              .collect(Collectors.toList()));
-      var ctxSequence = importSequence.createSequenceAndGet(ddl);
-      if (ctxSequence == null) {
-        throw new Exception("Fault to import sequence.");
-      }
+      var offset = 0;
+      var newCtxSequenceList = new ArrayList<CtxSequence>();
+      var ddlList = Dump.parseCreateSequence(ddl);
+      for (var d : ddlList) {
+        var importSequence = new ImportSequence(con);
+        importSequence.addExistingSequences(
+            Bucket.getInstance().getBucketSequence().ctxSequenceList.stream()
+                .map(s -> s.dbSequence.sequenceName)
+                .collect(Collectors.toList()));
+        var ctxSequence = importSequence.createSequenceAndGet(d);
+        if (ctxSequence == null) {
+          throw new Exception("Fault to import sequence.");
+        }
 
-      // DbSequenceOption
-      var dbSequenceOption = new DbSequenceOption();
-      dbSequenceOption.sequenceId = ctxSequence.dbSequence.sequenceId;
-      dbSequenceOption.posX = point.x;
-      dbSequenceOption.posY = point.y;
-      con.executeInsert(dbSequenceOption);
-      ctxSequence.dbSequenceOption = dbSequenceOption;
+        // DbSequenceOption
+        var dbSequenceOption = new DbSequenceOption();
+        dbSequenceOption.sequenceId = ctxSequence.dbSequence.sequenceId;
+        dbSequenceOption.posX = point.x + offset;
+        dbSequenceOption.posY = point.y + offset;
+        con.executeInsert(dbSequenceOption);
+        ctxSequence.dbSequenceOption = dbSequenceOption;
+
+        newCtxSequenceList.add(ctxSequence);
+
+        offset += 50;
+      }
       con.commit();
 
       // memory
-      ctxSequenceList.add(ctxSequence);
+      for (var ctxSequence : newCtxSequenceList) {
+        ctxSequenceList.add(ctxSequence);
+      }
 
-      return ctxSequence;
+      return newCtxSequenceList;
 
     } catch (Exception e) {
       con.rollback();
