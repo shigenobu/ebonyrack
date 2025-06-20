@@ -150,7 +150,6 @@ public class ImportForeignKey {
           .filter(d -> d.columnName.equals(columnForeignKeyOption.columnName))
           .findFirst()
           .get();
-      dbTableForeignKeyColumn.dictColumnId = dbDictColumn.dictColumnId;
 
       var fileteredReferenceDbDictColumnList = dbDictColumnList.stream()
           .filter(d -> referenceDbDictColumnIdList.contains(d.dictColumnId))
@@ -159,6 +158,14 @@ public class ImportForeignKey {
           .filter(d -> d.columnName.equals(referenceColumnForeignKeyOption.columnName))
           .findFirst()
           .get();
+
+      if (!dbDictColumn.dictColumnTypeId.equals(referenceDbDictColumn.dictColumnTypeId)) {
+        throw new SQLException(
+            String.format("Foreign key column type mismatch. Column: %s, reference column: %s.",
+                dbDictColumn.columnName, referenceDbDictColumn.columnName));
+      }
+
+      dbTableForeignKeyColumn.dictColumnId = dbDictColumn.dictColumnId;
       dbTableForeignKeyColumn.referenceDictColumnId = referenceDbDictColumn.dictColumnId;
 
       dbTableForeignKeyColumn.seqInIndex = String.valueOf(seqInIndex);

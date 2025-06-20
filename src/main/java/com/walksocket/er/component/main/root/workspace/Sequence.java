@@ -110,11 +110,11 @@ public class Sequence extends ErConnectorEndpoint {
           // copy
           workspace.getRoot().getMain().setCopied(ctxSequence, CtxSequence.class);
         } else if (e.getKeyCode() == KeyEvent.VK_F && e.isControlDown()) {
-          // search
-          workspace.showSearchTextDialog();
+          // show search
+          workspace.showSearchSpace();
         } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-          // clear
-          workspace.clearSearchText();
+          // hide search
+          workspace.hideSearchSpace();
         }
       }
     });
@@ -145,8 +145,9 @@ public class Sequence extends ErConnectorEndpoint {
         int width = metrics.stringWidth(text);
         int height = metrics.getHeight();
 
-        g.setColor(Color.YELLOW);
+        g.setColor(ErConnectorColor.FOUND_COLOR);
         g.fillRect(startX, startY, width, height);
+        workspace.addSearchHit(sequence);
       }
     };
     panelName.setLocation(new Point(BORDER_SIZE, BORDER_SIZE));
@@ -312,6 +313,12 @@ public class Sequence extends ErConnectorEndpoint {
         JOptionPane.showMessageDialog(workspace.getRoot(), e.getMessage());
       }
     }
+  }
+
+  @Override
+  public String getNameForSort() {
+    return String.format("002-%s-%s", ctxSequence.dbSequence.sequenceName,
+        ctxSequence.dbSequence.sequenceId);
   }
 
   @Override

@@ -52,6 +52,11 @@ public abstract class ErMover extends JPanel {
   private final JPanel selectingPanel = new JPanel();
 
   /**
+   * found panel.
+   */
+  private final JPanel foundPanel = new JPanel();
+
+  /**
    * Constructor.
    *
    * @param parent parent
@@ -166,5 +171,17 @@ public abstract class ErMover extends JPanel {
    */
   public void removeSelectingPanel() {
     remove(selectingPanel);
+  }
+
+  /**
+   * get found panel in time.
+   *
+   * @return found panel
+   */
+  public JPanel getFoundPanelInTime() {
+    foundPanel.setBackground(ErConnectorColor.FOUND_COLOR);
+    foundPanel.setSize(getWidth() + 10, getHeight() + 10);
+    foundPanel.setLocation(getX() - 5, getY() - 5);
+    return foundPanel;
   }
 }

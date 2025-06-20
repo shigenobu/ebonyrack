@@ -159,11 +159,11 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
           // copy
           workspace.getRoot().getMain().setCopied(ctxNote, CtxNote.class);
         } else if (e.getKeyCode() == KeyEvent.VK_F && e.isControlDown()) {
-          // search
-          workspace.showSearchTextDialog();
+          // show search
+          workspace.showSearchSpace();
         } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-          // clear
-          workspace.clearSearchText();
+          // hide clear
+          workspace.hideSearchSpace();
         }
       }
     });
@@ -332,8 +332,9 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
         int width = metrics.stringWidth(text);
         int height = metrics.getHeight();
 
-        g.setColor(new Color(255, 255, 0, 100));
+        g.setColor(ErConnectorColor.FOUND_COLOR);
         g.fillRect(startX, startY, width, height);
+        workspace.addSearchHit(note);
       }
     };
     textFieldSubject.addFocusListener(new FocusAdapter() {
@@ -418,8 +419,9 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
           int width = metrics.stringWidth(text);
           int height = metrics.getHeight();
 
-          g.setColor(new Color(255, 255, 0, 100));
+          g.setColor(ErConnectorColor.FOUND_COLOR);
           g.fillRect(startX, startY, width, height);
+          workspace.addSearchHit(note);
         }
       }
     };
@@ -734,7 +736,7 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
 
   @Override
   public String getNameForSort() {
-    return String.format("%s-%s", this, ctxNote.dbNote.noteId);
+    return String.format("003-%s-%s", ctxNote.dbNote.subject, ctxNote.dbNote.noteId);
   }
 
   @Override

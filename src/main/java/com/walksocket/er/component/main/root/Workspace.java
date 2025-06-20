@@ -89,6 +89,11 @@ public class Workspace extends ErConnectorPositioned {
   private Side side;
 
   /**
+   * outline.
+   */
+  private Outline outline;
+
+  /**
    * positioned tables.
    */
   private final Set<Table> positionedTables = new HashSet<>();
@@ -117,11 +122,6 @@ public class Workspace extends ErConnectorPositioned {
    * positioned connectors table to table.
    */
   private final Set<ErConnector> positionedConnectorsTableToTable = new HashSet<>();
-
-  /**
-   * search text.
-   */
-  private Object searchText;
 
   /**
    * Constructor.
@@ -165,10 +165,10 @@ public class Workspace extends ErConnectorPositioned {
           }
         } else if (e.getKeyCode() == KeyEvent.VK_F && e.isControlDown()) {
           // search
-          showSearchTextDialog();
+          showSearchSpace();
         } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
           // clear
-          clearSearchText();
+          hideSearchSpace();
         }
       }
     });
@@ -804,6 +804,15 @@ public class Workspace extends ErConnectorPositioned {
     this.side = side;
   }
 
+  /**
+   * set outline.
+   *
+   * @param outline outline
+   */
+  public void setOutline(Outline outline) {
+    this.outline = outline;
+  }
+
   @Override
   public Dimension getPreferredSize() {
     // --------------------
@@ -1358,17 +1367,23 @@ public class Workspace extends ErConnectorPositioned {
   }
 
   /**
-   * show search text dialog.
+   * show search space.
    */
-  public void showSearchTextDialog() {
-    searchText = JOptionPane.showInputDialog(
-        getRoot(),
-        "Enter text",
-        "Search",
-        JOptionPane.PLAIN_MESSAGE,
-        null,
-        null,
-        searchText);
+  public void showSearchSpace() {
+    if (outline == null) {
+      return;
+    }
+    outline.getSearchSpace().showSpace();
+  }
+
+  /**
+   * clear search text.
+   */
+  public void hideSearchSpace() {
+    if (outline == null) {
+      return;
+    }
+    outline.getSearchSpace().hideSpace();
   }
 
   /**
@@ -1377,17 +1392,21 @@ public class Workspace extends ErConnectorPositioned {
    * @return search text
    */
   public String getSearchText() {
-    if (!Utils.isNullOrEmpty(searchText)) {
-      return searchText.toString();
+    if (outline == null) {
+      return "";
     }
-    return "";
+    return outline.getSearchSpace().getSearchText();
   }
 
   /**
-   * clear search text.
+   * add search hit.
+   *
+   * @param panel panel
    */
-  public void clearSearchText() {
-    searchText = null;
+  public void addSearchHit(ErConnectorEndpoint panel) {
+    if (outline != null) {
+      outline.getSearchSpace().addHitObject(panel);
+    }
   }
 
   /**

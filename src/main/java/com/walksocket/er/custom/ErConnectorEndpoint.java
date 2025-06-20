@@ -183,9 +183,7 @@ public abstract class ErConnectorEndpoint extends ErMover {
    *
    * @return name for sort
    */
-  public String getNameForSort() {
-    return toString();
-  }
+  public abstract String getNameForSort();
 
   /**
    * show popup menu.

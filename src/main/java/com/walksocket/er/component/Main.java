@@ -704,7 +704,7 @@ public class Main extends JFrame {
     root.getWorkspace().getSelectingRange().clearAllMovers();
     root.getWorkspace().reorder();
     root.getWorkspace().requestFocusInWindow();
-    root.getWorkspace().clearSearchText();
+    root.getWorkspace().hideSearchSpace();
   }
 
   /**

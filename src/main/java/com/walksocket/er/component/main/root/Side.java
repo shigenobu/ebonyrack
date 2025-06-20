@@ -40,6 +40,11 @@ public class Side extends JPanel {
   private Workspace workspace;
 
   /**
+   * outline.
+   */
+  private Outline outline;
+
+  /**
    * tree.
    */
   private final JTree tree;
@@ -99,6 +104,14 @@ public class Side extends JPanel {
     // color
     setBackground(Color.WHITE);
 
+    // key event
+    addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyPressed(KeyEvent e) {
+        doSearchAction(e);
+      }
+    });
+
     // table
     treeNodeTable = new DefaultMutableTreeNode(
         String.format("Tables (0/%s)", Table.MAX_POSITIONED));
@@ -120,6 +133,10 @@ public class Side extends JPanel {
     tree.addKeyListener(new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {
+        if (doSearchAction(e)) {
+          return;
+        }
+
         var treePath = tree.getSelectionPath();
         if (treePath == null) {
           return;
@@ -154,6 +171,38 @@ public class Side extends JPanel {
       }
     });
     add(tree);
+  }
+
+  /**
+   * set outline.
+   *
+   * @param outline outline
+   */
+  public void setOutline(Outline outline) {
+    this.outline = outline;
+  }
+
+  /**
+   * do search action.
+   *
+   * @param e event
+   * @return if happened
+   */
+  private boolean doSearchAction(KeyEvent e) {
+    if (e.getKeyCode() == KeyEvent.VK_F && e.isControlDown()) {
+      // show search
+      if (outline != null) {
+        outline.getSearchSpace().showSpace();
+        return true;
+      }
+    } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+      // hide search
+      if (outline != null) {
+        outline.getSearchSpace().hideSpace();
+        return true;
+      }
+    }
+    return false;
   }
 
   /**

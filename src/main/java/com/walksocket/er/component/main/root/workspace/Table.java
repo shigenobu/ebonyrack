@@ -266,11 +266,11 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
           // copy
           workspace.getRoot().getMain().setCopied(ctxTable, CtxTable.class);
         } else if (e.getKeyCode() == KeyEvent.VK_F && e.isControlDown()) {
-          // search
-          workspace.showSearchTextDialog();
+          // show search
+          workspace.showSearchSpace();
         } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-          // clear
-          workspace.clearSearchText();
+          // hide search
+          workspace.hideSearchSpace();
         }
       }
     });
@@ -301,8 +301,9 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
         int width = metrics.stringWidth(text);
         int height = metrics.getHeight();
 
-        g.setColor(Color.YELLOW);
+        g.setColor(ErConnectorColor.FOUND_COLOR);
         g.fillRect(startX, startY, width, height);
+        workspace.addSearchHit(table);
       }
     };
     panelTable.setLocation(new Point(BORDER_SIZE, BORDER_SIZE));
@@ -618,8 +619,9 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
             int width = metrics.stringWidth(text);
             int height = metrics.getHeight();
 
-            g.setColor(new Color(255, 255, 0, 100));
+            g.setColor(ErConnectorColor.FOUND_COLOR);
             g.fillRect(startX, startY, width, height);
+            workspace.addSearchHit(table);
           }
         };
         textFieldColumnName.setText(showColumnName);
@@ -788,6 +790,11 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
     } else if (otherEndpoint instanceof Table) {
       workspace.removeConnectorFromTableToTable(connector);
     }
+  }
+
+  @Override
+  public String getNameForSort() {
+    return String.format("001-%s-%s", ctxTable.dbTable.tableName, ctxTable.dbTable.tableId);
   }
 
   @Override

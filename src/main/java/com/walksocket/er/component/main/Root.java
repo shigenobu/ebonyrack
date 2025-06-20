@@ -31,6 +31,11 @@ public class Root extends JPanel {
   private final Side side;
 
   /**
+   * outline.
+   */
+  private final Outline outline;
+
+  /**
    * workspace.
    */
   private final Workspace workspace;
@@ -94,7 +99,7 @@ public class Root extends JPanel {
     sideSp.setLeftComponent(scrollPaneSide);
 
     // outline
-    var outline = new Outline(this);
+    outline = new Outline(this);
     sideSp.setRightComponent(outline);
     sp.setLeftComponent(sideSp);
 
@@ -141,6 +146,11 @@ public class Root extends JPanel {
 
     // sync outline between workspace
     outline.setWorkspace(workspace);
+    workspace.setOutline(outline);
+
+    // sync outline between side
+    outline.setSide(side);
+    side.setOutline(outline);
 
     // read data
     workspace.readData();

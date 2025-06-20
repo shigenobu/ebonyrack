@@ -30,6 +30,11 @@ public class ErConnectorColor {
   public static final Color SELECTING_COLOR = new Color(25, 0, 255);
 
   /**
+   * found color.
+   */
+  public static final Color FOUND_COLOR = new Color(255, 255, 0, 100);
+
+  /**
    * default border.
    */
   public static final Border DEFAULT_BORDER = new LineBorder(DEFAULT_COLOR, 2, true);
@@ -48,6 +53,11 @@ public class ErConnectorColor {
    * selecting border.
    */
   public static final Border SELECTING_BORDER = new LineBorder(SELECTING_COLOR, 2, false);
+
+  /**
+   * found border.
+   */
+  public static final Border FOUND_BORDER = new LineBorder(FOUND_COLOR, 2, false);
 
   /**
    * get border.
