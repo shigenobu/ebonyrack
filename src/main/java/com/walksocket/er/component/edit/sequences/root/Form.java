@@ -1,15 +1,18 @@
 package com.walksocket.er.component.edit.sequences.root;
 
 import com.walksocket.er.Log;
+import com.walksocket.er.Pos;
 import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
 import com.walksocket.er.Word;
 import com.walksocket.er.component.edit.sequences.Root;
+import com.walksocket.er.custom.ErColorChooser;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.definition.Cycle;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.entity.DbSequence;
+import com.walksocket.er.sqlite.entity.DbSequenceOption;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -26,12 +29,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListCellRenderer;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -54,6 +60,10 @@ public class Form extends JPanel {
     columnNameWidthMaps.put(ErHeaderFormatter.format("Increment value", Type.ordinal), 100);
     columnNameWidthMaps.put(ErHeaderFormatter.format("Cache size", Type.ordinal), 100);
     columnNameWidthMaps.put(ErHeaderFormatter.format("Cycle", Type.ordinal), 100);
+
+    columnNameWidthMaps.put(ErHeaderFormatter.format("X", Type.ordinal), 50);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Y", Type.ordinal), 50);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Color", Type.ordinal), 100);
   }
 
   /**
@@ -106,6 +116,10 @@ public class Form extends JPanel {
       }
     };
 
+    var colors = ErColorChooser.getColors().stream()
+        .map(c -> ErColorChooser.getColorHexString(c))
+        .toArray();
+
     var widthList = columnNameWidthMaps.values().toArray(new Integer[columnNameWidthMaps.size()]);
     table = new JTable(tableModel);
     table.putClientProperty("terminateEditOnFocusLost", true);
@@ -132,6 +146,28 @@ public class Form extends JPanel {
         var comboBoxCycle = new JComboBox(
             new DefaultComboBoxModel(Cycle.getCycleListForColumn().toArray()));
         tc.setCellEditor(new DefaultCellEditor(comboBoxCycle));
+      }
+
+      // color
+      if (i == 10) {
+        var comboBoxColor = new JComboBox(new DefaultComboBoxModel(colors)) {
+          @Override
+          public ListCellRenderer getRenderer() {
+            return new DefaultListCellRenderer() {
+              @Override
+              public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+                  boolean isSelected, boolean cellHasFocus) {
+                if (index >= 0 && index < ErColorChooser.getColors().size()) {
+                  var c = ErColorChooser.getColors().get(index);
+                  list.setForeground(c);
+                }
+                return super.getListCellRendererComponent(list, value, index, isSelected,
+                    cellHasFocus);
+              }
+            };
+          }
+        };
+        tc.setCellEditor(new DefaultCellEditor(comboBoxColor));
       }
     }
     table.addKeyListener(new KeyAdapter() {
@@ -209,12 +245,12 @@ public class Form extends JPanel {
     var ctxSequenceList = Bucket.getInstance().getBucketSequence().ctxSequenceList;
 
     var i = 0;
-    for (var dbSequence : ctxSequenceList.stream()
-        .map(s -> s.dbSequence)
-        .sorted(Comparator.comparing(DbSequence::getSequenceNameForSort))
+    for (var ctxSequence : ctxSequenceList.stream()
+        .sorted(Comparator.comparing(c -> c.dbSequence.getSequenceNameForSort()))
         .collect(Collectors.toList())) {
       tableModel.setRowCount(i + 1);
 
+      var dbSequence = ctxSequence.dbSequence;
       table.setValueAt(dbSequence.sequenceId, i, 0);
       table.setValueAt(dbSequence.sequenceName, i, 1);
       table.setValueAt(dbSequence.startValue, i, 2);
@@ -223,6 +259,13 @@ public class Form extends JPanel {
       table.setValueAt(dbSequence.incrementValue, i, 5);
       table.setValueAt(dbSequence.cacheSize, i, 6);
       table.setValueAt(dbSequence.cycle, i, 7);
+
+      var dbSequenceOption = ctxSequence.dbSequenceOption;
+      table.setValueAt(dbSequenceOption.posX, i, 8);
+      table.setValueAt(dbSequenceOption.posY, i, 9);
+
+      var c = new Color(dbSequenceOption.color);
+      table.setValueAt(ErColorChooser.getColorHexString(c), i, 10);
 
       i++;
     }
@@ -236,7 +279,9 @@ public class Form extends JPanel {
   private boolean save() {
     try {
       var newDbSequenceList = new ArrayList<DbSequence>();
+      var newDbSequenceOptionList = new ArrayList<DbSequenceOption>();
       for (int i = 0; i < table.getRowCount(); i++) {
+        // DbSequence
         var newDbSequence = new DbSequence();
         newDbSequence.sequenceId = Utils.getString(table.getValueAt(i, 0));
         newDbSequence.sequenceName = Utils.getString(table.getValueAt(i, 1));
@@ -279,10 +324,24 @@ public class Form extends JPanel {
         }
 
         newDbSequenceList.add(newDbSequence);
+
+        // DbSequenceOption
+        var newDbSequenceOption = new DbSequenceOption();
+        newDbSequenceOption.sequenceId = newDbSequence.sequenceId;
+        newDbSequenceOption.posX = Utils.floorDegree(Integer.parseInt(
+                Utils.getString(table.getValueAt(i, 8))),
+            Pos.DEFAULT_UNIT);
+        newDbSequenceOption.posY = Utils.floorDegree(Integer.parseInt(
+                Utils.getString(table.getValueAt(i, 9))),
+            Pos.DEFAULT_UNIT);
+        var color = ErColorChooser.getColorFromHex(Utils.getString(table.getValueAt(i, 10)));
+        newDbSequenceOption.color = color.getRGB();
+
+        newDbSequenceOptionList.add(newDbSequenceOption);
       }
 
       // save
-      Bucket.getInstance().getBucketSequence().saveBulk(newDbSequenceList);
+      Bucket.getInstance().getBucketSequence().saveBulk(newDbSequenceList, newDbSequenceOptionList);
       root.getEditSequences().changeState();
 
       // load

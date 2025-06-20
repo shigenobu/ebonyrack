@@ -105,6 +105,38 @@ public class ErColorChooser extends ErDialog {
   }
 
   /**
+   * get colors.
+   *
+   * @return colors
+   */
+  public static List<Color> getColors() {
+    return colors;
+  }
+
+  /**
+   * get color hex string.
+   *
+   * @param color color
+   * @return color hex string
+   */
+  public static String getColorHexString(Color color) {
+    return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
+  }
+
+  /**
+   * get color from hex string.
+   *
+   * @param hexString hexString
+   * @return color
+   */
+  public static Color getColorFromHex(String hexString) {
+    var red = Integer.parseInt(hexString.substring(1, 3), 16);
+    var green = Integer.parseInt(hexString.substring(3, 5), 16);
+    var blue = Integer.parseInt(hexString.substring(5, 7), 16);
+    return new Color(red, green, blue);
+  }
+
+  /**
    * ErColorPanel.
    */
   private class ErColorPanel extends JPanel {
@@ -122,6 +154,7 @@ public class ErColorChooser extends ErDialog {
       // color
       for (var color : colors) {
         var button = new JButton();
+        button.setToolTipText(getColorHexString(color));
         button.setBackground(color);
         button.addActionListener(actionEvent -> {
           selectedColor = ((JButton) actionEvent.getSource()).getBackground();

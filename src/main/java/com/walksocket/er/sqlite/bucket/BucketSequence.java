@@ -265,16 +265,21 @@ public class BucketSequence {
   /**
    * save bulk.
    *
-   * @param newDbSequenceList new db sequence list
+   * @param newDbSequenceList       new db sequence list
+   * @param newDbSequenceOptionList
    * @throws Exception
    */
-  public void saveBulk(List<DbSequence> newDbSequenceList) throws Exception {
+  public void saveBulk(List<DbSequence> newDbSequenceList,
+      List<DbSequenceOption> newDbSequenceOptionList) throws Exception {
     try {
       con.begin();
 
       // database
       for (var newDbSequence : newDbSequenceList) {
         con.executeUpdate(newDbSequence);
+      }
+      for (var newDbSequenceOption : newDbSequenceOptionList) {
+        con.executeUpdate(newDbSequenceOption);
       }
 
       con.commit();
@@ -290,6 +295,17 @@ public class BucketSequence {
           throw new Exception("Not found sequence.");
         }
         opt.get().dbSequence = newDbSequence;
+      }
+      for (var newDbSequenceOption : newDbSequenceOptionList) {
+        var opt = Bucket.getInstance().getBucketSequence()
+            .ctxSequenceList
+            .stream()
+            .filter(c -> c.dbSequenceOption.sequenceId.equals(newDbSequenceOption.sequenceId))
+            .findFirst();
+        if (!opt.isPresent()) {
+          throw new Exception("Not found sequence.");
+        }
+        opt.get().dbSequenceOption = newDbSequenceOption;
       }
 
     } catch (Exception e) {
