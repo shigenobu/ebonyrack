@@ -282,6 +282,8 @@ public class Side extends JPanel {
   public void notifySelectionTable(Table table) {
     var node = childrenTable.get(table);
     tree.setSelectionPath(new TreePath(node.getPath()));
+
+    moveScroll();
   }
 
   /**
@@ -332,6 +334,8 @@ public class Side extends JPanel {
   public void notifySelectionSequence(Sequence sequence) {
     var node = childrenSequence.get(sequence);
     tree.setSelectionPath(new TreePath(node.getPath()));
+
+    moveScroll();
   }
 
   /**
@@ -382,6 +386,8 @@ public class Side extends JPanel {
   public void notifySelectionNote(Note note) {
     var node = childrenNote.get(note);
     tree.setSelectionPath(new TreePath(node.getPath()));
+
+    moveScroll();
   }
 
   /**
@@ -422,5 +428,17 @@ public class Side extends JPanel {
     if (treeNodeNote.getChildCount() > 0) {
       tree.expandPath(new TreePath(treeNodeNote.getPath()));
     }
+  }
+
+  /**
+   * move scroll.
+   */
+  private void moveScroll() {
+    var r = tree.getRowBounds(tree.getRowForPath(tree.getSelectionPath()));
+    var sp = (JScrollPane) getParent().getParent();
+    var bw = sp.getHorizontalScrollBar();
+    var bh = sp.getVerticalScrollBar();
+    bw.setValue(0);
+    bh.setValue(r.y);
   }
 }
