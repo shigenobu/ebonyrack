@@ -1,10 +1,12 @@
 package com.walksocket.er.component.edit.tables.root;
 
 import com.walksocket.er.Log;
+import com.walksocket.er.Pos;
 import com.walksocket.er.Size.DialogLarge;
 import com.walksocket.er.Utils;
 import com.walksocket.er.Word;
 import com.walksocket.er.component.edit.tables.Root;
+import com.walksocket.er.custom.ErColorChooser;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.definition.Charset;
@@ -13,6 +15,7 @@ import com.walksocket.er.definition.Engine;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.entity.DbTable;
 import com.walksocket.er.sqlite.entity.DbTableGroup;
+import com.walksocket.er.sqlite.entity.DbTableOption;
 import com.walksocket.er.sqlite.entity.DbTablePartition;
 import java.awt.Color;
 import java.awt.Component;
@@ -30,12 +33,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListCellRenderer;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -60,6 +66,10 @@ public class Form extends JPanel {
     columnNameWidthMaps.put(ErHeaderFormatter.format("Option", Type.ordinal), 100);
     columnNameWidthMaps.put(ErHeaderFormatter.format("Group", Type.ordinal), 100);
     columnNameWidthMaps.put(ErHeaderFormatter.format("Partition", Type.ordinal), 100);
+
+    columnNameWidthMaps.put(ErHeaderFormatter.format("X", Type.ordinal), 50);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Y", Type.ordinal), 50);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Color", Type.ordinal), 100);
   }
 
   /**
@@ -124,6 +134,10 @@ public class Form extends JPanel {
       }
     };
 
+    var colors = ErColorChooser.getColors().stream()
+        .map(c -> ErColorChooser.getColorHexString(c))
+        .toArray();
+
     var widthList = columnNameWidthMaps.values().toArray(new Integer[columnNameWidthMaps.size()]);
     table = new JTable(tableModel);
     table.putClientProperty("terminateEditOnFocusLost", true);
@@ -181,6 +195,28 @@ public class Form extends JPanel {
         var comboBoxPartition = new JComboBox(
             new DefaultComboBoxModel(partitions.toArray()));
         tc.setCellEditor(new DefaultCellEditor(comboBoxPartition));
+      }
+
+      // color
+      if (i == 12) {
+        var comboBoxColor = new JComboBox(new DefaultComboBoxModel(colors)) {
+          @Override
+          public ListCellRenderer getRenderer() {
+            return new DefaultListCellRenderer() {
+              @Override
+              public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+                  boolean isSelected, boolean cellHasFocus) {
+                if (index >= 0 && index < ErColorChooser.getColors().size()) {
+                  var c = ErColorChooser.getColors().get(index);
+                  list.setForeground(c);
+                }
+                return super.getListCellRendererComponent(list, value, index, isSelected,
+                    cellHasFocus);
+              }
+            };
+          }
+        };
+        tc.setCellEditor(new DefaultCellEditor(comboBoxColor));
       }
     }
     table.addKeyListener(new KeyAdapter() {
@@ -260,12 +296,12 @@ public class Form extends JPanel {
     var dbDictPartitionList = Bucket.getInstance().getBucketDict().dbDictPartitionList;
 
     var i = 0;
-    for (var dbTable : ctxTableList.stream()
-        .map(t -> t.dbTable)
-        .sorted(Comparator.comparing(DbTable::getTableNameForSort))
+    for (var ctxTable : ctxTableList.stream()
+        .sorted(Comparator.comparing(c -> c.dbTable.getTableNameForSort()))
         .collect(Collectors.toList())) {
       tableModel.setRowCount(i + 1);
 
+      var dbTable = ctxTable.dbTable;
       table.setValueAt(dbTable.tableId, i, 0);
       table.setValueAt(dbTable.tableName, i, 1);
       table.setValueAt(dbTable.tableComment, i, 2);
@@ -305,6 +341,13 @@ public class Form extends JPanel {
       }
       table.setValueAt(partitionName, i, 9);
 
+      var dbTableOption = ctxTable.dbTableOption;
+      table.setValueAt(dbTableOption.posX, i, 10);
+      table.setValueAt(dbTableOption.posY, i, 11);
+
+      var c = new Color(dbTableOption.color);
+      table.setValueAt(ErColorChooser.getColorHexString(c), i, 12);
+
       i++;
     }
   }
@@ -320,9 +363,11 @@ public class Form extends JPanel {
       var dbDictPartitionList = Bucket.getInstance().getBucketDict().dbDictPartitionList;
 
       var newDbTableList = new ArrayList<DbTable>();
+      var newDbTableOptionList = new ArrayList<DbTableOption>();
       var newDbTableGroupList = new ArrayList<DbTableGroup>();
       var newDbTablePartitionList = new ArrayList<DbTablePartition>();
       for (int i = 0; i < table.getRowCount(); i++) {
+        // DbTable
         var newDbTable = new DbTable();
         newDbTable.tableId = Utils.getString(table.getValueAt(i, 0));
         newDbTable.tableName = Utils.getString(table.getValueAt(i, 1));
@@ -386,11 +431,39 @@ public class Form extends JPanel {
             newDbTablePartitionList.add(newDbTablePartition);
           }
         }
+
+        // DbTableOption
+        var newDbTableOption = new DbTableOption();
+        newDbTableOption.tableId = newDbTable.tableId;
+        var posX = Utils.getString(table.getValueAt(i, 10));
+        if (!Utils.isNumber(posX)) {
+          throw new Exception("Must be number 'X'.");
+        }
+        newDbTableOption.posX = Utils.floorDegree(Integer.parseInt(posX), Pos.DEFAULT_UNIT);
+
+        var posY = Utils.getString(table.getValueAt(i, 11));
+        if (!Utils.isNumber(posY)) {
+          throw new Exception("Must be number 'Y'.");
+        }
+        newDbTableOption.posY = Utils.floorDegree(Integer.parseInt(posY), Pos.DEFAULT_UNIT);
+
+        var colorCodeList = ErColorChooser.getColors().stream()
+            .map(c -> ErColorChooser.getColorHexString(c))
+            .toList();
+        var colorCode = Utils.getString(table.getValueAt(i, 12));
+        var color = ErColorChooser.getColors().get(0);
+        if (colorCodeList.contains(colorCode)) {
+          color = ErColorChooser.getColorFromHex(colorCode);
+        }
+        newDbTableOption.color = color.getRGB();
+
+        newDbTableOptionList.add(newDbTableOption);
       }
 
       // save
       Bucket.getInstance().getBucketTable()
-          .saveBulk(newDbTableList, newDbTableGroupList, newDbTablePartitionList);
+          .saveBulk(newDbTableList, newDbTableOptionList, newDbTableGroupList,
+              newDbTablePartitionList);
       root.getEditTables().changeState();
 
       // load

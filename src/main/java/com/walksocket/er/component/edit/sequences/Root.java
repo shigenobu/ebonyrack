@@ -1,6 +1,6 @@
 package com.walksocket.er.component.edit.sequences;
 
-import com.walksocket.er.Size.DialogMedium;
+import com.walksocket.er.Size.DialogLarge;
 import com.walksocket.er.component.EditSequences;
 import com.walksocket.er.component.edit.sequences.root.Form;
 import java.awt.Component;
@@ -36,7 +36,7 @@ public class Root extends JPanel {
 
     // panel - form
     form = new Form(this);
-    form.setPreferredSize(new Dimension(DialogMedium.WIDTH - 20, DialogMedium.HEIGHT));
+    form.setPreferredSize(new Dimension(DialogLarge.WIDTH - 20, DialogLarge.HEIGHT));
     form.setAlignmentX(Component.LEFT_ALIGNMENT);
     add(form);
   }

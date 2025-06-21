@@ -1425,11 +1425,14 @@ public class BucketTable {
    * save bulk.
    *
    * @param newDbTableList          new db table list
+   * @param newDbTableOptionList    new db table option list
    * @param newDbTableGroupList     new db table group list
    * @param newDbTablePartitionList new db table partition list
    * @throws Exception
    */
-  public void saveBulk(List<DbTable> newDbTableList, List<DbTableGroup> newDbTableGroupList,
+  public void saveBulk(List<DbTable> newDbTableList,
+      List<DbTableOption> newDbTableOptionList,
+      List<DbTableGroup> newDbTableGroupList,
       List<DbTablePartition> newDbTablePartitionList)
       throws Exception {
     try {
@@ -1462,6 +1465,9 @@ public class BucketTable {
           }
         }
         con.executeUpdate(newDbTable);
+      }
+      for (var newDbTableOption : newDbTableOptionList) {
+        con.executeUpdate(newDbTableOption);
       }
 
       con.execute("DELETE FROM DbTableGroup");
@@ -1522,6 +1528,17 @@ public class BucketTable {
         opt.get().dbTable = newDbTable;
         opt.get().dbTableGroup = null;
         opt.get().dbTablePartition = null;
+      }
+      for (var newDbTableOption : newDbTableOptionList) {
+        var opt = Bucket.getInstance().getBucketTable()
+            .ctxTableList
+            .stream()
+            .filter(c -> c.dbTableOption.tableId.equals(newDbTableOption.tableId))
+            .findFirst();
+        if (!opt.isPresent()) {
+          throw new Exception("Not found table.");
+        }
+        opt.get().dbTableOption = newDbTableOption;
       }
       for (var newDbTableGroup : newDbTableGroupList) {
         var opt = Bucket.getInstance().getBucketTable()

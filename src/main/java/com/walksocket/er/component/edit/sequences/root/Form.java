@@ -2,7 +2,7 @@ package com.walksocket.er.component.edit.sequences.root;
 
 import com.walksocket.er.Log;
 import com.walksocket.er.Pos;
-import com.walksocket.er.Size.DialogMedium;
+import com.walksocket.er.Size.DialogLarge;
 import com.walksocket.er.Utils;
 import com.walksocket.er.Word;
 import com.walksocket.er.component.edit.sequences.Root;
@@ -213,12 +213,12 @@ public class Form extends JPanel {
     });
 
     var sp = new JScrollPane(table);
-    sp.setPreferredSize(new Dimension(DialogMedium.WIDTH - 40 + 30, DialogMedium.HEIGHT / 10 * 8));
+    sp.setPreferredSize(new Dimension(DialogLarge.WIDTH - 40 + 30, DialogLarge.HEIGHT / 10 * 9));
     panelTable.add(sp);
 
     // button
     var panelButton = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    panelButton.setPreferredSize(new Dimension(DialogMedium.WIDTH - 20, DialogMedium.HEIGHT / 10));
+    panelButton.setPreferredSize(new Dimension(DialogLarge.WIDTH - 20, DialogLarge.HEIGHT / 10));
     panelButton.setAlignmentX(Component.LEFT_ALIGNMENT);
     add(panelButton);
     buttonSave.addActionListener(actionEvent -> {
@@ -328,13 +328,26 @@ public class Form extends JPanel {
         // DbSequenceOption
         var newDbSequenceOption = new DbSequenceOption();
         newDbSequenceOption.sequenceId = newDbSequence.sequenceId;
-        newDbSequenceOption.posX = Utils.floorDegree(Integer.parseInt(
-                Utils.getString(table.getValueAt(i, 8))),
-            Pos.DEFAULT_UNIT);
-        newDbSequenceOption.posY = Utils.floorDegree(Integer.parseInt(
-                Utils.getString(table.getValueAt(i, 9))),
-            Pos.DEFAULT_UNIT);
-        var color = ErColorChooser.getColorFromHex(Utils.getString(table.getValueAt(i, 10)));
+        var posX = Utils.getString(table.getValueAt(i, 8));
+        if (!Utils.isNumber(posX)) {
+          throw new Exception("Must be number 'X'.");
+        }
+        newDbSequenceOption.posX = Utils.floorDegree(Integer.parseInt(posX), Pos.DEFAULT_UNIT);
+
+        var posY = Utils.getString(table.getValueAt(i, 9));
+        if (!Utils.isNumber(posY)) {
+          throw new Exception("Must be number 'Y'.");
+        }
+        newDbSequenceOption.posY = Utils.floorDegree(Integer.parseInt(posY), Pos.DEFAULT_UNIT);
+
+        var colorCodeList = ErColorChooser.getColors().stream()
+            .map(c -> ErColorChooser.getColorHexString(c))
+            .toList();
+        var colorCode = Utils.getString(table.getValueAt(i, 10));
+        var color = ErColorChooser.getColors().get(0);
+        if (colorCodeList.contains(colorCode)) {
+          color = ErColorChooser.getColorFromHex(colorCode);
+        }
         newDbSequenceOption.color = color.getRGB();
 
         newDbSequenceOptionList.add(newDbSequenceOption);

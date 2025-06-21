@@ -1,7 +1,7 @@
 package com.walksocket.er.component;
 
 import com.walksocket.er.Const;
-import com.walksocket.er.Size.DialogMedium;
+import com.walksocket.er.Size.DialogLarge;
 import com.walksocket.er.component.edit.sequences.Root;
 import com.walksocket.er.custom.ErDialog;
 import java.awt.Dimension;
@@ -36,13 +36,13 @@ public class EditSequences extends ErDialog {
 
     // pos
     var b = main.getGraphicsConfiguration().getBounds();
-    var x = (b.getWidth() - DialogMedium.WIDTH) / 2 + b.getX();
-    var y = (b.getHeight() - DialogMedium.HEIGHT) / 2 + b.getY();
+    var x = (b.getWidth() - DialogLarge.WIDTH) / 2 + b.getX();
+    var y = (b.getHeight() - DialogLarge.HEIGHT) / 2 + b.getY();
 
     // init
     setTitle(String.format("%s - sequences", Const.TITLE));
     setLocation(new Point((int) x, (int) y));
-    setMinimumSize(new Dimension(DialogMedium.WIDTH, DialogMedium.HEIGHT));
+    setMinimumSize(new Dimension(DialogLarge.WIDTH, DialogLarge.HEIGHT));
     setResizable(false);
     setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     addWindowListener(new WindowAdapter() {
