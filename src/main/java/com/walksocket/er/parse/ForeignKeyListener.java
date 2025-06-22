@@ -8,6 +8,7 @@ import com.walksocket.er.Log;
 import com.walksocket.er.Utils;
 import com.walksocket.er.parts.ColumnForeignKeyOption;
 import com.walksocket.er.sqlite.tmp.TmpForeignKey;
+import java.util.stream.Collectors;
 
 /**
  * ForeignKeyListener.
@@ -36,7 +37,6 @@ public class ForeignKeyListener extends MariaDBParserBaseListener {
   @Override
   public void enterAlterByAddForeignKey(AlterByAddForeignKeyContext ctx) {
     tmpForeignKey.constraintName = Utils.removeBackQuote(ctx.name.getText());
-    tmpForeignKey.keyName = Utils.removeBackQuote(ctx.indexName.getText());
 
     tmpForeignKey.columnForeignKeyOptionList.clear();
     var seq = 1;
@@ -48,6 +48,15 @@ public class ForeignKeyListener extends MariaDBParserBaseListener {
 
       seq++;
     }
+
+    if (ctx.indexName != null) {
+      tmpForeignKey.keyName = Utils.removeBackQuote(ctx.indexName.getText());
+    } else {
+      tmpForeignKey.keyName = "fk_" + tmpForeignKey.columnForeignKeyOptionList.stream()
+          .map(e -> e.columnName)
+          .collect(Collectors.joining("_"));
+    }
+
     tmpForeignKey.referenceTableName = Utils.removeBackQuote(
         ctx.referenceDefinition().tableName().getText());
 
