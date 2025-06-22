@@ -141,6 +141,8 @@ public class Side extends JPanel {
         if (treePath == null) {
           return;
         }
+
+        // focus
         var endpoint = moveToEndpoint(treePath);
         if (endpoint != null && e.getKeyCode() == KeyEvent.VK_ENTER) {
           workspace.getSelectingRange().clearAllMovers();
@@ -156,11 +158,10 @@ public class Side extends JPanel {
         }
 
         var tree = (JTree) e.getSource();
-        var treePath = tree.getPathForLocation(e.getX(), e.getY());
+        var treePath = tree.getSelectionPath();
         if (treePath == null) {
           return;
         }
-        tree.setSelectionPath(treePath);
         var endpoint = moveToEndpoint(treePath);
 
         // focus

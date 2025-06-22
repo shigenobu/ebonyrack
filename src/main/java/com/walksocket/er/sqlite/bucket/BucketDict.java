@@ -280,13 +280,15 @@ public class BucketDict {
           var referenceDbTableForeignKeyColumnList = ctxInnerForeignKey.dbTableForeignKeyColumnList.stream()
               .filter(c -> c.referenceDictColumnId.equals(tmpDictColumn.dictColumnId))
               .collect(Collectors.toList());
+
           for (var referenceDbTableForeignKeyColumn : referenceDbTableForeignKeyColumnList) {
             var optionalReferenceDbDictColumn = dbDictColumnList.stream()
                 .filter(c -> c.dictColumnId.equals(referenceDbTableForeignKeyColumn.dictColumnId))
                 .findFirst();
             if (optionalReferenceDbDictColumn.isPresent()) {
               var referenceDbDictColumn = optionalReferenceDbDictColumn.get();
-              if (!referenceDbDictColumn.dictColumnTypeId.equals(
+              if (!tmpDictColumn.dictColumnId.equals(referenceDbDictColumn.dictColumnId)
+                  && !referenceDbDictColumn.dictColumnTypeId.equals(
                   dbDictColumnType.dictColumnTypeId)) {
                 throw new Exception("Referenced foreign key Column type is mismatch.");
               }
@@ -302,7 +304,8 @@ public class BucketDict {
                 .findFirst();
             if (optionalDbDictColumn.isPresent()) {
               var dbDictColumn = optionalDbDictColumn.get();
-              if (!dbDictColumn.dictColumnTypeId.equals(dbDictColumnType.dictColumnTypeId)) {
+              if (!tmpDictColumn.dictColumnId.equals(dbDictColumn.dictColumnId)
+                  && !dbDictColumn.dictColumnTypeId.equals(dbDictColumnType.dictColumnTypeId)) {
                 throw new Exception("Foreign key Column type is mismatch.");
               }
             }
