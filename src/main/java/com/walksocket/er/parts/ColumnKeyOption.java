@@ -48,7 +48,7 @@ public class ColumnKeyOption implements Value {
         columnKeyOption.collation = lengthAndCollation[0];
       }
 
-      columnKeyOption.seqInIndex = String.valueOf(i + 1);
+      columnKeyOption.seqInIndex = i + 1;
 
       columnKeyOptionList.add(columnKeyOption);
     }
@@ -68,7 +68,7 @@ public class ColumnKeyOption implements Value {
   /**
    * seqInIndex.
    */
-  public String seqInIndex;
+  public int seqInIndex;
 
   /**
    * collation.
@@ -93,7 +93,7 @@ public class ColumnKeyOption implements Value {
    * @return seq in index
    */
   public int getSeqInIndexForSort() {
-    return Integer.parseInt(seqInIndex);
+    return seqInIndex;
   }
 
   /**

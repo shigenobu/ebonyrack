@@ -622,14 +622,14 @@ public class BucketTable {
           }
 
           // check seq index 1
-          if (!dbTableForeignKeyColumn.seqInIndex.equals("1")) {
+          if (dbTableForeignKeyColumn.seqInIndex != 1) {
             continue;
           }
           Log.trace(String.format("column:%s", dbTableForeignKeyColumn));
           var isFirst = false;
           if (!isFirst) {
             isFirst = ctxInnerPrimaryKey.dbTablePrimaryKeyColumnList.stream()
-                .filter(c -> c.seqInIndex.equals("1"))
+                .filter(c -> c.seqInIndex == 1)
                 .filter(c -> c.dictColumnId.equals(dbTableForeignKeyColumn.dictColumnId))
                 .findFirst()
                 .isPresent();
@@ -637,7 +637,7 @@ public class BucketTable {
           if (!isFirst) {
             for (var ctxInnerUniqueKey : ctxInnerUniqueKeyList) {
               isFirst = ctxInnerUniqueKey.dbTableUniqueKeyColumnList.stream()
-                  .filter(c -> c.seqInIndex.equals("1"))
+                  .filter(c -> c.seqInIndex == 1)
                   .filter(c -> c.dictColumnId.equals(dbTableForeignKeyColumn.dictColumnId))
                   .findFirst()
                   .isPresent();
@@ -649,7 +649,7 @@ public class BucketTable {
           if (!isFirst) {
             for (var ctxInnerKey : ctxInnerKeyList) {
               isFirst = ctxInnerKey.dbTableKeyColumnList.stream()
-                  .filter(c -> c.seqInIndex.equals("1"))
+                  .filter(c -> c.seqInIndex == 1)
                   .filter(c -> c.dictColumnId.equals(dbTableForeignKeyColumn.dictColumnId))
                   .findFirst()
                   .isPresent();

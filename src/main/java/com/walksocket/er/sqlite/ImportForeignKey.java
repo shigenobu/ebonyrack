@@ -168,7 +168,7 @@ public class ImportForeignKey {
       dbTableForeignKeyColumn.dictColumnId = dbDictColumn.dictColumnId;
       dbTableForeignKeyColumn.referenceDictColumnId = referenceDbDictColumn.dictColumnId;
 
-      dbTableForeignKeyColumn.seqInIndex = String.valueOf(seqInIndex);
+      dbTableForeignKeyColumn.seqInIndex = seqInIndex;
 
       con.executeInsert(dbTableForeignKeyColumn);
       ctxInnerForeignKey.dbTableForeignKeyColumnList.add(dbTableForeignKeyColumn);

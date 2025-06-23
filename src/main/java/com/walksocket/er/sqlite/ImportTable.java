@@ -297,7 +297,7 @@ public class ImportTable {
         if (!Utils.isNullOrEmpty(columnKey.length)) {
           dbTablePrimaryKeyColumn.length = columnKey.length;
         }
-        dbTablePrimaryKeyColumn.seqInIndex = String.valueOf(seqInIndex);
+        dbTablePrimaryKeyColumn.seqInIndex = seqInIndex;
         if (!Utils.isNullOrEmpty(columnKey.collation)) {
           dbTablePrimaryKeyColumn.collation = columnKey.collation;
         }
@@ -344,7 +344,7 @@ public class ImportTable {
         if (!Utils.isNullOrEmpty(columnKey.length)) {
           dbTableUniqueKeyColumn.length = columnKey.length;
         }
-        dbTableUniqueKeyColumn.seqInIndex = String.valueOf(seqInIndex);
+        dbTableUniqueKeyColumn.seqInIndex = seqInIndex;
         if (!Utils.isNullOrEmpty(columnKey.collation)) {
           dbTableUniqueKeyColumn.collation = columnKey.collation;
         }
@@ -391,7 +391,7 @@ public class ImportTable {
         if (!Utils.isNullOrEmpty(columnKey.length)) {
           dbTableKeyColumn.length = columnKey.length;
         }
-        dbTableKeyColumn.seqInIndex = String.valueOf(seqInIndex);
+        dbTableKeyColumn.seqInIndex = seqInIndex;
         if (!Utils.isNullOrEmpty(columnKey.collation)) {
           dbTableKeyColumn.collation = columnKey.collation;
         }

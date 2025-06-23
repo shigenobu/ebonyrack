@@ -359,7 +359,7 @@ public class TableListener extends MariaDBParserBaseListener {
       tmpPrimaryKey.columnKeyOptionList.add(columnKeyOption);
 
       columnKeyOption.columnName = Utils.removeBackQuote(indexColumnName.uid().getText());
-      columnKeyOption.seqInIndex = String.valueOf(seqInIndex);
+      columnKeyOption.seqInIndex = seqInIndex;
 
       if (indexColumnName.decimalLiteral() != null) {
         columnKeyOption.length = indexColumnName.decimalLiteral().getText();
@@ -414,7 +414,7 @@ public class TableListener extends MariaDBParserBaseListener {
       tmpUniqueKey.columnKeyOptionList.add(columnKeyOption);
 
       columnKeyOption.columnName = Utils.removeBackQuote(indexColumnName.uid().getText());
-      columnKeyOption.seqInIndex = String.valueOf(seqInIndex);
+      columnKeyOption.seqInIndex = seqInIndex;
 
       if (indexColumnName.decimalLiteral() != null) {
         columnKeyOption.length = indexColumnName.decimalLiteral().getText();
@@ -509,7 +509,7 @@ public class TableListener extends MariaDBParserBaseListener {
         tmpKey.columnKeyOptionList.add(columnKeyOption);
 
         columnKeyOption.columnName = Utils.removeBackQuote(indexColumnName.uid().getText());
-        columnKeyOption.seqInIndex = String.valueOf(seqInIndex);
+        columnKeyOption.seqInIndex = seqInIndex;
 
         if (indexColumnName.decimalLiteral() != null) {
           columnKeyOption.length = indexColumnName.decimalLiteral().getText();

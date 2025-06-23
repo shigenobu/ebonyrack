@@ -43,7 +43,7 @@ public class ForeignKeyListener extends MariaDBParserBaseListener {
     for (var indexColumn : ctx.indexColumnNames().indexColumnName()) {
       var columnForeignKeyOption = new ColumnForeignKeyOption();
       columnForeignKeyOption.columnName = Utils.removeBackQuote(indexColumn.getText());
-      columnForeignKeyOption.seqInIndex = String.valueOf(seq);
+      columnForeignKeyOption.seqInIndex = seq;
       tmpForeignKey.columnForeignKeyOptionList.add(columnForeignKeyOption);
 
       seq++;
@@ -65,7 +65,7 @@ public class ForeignKeyListener extends MariaDBParserBaseListener {
     for (var indexColumn : ctx.referenceDefinition().indexColumnNames().indexColumnName()) {
       var columnForeignKeyOption = new ColumnForeignKeyOption();
       columnForeignKeyOption.columnName = Utils.removeBackQuote(indexColumn.getText());
-      columnForeignKeyOption.seqInIndex = String.valueOf(seqRef);
+      columnForeignKeyOption.seqInIndex = seqRef;
       tmpForeignKey.referenceColumnForeignKeyOptionList.add(columnForeignKeyOption);
 
       seqRef++;

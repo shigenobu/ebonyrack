@@ -206,7 +206,7 @@ public class Form extends JPanel {
       var builder = new StringBuilder();
       if (validTmpPrimaryKey != null) {
         var opt = validTmpPrimaryKey.columnKeyOptionList.stream()
-            .filter(c -> c.columnName.equals(tmpColumn.columnName) && c.seqInIndex.equals("1"))
+            .filter(c -> c.columnName.equals(tmpColumn.columnName) && c.seqInIndex == 1)
             .findFirst();
         if (opt.isPresent()) {
           builder.append("[PK]");
@@ -215,7 +215,7 @@ public class Form extends JPanel {
       if (validTmpUniqueKeyList.size() > 0) {
         for (var t : validTmpUniqueKeyList) {
           var opt = t.columnKeyOptionList.stream()
-              .filter(c -> c.columnName.equals(tmpColumn.columnName) && c.seqInIndex.equals("1"))
+              .filter(c -> c.columnName.equals(tmpColumn.columnName) && c.seqInIndex == 1)
               .findFirst();
           if (opt.isPresent()) {
             builder.append("[UK]");
@@ -226,7 +226,7 @@ public class Form extends JPanel {
       if (validTmpKeyList.size() > 0) {
         for (var t : validTmpKeyList) {
           var opt = t.columnKeyOptionList.stream()
-              .filter(c -> c.columnName.equals(tmpColumn.columnName) && c.seqInIndex.equals("1"))
+              .filter(c -> c.columnName.equals(tmpColumn.columnName) && c.seqInIndex == 1)
               .findFirst();
           if (opt.isPresent()) {
             builder.append("[K]");
@@ -343,7 +343,7 @@ public class Form extends JPanel {
         var builder = new StringBuilder();
         if (validTmpPrimaryKey != null) {
           var opt = validTmpPrimaryKey.columnKeyOptionList.stream()
-              .filter(c -> c.columnName.equals(tmpColumn.columnName) && c.seqInIndex.equals("1"))
+              .filter(c -> c.columnName.equals(tmpColumn.columnName) && c.seqInIndex == 1)
               .findFirst();
           if (opt.isPresent()) {
             builder.append("[PK]");
@@ -352,7 +352,7 @@ public class Form extends JPanel {
         if (validTmpUniqueKeyList.size() > 0) {
           for (var t : validTmpUniqueKeyList) {
             var opt = t.columnKeyOptionList.stream()
-                .filter(c -> c.columnName.equals(tmpColumn.columnName) && c.seqInIndex.equals("1"))
+                .filter(c -> c.columnName.equals(tmpColumn.columnName) && c.seqInIndex == 1)
                 .findFirst();
             if (opt.isPresent()) {
               builder.append("[UK]");
@@ -363,7 +363,7 @@ public class Form extends JPanel {
         if (validTmpKeyList.size() > 0) {
           for (var t : validTmpKeyList) {
             var opt = t.columnKeyOptionList.stream()
-                .filter(c -> c.columnName.equals(tmpColumn.columnName) && c.seqInIndex.equals("1"))
+                .filter(c -> c.columnName.equals(tmpColumn.columnName) && c.seqInIndex == 1)
                 .findFirst();
             if (opt.isPresent()) {
               builder.append("[K]");
@@ -496,7 +496,7 @@ public class Form extends JPanel {
       if (vTmpPrimaryKey != null) {
         var o = vTmpPrimaryKey.columnKeyOptionList.stream()
             .filter(
-                c -> c.columnName.equals(referenceTmpColumn.columnName) && c.seqInIndex.equals("1"))
+                c -> c.columnName.equals(referenceTmpColumn.columnName) && c.seqInIndex == 1)
             .findFirst();
         if (o.isPresent()) {
           builder.append("[PK]");
@@ -506,8 +506,7 @@ public class Form extends JPanel {
         for (var t : vTmpUniqueKeyList) {
           var o = t.columnKeyOptionList.stream()
               .filter(
-                  c -> c.columnName.equals(referenceTmpColumn.columnName) && c.seqInIndex.equals(
-                      "1"))
+                  c -> c.columnName.equals(referenceTmpColumn.columnName) && c.seqInIndex == 1)
               .findFirst();
           if (o.isPresent()) {
             builder.append("[UK]");
@@ -519,8 +518,7 @@ public class Form extends JPanel {
         for (var t : vTmpKeyList) {
           var o = t.columnKeyOptionList.stream()
               .filter(
-                  c -> c.columnName.equals(referenceTmpColumn.columnName) && c.seqInIndex.equals(
-                      "1"))
+                  c -> c.columnName.equals(referenceTmpColumn.columnName) && c.seqInIndex == 1)
               .findFirst();
           if (o.isPresent()) {
             builder.append("[K]");
@@ -562,7 +560,7 @@ public class Form extends JPanel {
 
       var columnForeignKeyOption = new ColumnForeignKeyOption();
       columnForeignKeyOption.columnName = columnName;
-      columnForeignKeyOption.seqInIndex = seqInIndex;
+      columnForeignKeyOption.seqInIndex = Integer.parseInt(seqInIndex);
 
       columnForeignKeyOptionList.add(columnForeignKeyOption);
     }
@@ -616,7 +614,7 @@ public class Form extends JPanel {
 
       var referenceColumnForeignKeyOption = new ColumnForeignKeyOption();
       referenceColumnForeignKeyOption.columnName = columnName;
-      referenceColumnForeignKeyOption.seqInIndex = seqInIndex;
+      referenceColumnForeignKeyOption.seqInIndex = Integer.parseInt(seqInIndex);
 
       referenceColumnForeignKeyOptionList.add(referenceColumnForeignKeyOption);
     }
@@ -649,7 +647,7 @@ public class Form extends JPanel {
         .collect(Collectors.toList());
     for (int i = 0; i < sortedColumnForeignKeyOptionList.size(); i++) {
       var c = sortedColumnForeignKeyOptionList.get(i);
-      c.seqInIndex = String.valueOf(i + 1);
+      c.seqInIndex = i + 1;
     }
     tmpForeignKey.columnForeignKeyOptionList = sortedColumnForeignKeyOptionList;
 
@@ -662,7 +660,7 @@ public class Form extends JPanel {
         .collect(Collectors.toList());
     for (int i = 0; i < sortedReferenceColumnForeignKeyOptionList.size(); i++) {
       var c = sortedReferenceColumnForeignKeyOptionList.get(i);
-      c.seqInIndex = String.valueOf(i + 1);
+      c.seqInIndex = i + 1;
     }
     tmpForeignKey.referenceColumnForeignKeyOptionList = sortedReferenceColumnForeignKeyOptionList;
 

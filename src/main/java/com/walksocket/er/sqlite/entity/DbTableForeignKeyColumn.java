@@ -22,7 +22,7 @@ public class DbTableForeignKeyColumn extends EntityKeyColumn {
     seq = record.getOrZeroByInt("seq");
     dictColumnId = record.getOrEmpty("dictColumnId");
     referenceDictColumnId = record.getOrEmpty("referenceDictColumnId");
-    seqInIndex = record.getOrEmpty("seqInIndex");
+    seqInIndex = record.getOrZeroByInt("seqInIndex");
   }
 
   @Override
@@ -31,12 +31,12 @@ public class DbTableForeignKeyColumn extends EntityKeyColumn {
         "INSERT INTO DbTableForeignKeyColumn "
             + "(tableId, seq, dictColumnId, referenceDictColumnId, seqInIndex) "
             + "VALUES "
-            + "('%s', %s, '%s', '%s', '%s')",
+            + "('%s', %s, '%s', '%s', %s)",
         Utils.quote(tableId),
         seq,
         Utils.quote(dictColumnId),
         Utils.quote(referenceDictColumnId),
-        Utils.quote(seqInIndex)
+        seqInIndex
     );
   }
 

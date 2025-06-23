@@ -30,7 +30,7 @@ public class ColumnForeignKeyOption implements Value {
       }
       var columnForeignKeyOption = new ColumnForeignKeyOption();
       columnForeignKeyOption.columnName = match.group(1);
-      columnForeignKeyOption.seqInIndex = String.valueOf(i + 1);
+      columnForeignKeyOption.seqInIndex = i + 1;
       Log.trace(columnForeignKeyOption.columnName);
 
       columnForeignKeyOptionList.add(columnForeignKeyOption);
@@ -46,7 +46,7 @@ public class ColumnForeignKeyOption implements Value {
   /**
    * seqInIndex.
    */
-  public String seqInIndex;
+  public int seqInIndex;
 
   /**
    * get column.
@@ -63,7 +63,7 @@ public class ColumnForeignKeyOption implements Value {
    * @return seq in index
    */
   public int getSeqInIndexForSort() {
-    return Integer.parseInt(seqInIndex);
+    return seqInIndex;
   }
 
   /**

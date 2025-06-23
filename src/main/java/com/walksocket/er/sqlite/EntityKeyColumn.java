@@ -30,7 +30,7 @@ public abstract class EntityKeyColumn extends Entity {
   /**
    * seqInIndex.
    */
-  public String seqInIndex = "";
+  public int seqInIndex;
 
   /**
    * collation.

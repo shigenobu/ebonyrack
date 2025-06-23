@@ -17,7 +17,7 @@ public class DbTablePrimaryKeyColumn extends EntityKeyColumn {
     seq = record.getOrZeroByInt("seq");
     dictColumnId = record.getOrEmpty("dictColumnId");
     length = record.getOrEmpty("length");
-    seqInIndex = record.getOrEmpty("seqInIndex");
+    seqInIndex = record.getOrZeroByInt("seqInIndex");
     collation = record.getOrEmpty("collation");
   }
 
@@ -27,12 +27,12 @@ public class DbTablePrimaryKeyColumn extends EntityKeyColumn {
         "INSERT INTO DbTablePrimaryKeyColumn "
             + "(tableId, seq, dictColumnId, length, seqInIndex, collation) "
             + "VALUES "
-            + "('%s', %s, '%s', '%s', '%s', '%s')",
+            + "('%s', %s, '%s', '%s', %s, '%s')",
         Utils.quote(tableId),
         seq,
         Utils.quote(dictColumnId),
         Utils.quote(length),
-        Utils.quote(seqInIndex),
+        seqInIndex,
         Utils.quote(collation)
     );
   }

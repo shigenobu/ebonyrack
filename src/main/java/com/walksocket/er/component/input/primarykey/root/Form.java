@@ -197,7 +197,7 @@ public class Form extends JPanel {
       var columnKeyOption = new ColumnKeyOption();
       columnKeyOption.columnName = columnName;
       columnKeyOption.length = length;
-      columnKeyOption.seqInIndex = seqInIndex;
+      columnKeyOption.seqInIndex = Integer.parseInt(seqInIndex);
       columnKeyOption.collation = collation;
 
       columnKeyOptionList.add(columnKeyOption);
@@ -209,7 +209,7 @@ public class Form extends JPanel {
         .collect(Collectors.toList());
     for (int i = 0; i < sortedColumnKeyOptionList.size(); i++) {
       var c = sortedColumnKeyOptionList.get(i);
-      c.seqInIndex = String.valueOf(i + 1);
+      c.seqInIndex = i + 1;
     }
     tmpPrimaryKey.columnKeyOptionList = sortedColumnKeyOptionList;
   }
