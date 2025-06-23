@@ -12,7 +12,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -284,6 +283,12 @@ public class Side extends JPanel {
     var node = childrenTable.get(table);
     tree.setSelectionPath(new TreePath(node.getPath()));
 
+    if (outline == null) {
+      return;
+    }
+    if (!outline.getSearchSpace().isVisible()) {
+      return;
+    }
     moveScroll();
   }
 
@@ -293,8 +298,12 @@ public class Side extends JPanel {
   public void reloadTable() {
     treeNodeTable.removeAllChildren();
     var nodes = childrenTable.values().stream()
-        .sorted(Comparator.comparing(DefaultMutableTreeNode::toString)).collect(
-            Collectors.toList());
+        .sorted((o1, o2) -> {
+          var table1 = (Table) o1.getUserObject();
+          var table2 = (Table) o2.getUserObject();
+          return table1.getNameForSort().compareTo(table2.getNameForSort());
+        })
+        .collect(Collectors.toList());
     for (var node : nodes) {
       treeNodeTable.add(node);
     }
@@ -336,6 +345,12 @@ public class Side extends JPanel {
     var node = childrenSequence.get(sequence);
     tree.setSelectionPath(new TreePath(node.getPath()));
 
+    if (outline == null) {
+      return;
+    }
+    if (!outline.getSearchSpace().isVisible()) {
+      return;
+    }
     moveScroll();
   }
 
@@ -345,8 +360,12 @@ public class Side extends JPanel {
   public void reloadSequence() {
     treeNodeSequence.removeAllChildren();
     var nodes = childrenSequence.values().stream()
-        .sorted(Comparator.comparing(DefaultMutableTreeNode::toString)).collect(
-            Collectors.toList());
+        .sorted((o1, o2) -> {
+          var sequence1 = (Sequence) o1.getUserObject();
+          var sequence2 = (Sequence) o2.getUserObject();
+          return sequence1.getNameForSort().compareTo(sequence2.getNameForSort());
+        })
+        .collect(Collectors.toList());
     for (var node : nodes) {
       treeNodeSequence.add(node);
     }
@@ -388,6 +407,12 @@ public class Side extends JPanel {
     var node = childrenNote.get(note);
     tree.setSelectionPath(new TreePath(node.getPath()));
 
+    if (outline == null) {
+      return;
+    }
+    if (!outline.getSearchSpace().isVisible()) {
+      return;
+    }
     moveScroll();
   }
 
@@ -397,8 +422,12 @@ public class Side extends JPanel {
   public void reloadNote() {
     treeNodeNote.removeAllChildren();
     var nodes = childrenNote.values().stream()
-        .sorted(Comparator.comparing(DefaultMutableTreeNode::toString)).collect(
-            Collectors.toList());
+        .sorted((o1, o2) -> {
+          var note1 = (Note) o1.getUserObject();
+          var note2 = (Note) o2.getUserObject();
+          return note1.getNameForSort().compareTo(note2.getNameForSort());
+        })
+        .collect(Collectors.toList());
     for (var node : nodes) {
       treeNodeNote.add(node);
     }

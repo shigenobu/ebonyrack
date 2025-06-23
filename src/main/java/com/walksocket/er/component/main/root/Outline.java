@@ -430,6 +430,15 @@ public class Outline extends JPanel {
     }
 
     /**
+     * is visible space.
+     *
+     * @return if true, visible
+     */
+    public boolean isVisibleSpace() {
+      return isVisible();
+    }
+
+    /**
      * get search text.
      *
      * @return search text
