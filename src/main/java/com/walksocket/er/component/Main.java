@@ -394,6 +394,12 @@ public class Main extends JFrame {
       editDictPartitions.setVisible(true);
     });
     menuEdit.add(menuItemEditDictPartitions);
+    menuEdit.addSeparator();
+    var menuItemSearch = new JMenuItem("Search");
+    menuItemSearch.addActionListener(actionEvent -> {
+      root.getOutline().getSearchSpace().showSpace();
+    });
+    menuEdit.add(menuItemSearch);
     menuBar.add(menuEdit);
 
     // revalidate and repaint

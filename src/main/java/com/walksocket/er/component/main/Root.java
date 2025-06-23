@@ -173,4 +173,22 @@ public class Root extends JPanel {
   public Workspace getWorkspace() {
     return workspace;
   }
+
+  /**
+   * get side.
+   *
+   * @return side
+   */
+  public Side getSide() {
+    return side;
+  }
+
+  /**
+   * get outline.
+   *
+   * @return outline
+   */
+  public Outline getOutline() {
+    return outline;
+  }
 }
