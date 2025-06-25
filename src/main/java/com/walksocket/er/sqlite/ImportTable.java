@@ -70,6 +70,11 @@ public class ImportTable {
   private final List<DbDictPartition> newDbDictPartitionList = new ArrayList<>();
 
   /**
+   * partial foreign key ddl list.
+   */
+  private final List<String> partialForeignKeyDdlList = new ArrayList<>();
+
+  /**
    * Constructor.
    *
    * @param con con
@@ -123,7 +128,7 @@ public class ImportTable {
     var tmpCheckList = new ArrayList<TmpCheck>();
     var tmpPartition = new TmpPartition();
     var listener = new TableListener(tmpTable, tmpColumnList, tmpPrimaryKey, tmpUniqueKeyList,
-        tmpKeyList, tmpCheckList, tmpPartition);
+        tmpKeyList, tmpCheckList, tmpPartition, partialForeignKeyDdlList);
     ParseTreeWalker.DEFAULT.walk(listener, parser.root());
 
     if (Utils.isNullOrEmpty(tmpTable.tableName)) {
@@ -419,6 +424,15 @@ public class ImportTable {
     }
 
     return ctxTable;
+  }
+
+  /**
+   * get partial foreign key ddl list.
+   *
+   * @return partial foreign key ddl list
+   */
+  public List<String> getPartialForeignKeyDdlList() {
+    return partialForeignKeyDdlList;
   }
 
   /**

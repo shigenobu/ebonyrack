@@ -245,6 +245,7 @@ public class Dump {
       // foreign key
       var importForeignKey = new ImportForeignKey(con);
       var ddlForeignKeyList = parseAlterTable(FileUtils.readString(new FileInputStream(path)));
+      ddlForeignKeyList.addAll(importTable.getPartialForeignKeyDdlList());
       var dbDictColumnList = new ArrayList<DbDictColumn>();
       if (ddlForeignKeyList.size() > 0) {
         var sql = "SELECT * FROM DbDictColumn";

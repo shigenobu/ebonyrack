@@ -13,6 +13,7 @@ import com.walksocket.antlr4.MariaDBParser.CommentColumnConstraintContext;
 import com.walksocket.antlr4.MariaDBParser.ConstraintDeclarationContext;
 import com.walksocket.antlr4.MariaDBParser.CurrentTimestampContext;
 import com.walksocket.antlr4.MariaDBParser.DefaultColumnConstraintContext;
+import com.walksocket.antlr4.MariaDBParser.ForeignKeyTableConstraintContext;
 import com.walksocket.antlr4.MariaDBParser.GeneratedColumnConstraintContext;
 import com.walksocket.antlr4.MariaDBParser.IndexDeclarationContext;
 import com.walksocket.antlr4.MariaDBParser.LengthOneDimensionContext;
@@ -88,19 +89,25 @@ public class TableListener extends MariaDBParserBaseListener {
   private final TmpPartition tmpPartition;
 
   /**
+   * partialForeignKeyDdlList.
+   */
+  private final List<String> partialForeignKeyDdlList;
+
+  /**
    * Constructor.
    *
-   * @param tmpTable         tmpTable
-   * @param tmpColumnList    tmpColumnList
-   * @param tmpPrimaryKey    tmpPrimaryKey
-   * @param tmpUniqueKeyList tmpUniqueKeyList
-   * @param tmpKeyList       tmpKeyList
-   * @param tmpCheckList     tmpCheckList
-   * @param tmpPartition     tmpPartition
+   * @param tmpTable                 tmpTable
+   * @param tmpColumnList            tmpColumnList
+   * @param tmpPrimaryKey            tmpPrimaryKey
+   * @param tmpUniqueKeyList         tmpUniqueKeyList
+   * @param tmpKeyList               tmpKeyList
+   * @param tmpCheckList             tmpCheckList
+   * @param tmpPartition             tmpPartition
+   * @param partialForeignKeyDdlList partialForeignKeyDdlList
    */
   public TableListener(TmpTable tmpTable, List<TmpColumn> tmpColumnList, TmpKey tmpPrimaryKey,
       List<TmpKey> tmpUniqueKeyList, List<TmpKey> tmpKeyList, List<TmpCheck> tmpCheckList,
-      TmpPartition tmpPartition) {
+      TmpPartition tmpPartition, List<String> partialForeignKeyDdlList) {
     this.tmpTable = tmpTable;
     this.tmpColumnList = tmpColumnList;
     this.tmpPrimaryKey = tmpPrimaryKey;
@@ -108,6 +115,7 @@ public class TableListener extends MariaDBParserBaseListener {
     this.tmpKeyList = tmpKeyList;
     this.tmpCheckList = tmpCheckList;
     this.tmpPartition = tmpPartition;
+    this.partialForeignKeyDdlList = partialForeignKeyDdlList;
   }
 
   @Override
@@ -545,6 +553,86 @@ public class TableListener extends MariaDBParserBaseListener {
     }
     tmpPartition.expression = builder.toString();
     Log.trace(Json.toJsonString(tmpPartition));
+  }
+
+  @Override
+  public void enterConstraintDeclaration(ConstraintDeclarationContext ctx) {
+    if (!(ctx.tableConstraint() instanceof ForeignKeyTableConstraintContext foreignKeyTableConstraintContext)) {
+      return;
+    }
+
+    if (Utils.isNullOrEmpty(tmpTable.tableName)) {
+      return;
+    }
+
+    var builder = new StringBuilder();
+    builder.append("ALTER TABLE `");
+    builder.append(tmpTable.tableName);
+    builder.append("` ADD CONSTRAINT ");
+    builder.append(foreignKeyTableConstraintContext.name.getText());
+    builder.append(" FOREIGN KEY ");
+
+    var indexColumnNameList = new ArrayList<String>();
+    foreignKeyTableConstraintContext.indexColumnNames().indexColumnName().forEach(c -> {
+      indexColumnNameList.add(c.getText());
+    });
+
+    var indexName = "`fk_" + indexColumnNameList.stream()
+        .map(c -> Utils.removeBackQuote(c))
+        .collect(Collectors.joining("_")) + "`";
+    if (foreignKeyTableConstraintContext.index != null) {
+      indexName = foreignKeyTableConstraintContext.index.getText();
+    }
+    builder.append(indexName);
+    builder.append(" (");
+    for (var indexColumnName : indexColumnNameList) {
+      builder.append(indexColumnName);
+    }
+    builder.append(")");
+    builder.append(" REFERENCES ");
+    builder.append(foreignKeyTableConstraintContext.referenceDefinition().tableName().getText());
+
+    var referenceIndexColumnNameList = new ArrayList<String>();
+    foreignKeyTableConstraintContext.referenceDefinition().indexColumnNames().indexColumnName()
+        .forEach(c -> {
+          referenceIndexColumnNameList.add(c.getText());
+        });
+    builder.append(" (");
+    for (var referenceIndexColumnName : referenceIndexColumnNameList) {
+      builder.append(referenceIndexColumnName);
+    }
+    builder.append(")");
+
+    var referenceAction = foreignKeyTableConstraintContext.referenceDefinition().referenceAction();
+    if (referenceAction != null) {
+      var onUpdate = referenceAction.onUpdate;
+      if (onUpdate != null) {
+        builder.append(" ON UPDATE ");
+        if (onUpdate.RESTRICT() != null) {
+          builder.append("RESTRICT");
+        } else if (onUpdate.CASCADE() != null) {
+          builder.append("CASCADE");
+        } else if (onUpdate.SET() != null) {
+          builder.append("SET NULL");
+        }
+      }
+      var onDelete = referenceAction.onDelete;
+      if (onDelete != null) {
+        builder.append(" ON DELETE ");
+        if (onUpdate.RESTRICT() != null) {
+          builder.append("RESTRICT");
+        } else if (onUpdate.CASCADE() != null) {
+          builder.append("CASCADE");
+        } else if (onUpdate.SET() != null) {
+          builder.append("SET NULL");
+        }
+      }
+    }
+    builder.append(";");
+
+    var ddl = builder.toString();
+    Log.trace(ddl);
+    partialForeignKeyDdlList.add(ddl);
   }
 
   /**

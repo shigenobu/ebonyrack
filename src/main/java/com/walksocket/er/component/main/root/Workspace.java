@@ -1181,6 +1181,26 @@ public class Workspace extends ErConnectorPositioned {
         var table = new Table(this, newCtxTable);
         addTable(table);
       }
+      for (var newCtxTable : newCtxTableList) {
+        for (var newCtxInnerForeignKey : newCtxTable.ctxInnerForeignKeyList) {
+          var src = positionedTables.stream()
+              .filter(t -> t.getCtxTable().dbTable.tableId.equals(
+                  newCtxInnerForeignKey.dbTableForeignKey.tableId))
+              .findFirst()
+              .get();
+          var dst = positionedTables.stream()
+              .filter(t -> t.getCtxTable().dbTable.tableId.equals(
+                  newCtxInnerForeignKey.dbTableForeignKey.referenceTableId))
+              .findFirst()
+              .get();
+
+          src.redraw();
+          dst.redraw();
+          var connector = new ErConnector(this, src, dst, LineStyle.SIMPLE);
+          addConnectorFromTableToTable(connector);
+          resetConnectorTableToTable(src);
+        }
+      }
 
       return true;
 

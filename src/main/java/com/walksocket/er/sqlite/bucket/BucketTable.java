@@ -1355,6 +1355,21 @@ public class BucketTable {
         con.executeInsert(dbTableOption);
         ctxTable.dbTableOption = dbTableOption;
 
+        // foreign key
+        var newCtxInnerForeignKeyList = new ArrayList<CtxInnerForeignKey>();
+        var foreginKeyDdlList = importTable.getPartialForeignKeyDdlList();
+        for (var fd : foreginKeyDdlList) {
+          var importForeignKey = new ImportForeignKey(con);
+          var ctxInnerForeignKey = importForeignKey.createForeignKeyAndGet(
+              fd,
+              Bucket.getInstance().getBucketDict().dbDictColumnList);
+          if (ctxInnerForeignKey == null) {
+            throw new Exception("Fault to import foreign key.");
+          }
+          newCtxInnerForeignKeyList.add(ctxInnerForeignKey);
+        }
+        ctxTable.ctxInnerForeignKeyList = newCtxInnerForeignKeyList;
+
         newCtxTableList.add(ctxTable);
 
         offset += 50;
@@ -1366,7 +1381,7 @@ public class BucketTable {
         ctxTableList.add(ctxTable);
       }
 
-      return ctxTableList;
+      return newCtxTableList;
 
     } catch (Exception e) {
       con.rollback();
