@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -39,6 +40,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.OverlayLayout;
 import javax.swing.Timer;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import javax.swing.text.JTextComponent;
 
 /**
@@ -291,6 +294,28 @@ public class Outline extends JPanel {
     }
 
     /**
+     * default border.
+     */
+    public static Border defaultborder;
+
+    static {
+      defaultborder = BorderFactory.createCompoundBorder(
+          new LineBorder(ErConnectorColor.DEFAULT_COLOR, 1),
+          BorderFactory.createEmptyBorder(1, 2, 1, 2));
+    }
+
+    /**
+     * focused border.
+     */
+    private static final Border focusedBorder;
+
+    static {
+      focusedBorder = BorderFactory.createCompoundBorder(
+          new LineBorder(ErConnectorColor.FOCUSED_COLOR, 1),
+          BorderFactory.createEmptyBorder(1, 2, 1, 2));
+    }
+
+    /**
      * text field search.
      */
     private final JTextField textFieldSearch = new JTextField(10);
@@ -359,6 +384,7 @@ public class Outline extends JPanel {
       });
       p.add(buttonClose);
 
+      textFieldSearch.setBorder(defaultborder);
       textFieldSearch.addKeyListener(new KeyAdapter() {
         @Override
         public void keyReleased(KeyEvent e) {
@@ -413,7 +439,13 @@ public class Outline extends JPanel {
       textFieldSearch.addFocusListener(new FocusAdapter() {
         @Override
         public void focusGained(FocusEvent e) {
+          textFieldSearch.setBorder(focusedBorder);
           ((JTextComponent) e.getComponent()).selectAll();
+        }
+
+        @Override
+        public void focusLost(FocusEvent e) {
+          textFieldSearch.setBorder(defaultborder);
         }
       });
       textFieldSearch.requestFocusInWindow();

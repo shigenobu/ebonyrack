@@ -115,6 +115,11 @@ public class Sequence extends ErConnectorEndpoint {
         } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
           // hide search
           workspace.hideSearchSpace();
+        } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+          // edit
+          var inputSequence = new InputSequence(sequence);
+          inputSequence.setModal(true);
+          inputSequence.setVisible(true);
         }
       }
     });

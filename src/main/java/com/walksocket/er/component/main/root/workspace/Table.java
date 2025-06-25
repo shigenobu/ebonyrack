@@ -271,6 +271,11 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
         } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
           // hide search
           workspace.hideSearchSpace();
+        } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+          // edit
+          var inputTable = new InputTable(table);
+          inputTable.setModal(true);
+          inputTable.setVisible(true);
         }
       }
     });
