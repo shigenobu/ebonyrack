@@ -29,6 +29,7 @@ import com.walksocket.er.sqlite.entity.DbSequence;
 import com.walksocket.er.sqlite.entity.DbSequenceOption;
 import com.walksocket.er.sqlite.entity.DbTable;
 import com.walksocket.er.sqlite.entity.DbTableOption;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -36,6 +37,7 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.TexturePaint;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -51,7 +53,9 @@ import javax.imageio.ImageIO;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 /**
  * Workspace.
@@ -176,6 +180,11 @@ public class Workspace extends ErConnectorPositioned {
     // mouse event
     addMouseListener(new MouseAdapter() {
 
+      /**
+       * movingTimer.
+       */
+      private Timer movingTimer;
+
       @Override
       public void mousePressed(MouseEvent e) {
         // focus
@@ -187,7 +196,26 @@ public class Workspace extends ErConnectorPositioned {
         // menu
         if (e.isPopupTrigger() || SwingUtilities.isRightMouseButton(e)) {
           doPop(e);
+          return;
         }
+
+        // scroll
+        var cursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
+        workspace.setCursor(cursor);
+        ActionListener movingListener = actionEvent -> {
+          var startPoint = e.getPoint();
+          var nowPoint = MouseInfo.getPointerInfo().getLocation();
+          SwingUtilities.convertPointFromScreen(nowPoint, workspace);
+          if (getParent().getParent() instanceof JScrollPane sp) {
+            sp.getHorizontalScrollBar()
+                .setValue(sp.getHorizontalScrollBar().getValue() - (nowPoint.x - startPoint.x));
+            sp.getVerticalScrollBar()
+                .setValue(sp.getVerticalScrollBar().getValue() - (nowPoint.y - startPoint.y));
+          }
+        };
+        movingTimer = new Timer(100, movingListener);
+        movingTimer.setRepeats(true);
+        movingTimer.start();
       }
 
       @Override
@@ -206,6 +234,14 @@ public class Workspace extends ErConnectorPositioned {
 
         // reorder
         reorder();
+
+        // scroll
+        if (movingTimer != null) {
+          movingTimer.stop();
+        }
+        movingTimer = null;
+        var cursor = Cursor.getDefaultCursor();
+        workspace.setCursor(cursor);
       }
 
       private void doPop(MouseEvent e) {
