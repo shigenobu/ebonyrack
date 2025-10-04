@@ -34,7 +34,7 @@ public class Charset {
   }
 
   /**
-   * charset list list for column.
+   * charset list for column.
    */
   private static final List<String> charsetListForColumn = new ArrayList<>();
 

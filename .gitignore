@@ -42,3 +42,4 @@ ebonyrack_*.sql
 ebonyrack_*.png
 *.exlock
 .checkstyle
+qodana.yaml

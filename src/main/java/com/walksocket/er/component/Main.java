@@ -600,7 +600,7 @@ public class Main extends JFrame {
     // font
     var fontData = "";
     try (var stream = App.class.getClassLoader()
-        .getResourceAsStream("font/Mplus1-Regular.otf")) {
+        .getResourceAsStream("font/Mplus1-Regular.woff2")) {
       var fontBytes = stream.readAllBytes();
       fontData = Base64.getEncoder().encodeToString(fontBytes);
     }

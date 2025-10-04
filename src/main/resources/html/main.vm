@@ -6,7 +6,7 @@
   <style>
     @font-face {
       font-family: "M PLUS 1";
-      src: url("data:application/x-font-otf; charset=utf-8; base64,${fontData}") format("opentype");
+      src: url("data:application/font-woff; charset=utf-8; base64,${fontData}") format("woff2");
     }
         #foreach($css in $cssList)
             ${ErTemplateUtils.nonEscape($css)}

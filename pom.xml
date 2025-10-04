@@ -6,7 +6,7 @@
 
   <groupId>com.walksocket</groupId>
   <artifactId>ebonyrack</artifactId>
-  <version>0.8.6</version>
+  <version>0.9.0</version>
   <packaging>jar</packaging>
 
   <name>ebonyrack</name>
@@ -22,8 +22,8 @@
   <!-- properties -->
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.version>17</java.version>
-    <compile.version>17</compile.version>
+    <java.version>21</java.version>
+    <compile.version>21</compile.version>
     <antlr.version>4.13.2</antlr.version>
   </properties>
 
