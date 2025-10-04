@@ -99,6 +99,12 @@
       <artifactId>maven-artifact</artifactId>
       <version>3.9.11</version>
     </dependency>
+    <!-- webp-imageio -->
+    <dependency>
+      <groupId>org.sejda.imageio</groupId>
+      <artifactId>webp-imageio</artifactId>
+      <version>0.1.6</version>
+    </dependency>
     <!-- junit-jupiter-api -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>

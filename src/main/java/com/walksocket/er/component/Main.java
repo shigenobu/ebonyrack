@@ -1,5 +1,6 @@
 package com.walksocket.er.component;
 
+import com.luciad.imageio.webp.WebPWriteParam;
 import com.walksocket.er.App;
 import com.walksocket.er.Config;
 import com.walksocket.er.Const;
@@ -39,7 +40,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -521,8 +524,15 @@ public class Main extends JFrame {
 
     // image
     var captureImage = createWorkspaceImage(workspace);
+    var writer = ImageIO.getImageWritersByMIMEType("image/webp").next();
+    var writeParam = new WebPWriteParam(writer.getLocale());
+    writeParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+    writeParam.setCompressionType("Lossless");
     var os = new ByteArrayOutputStream();
-    ImageIO.write(captureImage, "png", os);
+    var ios = ImageIO.createImageOutputStream(os);
+    writer.setOutput(ios);
+    writer.write(null, new IIOImage(captureImage, null, null), writeParam);
+    ios.flush();
     var imageData = Base64.getEncoder().encodeToString(os.toByteArray());
     var imageWidth = captureImage.getWidth();
     var imageHeight = captureImage.getHeight();

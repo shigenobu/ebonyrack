@@ -49,7 +49,7 @@
   </header>
   <section>
     <svg xmlns="http://www.w3.org/2000/svg" width="${imageWidth}" height="${imageHeight}">
-      <image href="data:image/png;base64,${imageData}" width="${imageWidth}"
+      <image href="data:image/webp;base64,${imageData}" width="${imageWidth}"
              height="${imageHeight}"/>
         #foreach($table in $tables)
             #set($ctxTable = $table.getCtxTable())

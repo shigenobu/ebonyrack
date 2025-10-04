@@ -10,7 +10,7 @@ Entity relationship creation tool for MariaDB.
 
 ### System required
 
-* over JAVA 17
+* over JAVA 21
 
 ### How to run
 
