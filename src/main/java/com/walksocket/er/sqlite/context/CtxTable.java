@@ -117,32 +117,16 @@ public class CtxTable implements Value, Copiable<CtxTable> {
     }
 
     // List<CtxInnerUniqueKey>
-    for (var newCtxInnerUniqueKey : newCtxTable.ctxInnerUniqueKeyList) {
-      if (newCtxInnerUniqueKey.dbTableUniqueKey != null) {
-        newCtxInnerUniqueKey.dbTableUniqueKey.tableId = newTableId;
-        for (var newDbTableUniqueKeyColumn : newCtxInnerUniqueKey.dbTableUniqueKeyColumnList) {
-          newDbTableUniqueKeyColumn.tableId = newTableId;
-        }
-      }
-    }
+    newCtxTable.ctxInnerUniqueKeyList = new ArrayList<>();
 
     // List<CtxInnerKey>
-    for (var newCtxInnerKey : newCtxTable.ctxInnerKeyList) {
-      if (newCtxInnerKey.dbTableKey != null) {
-        newCtxInnerKey.dbTableKey.tableId = newTableId;
-        for (var newDbTableKeyColumn : newCtxInnerKey.dbTableKeyColumnList) {
-          newDbTableKeyColumn.tableId = newTableId;
-        }
-      }
-    }
+    newCtxTable.ctxInnerKeyList = new ArrayList<>();
 
     // List<CtxInnerForeignKey>
     newCtxTable.ctxInnerForeignKeyList = new ArrayList<>();
 
     // List<DbTableCheck>
-    for (var newDbTableCheck : newCtxTable.dbTableCheckList) {
-      newDbTableCheck.tableId = newTableId;
-    }
+    newCtxTable.dbTableCheckList = new ArrayList<>();
 
     return newCtxTable;
   }

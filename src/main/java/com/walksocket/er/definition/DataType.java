@@ -120,7 +120,9 @@ public class DataType {
    */
   public static boolean isBinary(String columnType) {
     columnType = columnType.toLowerCase();
-    return columnType.contains("blob") || columnType.contains("binary");
+    return columnType.contains("blob")
+        || columnType.contains("binary")
+        || columnType.contains("vector");
   }
 
   /**
@@ -194,6 +196,7 @@ public class DataType {
     dataTypeList.add(new DataType("blob"));
     dataTypeList.add(new DataType("mediumblob"));
     dataTypeList.add(new DataType("longblob"));
+    dataTypeList.add(new DataType("vector"));
 
     // date
     dataTypeList.add(new DataType("date"));
