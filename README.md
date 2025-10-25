@@ -37,7 +37,7 @@ Entity relationship creation tool for MariaDB.
 
 ### Dependencies
 
-* Font: [Mplus1-Regular](https://mplusfonts.github.io/)
+* Font: [Migu 1C Regular](https://itouhiro.github.io/mixfont-mplus-ipa/migu/)
 * Look and Feel: [FlatLaf](https://www.formdev.com/flatlaf/)
 
 ### Contributors

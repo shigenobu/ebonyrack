@@ -5,7 +5,7 @@
   <title>${title}</title>
   <style>
     @font-face {
-      font-family: "M PLUS 1";
+      font-family: "ebonyrack";
       src: url("data:application/font-woff; charset=utf-8; base64,${fontData}") format("woff2");
     }
         #foreach($css in $cssList)

@@ -43,8 +43,8 @@ public class Copyright extends JPanel {
       add(panel2);
 
       var labelFont = new ErLinkLabel(
-          "<html><font color='white'>Font <u>Mplus1-Regular</u>.</font></html>",
-          new URI("https://mplusfonts.github.io/")
+          "<html><font color='white'>Font <u>Migu 1C Regular</u>.</font></html>",
+          new URI("https://itouhiro.github.io/mixfont-mplus-ipa/migu/")
       );
       panel2.add(labelFont);
 

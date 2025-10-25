@@ -4,10 +4,12 @@ import com.formdev.flatlaf.FlatLightLaf;
 import com.walksocket.er.component.Startup;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.util.Locale;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
 
 /**
  * App.
@@ -56,17 +58,18 @@ public class App {
 
     // load font
     try (var stream = App.class.getClassLoader()
-        .getResourceAsStream("font/Mplus1-Regular.otf")) {
-      var font = Font.createFont(Font.PLAIN, stream).deriveFont(11f);
+        .getResourceAsStream("font/migu-1c-regular.ttf")) {
+      var font = Font.createFont(Font.TRUETYPE_FONT, stream).deriveFont(11f);
+      var fontUiResource = new FontUIResource(font);
+      UIManager.put("defaultFont", fontUiResource);
       Log.trace(String.format("font:%s", font));
       UIManager.getLookAndFeelDefaults().forEach((key, value) -> {
         if (key.toString().toLowerCase(Locale.ENGLISH).endsWith("font")) {
-          UIManager.put(key, font);
+          UIManager.put(key, fontUiResource);
         }
       });
-    } catch (IOException e) {
-      Log.error(e);
-    } catch (FontFormatException e) {
+      GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
+    } catch (IOException | FontFormatException e) {
       Log.error(e);
     }
 
