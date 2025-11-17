@@ -19,8 +19,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
 
 /**
@@ -129,6 +132,21 @@ public class Side extends JPanel {
     treeNode.add(treeNodeSequence);
     treeNode.add(treeNodeNote);
     tree = new JTree(treeModel);
+    tree.addTreeWillExpandListener(new TreeWillExpandListener() {
+      @Override
+      public void treeWillExpand(TreeExpansionEvent treeExpansionEvent) throws ExpandVetoException {
+      }
+
+      @Override
+      public void treeWillCollapse(TreeExpansionEvent treeExpansionEvent)
+          throws ExpandVetoException {
+        if (treeExpansionEvent.getPath() == tree.getPathForRow(0)) {
+          tree.collapseRow(1);  // table
+          tree.collapseRow(2);  // sequence
+          tree.collapseRow(3);  // note
+        }
+      }
+    });
     tree.addKeyListener(new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {

@@ -2,14 +2,18 @@ package com.walksocket.er;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.walksocket.er.component.Startup;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.util.Locale;
+import javax.swing.Icon;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
+import javax.swing.plaf.IconUIResource;
 
 /**
  * App.
@@ -80,6 +84,28 @@ public class App {
     d.put("Table.showVerticalLines", true);
     d.put("Tree.showDefaultIcons", true);
     d.put("apple.awt.documentModalSheet", true);
+
+    var emptyIcon = new Icon() {
+      @Override
+      public void paintIcon(Component component, Graphics graphics, int i, int i1) {
+      }
+
+      @Override
+      public int getIconWidth() {
+        return 0;
+      }
+
+      @Override
+      public int getIconHeight() {
+        return 0;
+      }
+    };
+    var emptyIconUiResource = new IconUIResource(emptyIcon);
+    d.put("Tree.leftChildIndent", 3);
+    d.put("Tree.rightChildIndent", 3);
+    d.put("Tree.expandedIcon", emptyIconUiResource);
+    d.put("Tree.collapsedIcon", emptyIconUiResource);
+    d.put("Tree.leafIcon", emptyIconUiResource);
 
     // execute
     SwingUtilities.invokeLater(() -> new Startup());

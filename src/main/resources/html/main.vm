@@ -54,7 +54,7 @@
         #foreach($table in $tables)
             #set($ctxTable = $table.getCtxTable())
             #set($tableNameX = $table.getX() + 26)
-            #set($tableNameY = $table.getY() + 25)
+            #set($tableNameY = $table.getY() + 24)
           <text x="${tableNameX}" y="${tableNameY}" font-size="11"
                 fill-opacity="0">${ctxTable.dbTable.getShowTableName()}</text>
             #set($idx = 0)
@@ -71,8 +71,8 @@
         #end
         #foreach($sequence in $sequences)
             #set($ctxSequence = $sequence.getCtxSequence())
-            #set($sequenceNameX = $sequence.getX() + 26)
-            #set($sequenceNameY = $sequence.getY() + 23)
+            #set($sequenceNameX = $sequence.getX() + 25)
+            #set($sequenceNameY = $sequence.getY() + 22)
           <text x="${sequenceNameX}" y="${sequenceNameY}" font-size="11"
                 fill-opacity="0">${ctxSequence.dbSequence.sequenceName}</text>
           <rect id="sequence-${ctxSequence.dbSequence.sequenceId}" x="${sequence.getX()}"
@@ -83,7 +83,7 @@
         #foreach($note in $notes)
             #set($ctxNote = $note.getCtxNote())
             #set($subjectX = $note.getX() + 17)
-            #set($subjectY = $note.getY() + 20)
+            #set($subjectY = $note.getY() + 19)
           <text x="${subjectX}" y="${subjectY}" font-size="11"
                 fill-opacity="0">${ctxNote.dbNote.subject}</text>
             #set($idx = 0)
