@@ -402,11 +402,12 @@ public class Form extends JPanel {
 
     var dbDictColumnTypeList = Bucket.getInstance().getBucketDict().dbDictColumnTypeList;
     var dbDictColumnList = Bucket.getInstance().getBucketDict().dbDictColumnList;
+    var dbDictColumnAliasList = Bucket.getInstance().getBucketDict().dbDictColumnAliasList;
     var dbDictGroupList = Bucket.getInstance().getBucketDict().dbDictGroupList;
     var dbDictGroupColumnList = Bucket.getInstance().getBucketDict().dbDictGroupColumnList;
 
     var referenceTmpColumnList = Tmp.createTmpColumnList(referenceDbTableColumnList,
-        dbDictColumnTypeList, dbDictColumnList);
+        dbDictColumnTypeList, dbDictColumnList, dbDictColumnAliasList);
 
     // group column
     var optGroup = Bucket.getInstance().getBucketTable().ctxTableList.stream()
@@ -417,7 +418,7 @@ public class Form extends JPanel {
     if (optGroup.isPresent()) {
       referenceTmpColumnList.addAll(Tmp.createTmpGroupColumnList(
           optGroup.get(), dbDictColumnTypeList, dbDictColumnList, dbDictGroupList,
-          dbDictGroupColumnList));
+          dbDictGroupColumnList, dbDictColumnAliasList));
     }
 
     var range = new ArrayList<String>();

@@ -7,6 +7,7 @@ import com.walksocket.er.Log;
 import com.walksocket.er.config.CfgProject;
 import com.walksocket.er.sqlite.entity.DbDefault;
 import com.walksocket.er.sqlite.entity.DbDictColumn;
+import com.walksocket.er.sqlite.entity.DbDictColumnAlias;
 import com.walksocket.er.sqlite.entity.DbDictColumnType;
 import com.walksocket.er.sqlite.entity.DbDictGroup;
 import com.walksocket.er.sqlite.entity.DbDictGroupColumn;
@@ -63,6 +64,7 @@ public class Dump {
     classes.add(DbDefault.class);
     classes.add(DbDictColumnType.class);
     classes.add(DbDictColumn.class);
+    classes.add(DbDictColumnAlias.class);
     classes.add(DbDictGroup.class);
     classes.add(DbDictGroupColumn.class);
     classes.add(DbDictPartition.class);

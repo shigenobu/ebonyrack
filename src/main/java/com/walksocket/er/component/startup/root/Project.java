@@ -83,6 +83,8 @@ public class Project extends JPanel {
     var sp = new JScrollPane(panel2);
     sp.setPreferredSize(new Dimension(WindowStartup.WIDTH - 20, WindowStartup.HEIGHT / 15 * 8));
     sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    sp.getVerticalScrollBar().setUnitIncrement(15);
+    sp.getHorizontalScrollBar().setUnitIncrement(15);
     add(sp);
   }
 

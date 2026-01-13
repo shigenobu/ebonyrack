@@ -43,6 +43,7 @@
           <th>Auto increment</th>
           <th>Option</th>
           <th>Note</th>
+          <th>Alias</th>
         </tr>
         </thead>
         <tbody>
@@ -69,6 +70,20 @@
                         <div>${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}</div>
                       #end
                   #end
+              </td>
+              <td>
+                <p>${tmpColumn.alias.explanation}</p>
+                <ul class="alias">
+                    #if($tmpColumn.alias.alias1)
+                      <li>${tmpColumn.alias.alias1}</li>
+                    #end
+                    #if($tmpColumn.alias.alias2)
+                      <li>${tmpColumn.alias.alias2}</li>
+                    #end
+                    #if($tmpColumn.alias.alias3)
+                      <li>${tmpColumn.alias.alias3}</li>
+                    #end
+                </ul>
               </td>
             </tr>
             #end

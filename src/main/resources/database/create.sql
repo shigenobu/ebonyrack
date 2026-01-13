@@ -41,6 +41,17 @@ create table if not exists DbDictColumn
 create index if not exists DbDictColumnIdx01 on DbDictColumn (dictColumnTypeId);
 create index if not exists DbDictColumnIdx02 on DbDictColumn (columnName, columnComment);
 
+create table if not exists DbDictColumnAlias
+(
+    dictColumnId text,
+    explanation  text,
+    alias1       text,
+    alias2       text,
+    alias3       text,
+    primary key (dictColumnId),
+    foreign key (dictColumnId) references DbDictColumn (dictColumnId) on delete cascade
+);
+
 create table if not exists DbDictGroup
 (
     dictGroupId text,

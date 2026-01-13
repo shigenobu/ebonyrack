@@ -126,6 +126,7 @@ public class Columns extends JPanel {
     // bucket
     var dbDictColumnTypeList = Bucket.getInstance().getBucketDict().dbDictColumnTypeList;
     var dbDictColumnList = Bucket.getInstance().getBucketDict().dbDictColumnList;
+    var dbDictColumnAliasList = Bucket.getInstance().getBucketDict().dbDictColumnAliasList;
 
     var widthList = columnNameWidthMaps.values().toArray(new Integer[columnNameWidthMaps.size()]);
     table = new JTable(tableModel);
@@ -280,7 +281,7 @@ public class Columns extends JPanel {
 
     // tmp column list
     var tmpColumnList = Tmp.createTmpColumnList(ctxTable.dbTableColumnList, dbDictColumnTypeList,
-        dbDictColumnList);
+        dbDictColumnList, dbDictColumnAliasList);
     for (int i = 0; i < tmpColumnList.size(); i++) {
       var tmpColumn = tmpColumnList.get(i);
       setTmpColumnForDict(i, tmpColumn);

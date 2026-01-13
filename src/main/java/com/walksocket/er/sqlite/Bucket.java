@@ -367,6 +367,7 @@ public class Bucket {
 
     var dbDictColumnTypeList = getBucketDict().dbDictColumnTypeList;
     var dbDictColumnList = getBucketDict().dbDictColumnList;
+    var dbDictColumnAliasList = getBucketDict().dbDictColumnAliasList;
     var dbDictGroupList = getBucketDict().dbDictGroupList;
     var dbDictGroupColumnList = getBucketDict().dbDictGroupColumnList;
     var dbDictPartitionList = getBucketDict().dbDictPartitionList;
@@ -412,7 +413,25 @@ public class Bucket {
       // column
       var columns = new ArrayList<String>();
       for (var tmpColumn : Tmp.createTmpColumnList(dbTableColumnList, dbDictColumnTypeList,
-          dbDictColumnList)) {
+          dbDictColumnList, dbDictColumnAliasList)) {
+
+        if (!Utils.isNullOrEmpty(tmpColumn.alias.explanation)) {
+          columns.add(String.format("-- %s", tmpColumn.alias.explanation));
+        }
+        var as = new ArrayList<String>();
+        if (!Utils.isNullOrEmpty(tmpColumn.alias.alias1)) {
+          as.add(tmpColumn.alias.alias1);
+        }
+        if (!Utils.isNullOrEmpty(tmpColumn.alias.alias2)) {
+          as.add(tmpColumn.alias.alias2);
+        }
+        if (!Utils.isNullOrEmpty(tmpColumn.alias.alias3)) {
+          as.add(tmpColumn.alias.alias3);
+        }
+        if (as.size() > 0) {
+          columns.add(String.format("-- %s", as.stream().collect(Collectors.joining(", "))));
+        }
+
         var b = new StringBuilder();
         b.append(String.format("`%s` %s", tmpColumn.columnName, tmpColumn.columnType));
         if (!Utils.isNullOrEmpty(tmpColumn.charsetValue)) {
@@ -444,7 +463,25 @@ public class Bucket {
       }
       if (dbTableGroup != null) {
         for (var tmpColumn : Tmp.createTmpGroupColumnList(dbTableGroup, dbDictColumnTypeList,
-            dbDictColumnList, dbDictGroupList, dbDictGroupColumnList)) {
+            dbDictColumnList, dbDictGroupList, dbDictGroupColumnList, dbDictColumnAliasList)) {
+
+          if (!Utils.isNullOrEmpty(tmpColumn.alias.explanation)) {
+            columns.add(String.format("-- %s", tmpColumn.alias.explanation));
+          }
+          var as = new ArrayList<String>();
+          if (!Utils.isNullOrEmpty(tmpColumn.alias.alias1)) {
+            as.add(tmpColumn.alias.alias1);
+          }
+          if (!Utils.isNullOrEmpty(tmpColumn.alias.alias2)) {
+            as.add(tmpColumn.alias.alias2);
+          }
+          if (!Utils.isNullOrEmpty(tmpColumn.alias.alias3)) {
+            as.add(tmpColumn.alias.alias3);
+          }
+          if (as.size() > 0) {
+            columns.add(String.format("-- %s", as.stream().collect(Collectors.joining(", "))));
+          }
+
           var b = new StringBuilder();
           b.append(String.format("`%s` %s", tmpColumn.columnName, tmpColumn.columnType));
           if (!Utils.isNullOrEmpty(tmpColumn.charsetValue)) {
@@ -475,10 +512,20 @@ public class Bucket {
           columns.add(b.toString());
         }
       }
-      var column = columns.stream()
+      var tmpColumns = columns.stream()
           .map(c -> c = "    " + c)
-          .collect(Collectors.joining(",\n"));
-      builder.append(column);
+          .collect(Collectors.toList());
+      var sep = "";
+      for (var tc : tmpColumns) {
+        builder.append(sep);
+        if (tc.trim().startsWith("--")) {
+          builder.append(tc);
+          sep = "\n";
+          continue;
+        }
+        builder.append(tc);
+        sep = ",\n";
+      }
 
       // primary key
       var tmpPrimaryKey = Tmp.createTmpKey(ctxInnerPrimaryKey.dbTablePrimaryKey,
@@ -656,6 +703,7 @@ public class Bucket {
 
     var dbDictColumnTypeList = Bucket.getInstance().getBucketDict().dbDictColumnTypeList;
     var dbDictColumnList = Bucket.getInstance().getBucketDict().dbDictColumnList;
+    var dbDictColumnAliasList = Bucket.getInstance().getBucketDict().dbDictColumnAliasList;
     var dbDictGroupList = Bucket.getInstance().getBucketDict().dbDictGroupList;
     var dbDictGroupColumnList = Bucket.getInstance().getBucketDict().dbDictGroupColumnList;
 
@@ -674,7 +722,8 @@ public class Bucket {
     var tmpColumnList = Tmp.createTmpColumnList(
         ctxTable.dbTableColumnList,
         dbDictColumnTypeList,
-        dbDictColumnList
+        dbDictColumnList,
+        dbDictColumnAliasList
     );
     List<TmpColumn> tmpGroupColumnList = new ArrayList<>();
     if (ctxTable.dbTableGroup != null) {
@@ -684,7 +733,8 @@ public class Bucket {
           dbDictColumnTypeList,
           dbDictColumnList,
           dbDictGroupList,
-          dbDictGroupColumnList
+          dbDictGroupColumnList,
+          dbDictColumnAliasList
       );
       tmpColumnList.addAll(tmpGroupColumnList);
     }

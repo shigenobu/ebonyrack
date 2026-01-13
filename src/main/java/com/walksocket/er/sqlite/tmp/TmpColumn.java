@@ -6,6 +6,7 @@ import com.walksocket.er.Word;
 import com.walksocket.er.definition.DataType;
 import com.walksocket.er.sqlite.Tmp;
 import com.walksocket.er.sqlite.entity.DbDictColumnType;
+import com.walksocket.er.sqlite.tmp.inner.TmpInnerColumnAlias;
 
 /**
  * TmpColumn.
@@ -61,6 +62,11 @@ public class TmpColumn implements Tmp, Value {
    * option.
    */
   public String option;
+
+  /**
+   * alias.
+   */
+  public TmpInnerColumnAlias alias = new TmpInnerColumnAlias();
 
   /**
    * is all empty.

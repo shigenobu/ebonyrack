@@ -3,6 +3,7 @@ package com.walksocket.er.sqlite;
 import com.walksocket.er.parts.ColumnForeignKeyOption;
 import com.walksocket.er.parts.ColumnKeyOption;
 import com.walksocket.er.sqlite.entity.DbDictColumn;
+import com.walksocket.er.sqlite.entity.DbDictColumnAlias;
 import com.walksocket.er.sqlite.entity.DbDictColumnType;
 import com.walksocket.er.sqlite.entity.DbDictGroup;
 import com.walksocket.er.sqlite.entity.DbDictGroupColumn;
@@ -73,8 +74,11 @@ public interface Tmp {
    * @param dbDictColumnList     dbDictColumnList
    * @return tmp column list
    */
-  static List<TmpColumn> createTmpColumnList(List<DbTableColumn> dbTableColumnList,
-      List<DbDictColumnType> dbDictColumnTypeList, List<DbDictColumn> dbDictColumnList) {
+  static List<TmpColumn> createTmpColumnList(
+      List<DbTableColumn> dbTableColumnList,
+      List<DbDictColumnType> dbDictColumnTypeList,
+      List<DbDictColumn> dbDictColumnList,
+      List<DbDictColumnAlias> dbDictColumnAliasList) {
     var tmpColumnList = new ArrayList<TmpColumn>();
     for (var dbTableColumn : dbTableColumnList.stream()
         .sorted(Comparator.comparing(t -> t.ordinalPosition)).collect(Collectors.toList())) {
@@ -104,6 +108,16 @@ public interface Tmp {
         tmpColumn.option = opt.get().option;
       }
 
+      var optAlias = dbDictColumnAliasList.stream()
+          .filter(d -> d.dictColumnId.equals(dictColumnId))
+          .findFirst();
+      if (optAlias.isPresent()) {
+        tmpColumn.alias.explanation = optAlias.get().explanation;
+        tmpColumn.alias.alias1 = optAlias.get().alias1;
+        tmpColumn.alias.alias2 = optAlias.get().alias2;
+        tmpColumn.alias.alias3 = optAlias.get().alias3;
+      }
+
       tmpColumnList.add(tmpColumn);
     }
     return tmpColumnList;
@@ -120,7 +134,8 @@ public interface Tmp {
       List<DbDictColumnType> dbDictColumnTypeList,
       List<DbDictColumn> dbDictColumnList,
       List<DbDictGroup> dbDictGroupList,
-      List<DbDictGroupColumn> dbDictGroupColumnList) {
+      List<DbDictGroupColumn> dbDictGroupColumnList,
+      List<DbDictColumnAlias> dbDictColumnAliasList) {
     var tmpColumnList = new ArrayList<TmpColumn>();
 
     var dbDictGroup = dbDictGroupList.stream()
@@ -155,6 +170,16 @@ public interface Tmp {
         tmpColumn.onUpdate = opt.get().onUpdate;
         tmpColumn.autoIncrementDefinition = opt.get().autoIncrementDefinition;
         tmpColumn.option = opt.get().option;
+
+        var optAlias = dbDictColumnAliasList.stream()
+            .filter(d -> d.dictColumnId.equals(dictColumnId))
+            .findFirst();
+        if (optAlias.isPresent()) {
+          tmpColumn.alias.explanation = optAlias.get().explanation;
+          tmpColumn.alias.alias1 = optAlias.get().alias1;
+          tmpColumn.alias.alias2 = optAlias.get().alias2;
+          tmpColumn.alias.alias3 = optAlias.get().alias3;
+        }
       }
 
       tmpColumnList.add(tmpColumn);

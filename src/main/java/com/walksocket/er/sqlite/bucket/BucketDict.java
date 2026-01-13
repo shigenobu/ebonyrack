@@ -8,6 +8,7 @@ import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.Connection;
 import com.walksocket.er.sqlite.Entity;
 import com.walksocket.er.sqlite.entity.DbDictColumn;
+import com.walksocket.er.sqlite.entity.DbDictColumnAlias;
 import com.walksocket.er.sqlite.entity.DbDictColumnType;
 import com.walksocket.er.sqlite.entity.DbDictGroup;
 import com.walksocket.er.sqlite.entity.DbDictGroupColumn;
@@ -43,6 +44,11 @@ public class BucketDict {
   public List<DbDictColumn> dbDictColumnList = new ArrayList<>();
 
   /**
+   * dbDictColumnAliasList.
+   */
+  public List<DbDictColumnAlias> dbDictColumnAliasList = new ArrayList<>();
+
+  /**
    * dbDictGroupList.
    */
   public List<DbDictGroup> dbDictGroupList = new ArrayList<>();
@@ -74,6 +80,7 @@ public class BucketDict {
   public void read() {
     dbDictColumnTypeList.clear();
     dbDictColumnList.clear();
+    dbDictColumnAliasList.clear();
     dbDictGroupList.clear();
     dbDictGroupColumnList.clear();
     dbDictPartitionList.clear();
@@ -99,6 +106,17 @@ public class BucketDict {
         Log.trace(dbDictColumn);
 
         dbDictColumnList.add(dbDictColumn);
+      }
+
+      // --------------------
+      // DbDictColumnAlias
+      sql = "SELECT * FROM DbDictColumnAlias";
+      records = con.getRecords(sql);
+      for (var record : records) {
+        var dbDictColumnAlias = Entity.convertEntity(record, DbDictColumnAlias.class);
+        Log.trace(dbDictColumnAlias);
+
+        dbDictColumnAliasList.add(dbDictColumnAlias);
       }
 
       // --------------------
@@ -394,6 +412,44 @@ public class BucketDict {
       if (opt.isPresent()) {
         dbDictColumnList.remove(opt.get());
       }
+    } catch (Exception e) {
+      con.rollback();
+      Log.error(e);
+
+      throw e;
+    }
+  }
+
+  /**
+   * save dict column alias.
+   *
+   * @param newDbDictColumnAliasList dbDictColumnAliasList
+   * @throws Exception
+   */
+  public void saveDictColumnAlias(List<DbDictColumnAlias> newDbDictColumnAliasList)
+      throws Exception {
+    try {
+      con.begin();
+
+      // database
+      con.execute("DELETE FROM DbDictColumnAlias");
+      for (var newDbDictColumnAlias : newDbDictColumnAliasList) {
+        con.executeInsert(newDbDictColumnAlias);
+      }
+
+      con.commit();
+
+      // memory
+      for (var newDbDictColumnAlias : newDbDictColumnAliasList) {
+        var opt = dbDictColumnAliasList.stream()
+            .filter(d -> d.dictColumnId.equals(newDbDictColumnAlias.dictColumnId))
+            .findFirst();
+        if (opt.isPresent()) {
+          dbDictColumnAliasList.remove(opt.get());
+        }
+        dbDictColumnAliasList.add(newDbDictColumnAlias);
+      }
+
     } catch (Exception e) {
       con.rollback();
       Log.error(e);

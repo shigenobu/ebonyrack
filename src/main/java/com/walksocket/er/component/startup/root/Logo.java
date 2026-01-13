@@ -11,7 +11,10 @@ import com.walksocket.er.custom.ErLinkLabel;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URI;
+import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
@@ -21,6 +24,19 @@ import org.apache.maven.artifact.versioning.ComparableVersion;
  * Logo.
  */
 public class Logo extends JPanel {
+
+  /**
+   * image logo.
+   */
+  private static BufferedImage imageLogo;
+
+  static {
+    try (var stream = App.class.getClassLoader().getResourceAsStream("image/logo.png")) {
+      imageLogo = ImageIO.read(stream);
+    } catch (IOException e) {
+      Log.error(e);
+    }
+  }
 
   /**
    * Constructor.
@@ -33,15 +49,15 @@ public class Logo extends JPanel {
     setBackground(bgColor);
 
     // panel - title
-    var panel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    var panel1 = new JPanel(new FlowLayout(FlowLayout.CENTER)) {
+      public void paintComponent(java.awt.Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(imageLogo, (getWidth() - imageLogo.getWidth()) / 2, 10, null);
+      }
+    };
     panel1.setBackground(bgColor);
     panel1.setPreferredSize(new Dimension(WindowStartup.WIDTH - 20, WindowStartup.HEIGHT / 10));
     add(panel1);
-    var labelTitle = new JLabel(
-        String.format("<html><font color='white'>%s</font></html>", Const.TITLE));
-    labelTitle.setFont(new Font(labelTitle.getFont().getName(), Font.BOLD, 36));
-    labelTitle.setBackground(bgColor);
-    panel1.add(labelTitle);
 
     // panel - description
     var panel2 = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));

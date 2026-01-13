@@ -383,6 +383,13 @@ public class Main extends JFrame {
       editDictColumns.setVisible(true);
     });
     menuEdit.add(menuItemEditDictColumns);
+    var menuItemEditDictAliases = new JMenuItem("Edit dict column aliases");
+    menuItemEditDictAliases.addActionListener(actionEvent -> {
+      var editDictColumnAliases = new EditDictColumnAliases(main);
+      editDictColumnAliases.setModal(true);
+      editDictColumnAliases.setVisible(true);
+    });
+    menuEdit.add(menuItemEditDictAliases);
     var menuItemEditDictGroups = new JMenuItem("Edit dict groups");
     menuItemEditDictGroups.addActionListener(actionEvent -> {
       var editDictGroups = new EditDictGroups(main);

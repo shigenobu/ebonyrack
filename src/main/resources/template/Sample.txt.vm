@@ -98,6 +98,11 @@ column \$tmpColumnList
     onUpdate: ${tmpColumn.onUpdate}
     autoIncrementDefinition: ${tmpColumn.autoIncrementDefinition}
     option: ${tmpColumn.option}
+    - alias
+    alias.explanation: ${tmpColumn.alias.explanation}
+    alias.alias1: ${tmpColumn.alias.alias1}
+    alias.alias2: ${tmpColumn.alias.alias2}
+    alias.alias3: ${tmpColumn.alias.alias3}
     #set($i = $i + 1)
 #end
 
@@ -117,6 +122,11 @@ column \$tmpGroupColumnList
     onUpdate: ${tmpColumn.onUpdate}
     autoIncrementDefinition: ${tmpColumn.autoIncrementDefinition}
     option: ${tmpColumn.option}
+    - alias
+    alias.explanation: ${tmpColumn.alias.explanation}
+    alias.alias1: ${tmpColumn.alias.alias1}
+    alias.alias2: ${tmpColumn.alias.alias2}
+    alias.alias3: ${tmpColumn.alias.alias3}
     #set($i = $i + 1)
 #end
 
