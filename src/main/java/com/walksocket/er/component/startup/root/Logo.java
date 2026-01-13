@@ -84,8 +84,9 @@ public class Logo extends JPanel {
           if (Utils.isNullOrEmpty(appVersion)) {
             appVersion = "v0.0.0";
           }
-          appVersion = appVersion.substring(1);
-
+          if (appVersion.startsWith("v")) {
+            appVersion = appVersion.substring(1);
+          }
           var latestVersion = Http.getLatestVersion();
           Log.trace(String.format("latest:%s, this:%s", latestVersion, appVersion));
 
