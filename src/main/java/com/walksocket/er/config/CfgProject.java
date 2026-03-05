@@ -34,6 +34,11 @@ public class CfgProject {
   public String lastDdlSavePath;
 
   /**
+   * last foreign key info save path.
+   */
+  public String lastForeignKeyInfoSavePath;
+
+  /**
    * last image save path.
    */
   public String lastImageSavePath;
@@ -67,6 +72,11 @@ public class CfgProject {
    * ddl histories.
    */
   public List<CfgProjectDdlHistory> ddlHistories = new ArrayList<>();
+
+  /**
+   * foreign key info histories.
+   */
+  public List<CfgProjectForeignKeyInfoHistory> foreignKeyInfoHistories = new ArrayList<>();
 
   /**
    * table class histories.

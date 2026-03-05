@@ -176,6 +176,7 @@ public class Main extends JFrame {
     });
     menuFile.add(menuItemCloseProject);
     menuFile.addSeparator();
+
     var menuItemExportImage = new JMenuItem("Export image");
     menuItemExportImage.addActionListener(actionEvent -> {
       // reset
@@ -249,6 +250,7 @@ public class Main extends JFrame {
       }
     });
     menuFile.add(menuItemExportImage);
+
     var menuItemExportHtml = new JMenuItem("Export html");
     menuItemExportHtml.addActionListener(actionEvent -> {
       // reset
@@ -322,6 +324,7 @@ public class Main extends JFrame {
       }
     });
     menuFile.add(menuItemExportHtml);
+
     var menuItemExportDdl = new JMenuItem("Export ddl");
     menuItemExportDdl.addActionListener(actionEvent -> {
       // reset
@@ -332,6 +335,18 @@ public class Main extends JFrame {
       exportDdl.setVisible(true);
     });
     menuFile.add(menuItemExportDdl);
+
+    var menuItemExportForeignKeyInfo = new JMenuItem("Export foreign key info");
+    menuItemExportForeignKeyInfo.addActionListener(actionEvent -> {
+      // reset
+      resetWorkspace();
+
+      var exportForeignKeyInfo = new ExportForeignKeyInfo(main, cfgProject);
+      exportForeignKeyInfo.setModal(true);
+      exportForeignKeyInfo.setVisible(true);
+    });
+    menuFile.add(menuItemExportForeignKeyInfo);
+
     var menuItemExportTableClass = new JMenuItem("Export table class");
     menuItemExportTableClass.addActionListener(actionEvent -> {
       // reset
