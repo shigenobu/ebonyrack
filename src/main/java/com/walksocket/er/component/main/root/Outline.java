@@ -17,6 +17,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
@@ -216,10 +217,28 @@ public class Outline extends JPanel {
         lastCaptureImageInfo.lastTimestampMillis = now;
 
         lastCaptureImageInfo.rect = workspace.getBounds();
-        lastCaptureImageInfo.image =
-            new BufferedImage(lastCaptureImageInfo.rect.width, lastCaptureImageInfo.rect.height,
-                BufferedImage.TYPE_INT_ARGB);
-        var cg = lastCaptureImageInfo.image.getGraphics();
+
+        var rect = lastCaptureImageInfo.rect;
+        var w = getWidth();
+        double wRatio = (double) getWidth() / (double) rect.width;
+        double scaleRatio = wRatio;
+        var h = (int) (wRatio * rect.height);
+        if (h > getHeight()) {
+          h = getHeight();
+          double hRatio = (double) getHeight() / (double) rect.height;
+          scaleRatio = hRatio;
+          w = (int) (hRatio * rect.width);
+        }
+
+        lastCaptureImageInfo.image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        var cg = (Graphics2D) lastCaptureImageInfo.image.getGraphics();
+        cg.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+            RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        cg.setRenderingHint(RenderingHints.KEY_RENDERING,
+            RenderingHints.VALUE_RENDER_SPEED);
+        cg.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+            RenderingHints.VALUE_ANTIALIAS_OFF);
+        cg.scale(scaleRatio, scaleRatio);
         workspace.printComponents(cg);
         cg.dispose();
       }
