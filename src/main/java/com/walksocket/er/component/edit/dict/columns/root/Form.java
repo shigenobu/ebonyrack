@@ -293,6 +293,8 @@ public class Form extends JPanel {
     comboBoxOnUpdate = new JComboBox(
         new DefaultComboBoxModel(OnUpdate.getOnUpdateListForColumn()
             .toArray()));
+    comboBoxOnUpdate.setPreferredSize(new Dimension(170, comboBoxOnUpdate.getFont().getSize() * 2));
+    comboBoxOnUpdate.setEditable(true);
     panel9.add(comboBoxOnUpdate);
 
     // auto increment

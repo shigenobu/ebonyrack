@@ -189,6 +189,7 @@ public class Columns extends JPanel {
         var comboBoxOnUpdate = new JComboBox(
             new DefaultComboBoxModel(OnUpdate.getOnUpdateListForColumn()
                 .toArray()));
+        comboBoxOnUpdate.setEditable(true);
         tc.setCellEditor(new DefaultCellEditor(comboBoxOnUpdate));
       }
 

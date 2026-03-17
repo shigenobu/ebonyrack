@@ -100,6 +100,11 @@ public class TmpDictColumn implements Tmp {
       return "'On update' is allowed only on 'datetime' or 'timestamp' type.";
     }
 
+    // auto increment
+    if (!Utils.isNullOrEmpty(autoIncrementDefinition) && !DataType.allowAutoIncrement(columnType)) {
+      return "'Auto increment' is not allowed type.";
+    }
+
     return "";
   }
 }
