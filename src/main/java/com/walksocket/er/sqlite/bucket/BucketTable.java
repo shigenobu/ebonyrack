@@ -868,6 +868,22 @@ public class BucketTable {
         if (!o.notNullValue.equals(NotNull.NOT_NULL_VALUE)) {
           throw new Exception("Primary key must be 'Not null'.");
         }
+
+        // check length, text max is 768, blob max is 3072
+        var dbDictColumnType = Bucket.getInstance().getBucketDict().dbDictColumnTypeList.stream()
+            .filter(d -> d.dictColumnTypeId.equals(o.dictColumnTypeId))
+            .findFirst()
+            .get();
+        if (dbDictColumnType.columnType.toLowerCase().contains("text")
+            && (Utils.isNullOrEmpty(columnKeyOption.length)
+            || Integer.parseInt(columnKeyOption.length) > 768)) {
+          throw new Exception("Text primary key length must be less than 768.");
+        }
+        if (dbDictColumnType.columnType.toLowerCase().contains("blob")
+            && (Utils.isNullOrEmpty(columnKeyOption.length)
+            || Integer.parseInt(columnKeyOption.length) > 3072)) {
+          throw new Exception("Blob primary key length must be less than 3072.");
+        }
       }
       seqForPrimaryKey++;
 
@@ -947,6 +963,23 @@ public class BucketTable {
           throw new Exception(
               String.format("For unique key '%s' is not exist.", columnKeyOption.columnName));
         }
+
+        // check length, text max is 768, blob max is 3072
+        var dbDictColumnType = Bucket.getInstance().getBucketDict().dbDictColumnTypeList.stream()
+            .filter(d -> d.dictColumnTypeId.equals(optDictColumn.get().dictColumnTypeId))
+            .findFirst()
+            .get();
+        if (dbDictColumnType.columnType.toLowerCase().contains("text")
+            && (Utils.isNullOrEmpty(columnKeyOption.length)
+            || Integer.parseInt(columnKeyOption.length) > 768)) {
+          throw new Exception("Text unique key length must be less than 768.");
+        }
+        if (dbDictColumnType.columnType.toLowerCase().contains("blob")
+            && (Utils.isNullOrEmpty(columnKeyOption.length)
+            || Integer.parseInt(columnKeyOption.length) > 3072)) {
+          throw new Exception("Blob unique key length must be less than 3072.");
+        }
+
         dbTableUniqueKeyColumn.dictColumnId = optDictColumn.get().dictColumnId;
         dbTableUniqueKeyColumn.length = columnKeyOption.length;
         dbTableUniqueKeyColumn.seqInIndex = columnKeyOption.seqInIndex;
@@ -1029,8 +1062,24 @@ public class BucketTable {
           throw new Exception(
               String.format("For key '%s' is not exist.", columnKeyOption.columnName));
         }
-        dbTableKeyColumn.dictColumnId = optDictColumn.get().dictColumnId;
 
+        // check length, text max is 768, blob max is 3072
+        var dbDictColumnType = Bucket.getInstance().getBucketDict().dbDictColumnTypeList.stream()
+            .filter(d -> d.dictColumnTypeId.equals(optDictColumn.get().dictColumnTypeId))
+            .findFirst()
+            .get();
+        if (dbDictColumnType.columnType.toLowerCase().contains("text")
+            && (Utils.isNullOrEmpty(columnKeyOption.length)
+            || Integer.parseInt(columnKeyOption.length) > 768)) {
+          throw new Exception("Text key length must be less than 768.");
+        }
+        if (dbDictColumnType.columnType.toLowerCase().contains("blob")
+            && (Utils.isNullOrEmpty(columnKeyOption.length)
+            || Integer.parseInt(columnKeyOption.length) > 3072)) {
+          throw new Exception("Blob key length must be less than 3072.");
+        }
+
+        dbTableKeyColumn.dictColumnId = optDictColumn.get().dictColumnId;
         dbTableKeyColumn.length = columnKeyOption.length;
         dbTableKeyColumn.seqInIndex = columnKeyOption.seqInIndex;
         dbTableKeyColumn.collation = columnKeyOption.collation;
@@ -1195,6 +1244,16 @@ public class BucketTable {
         // check same column type - self and other
         if (!dictColumnTypeId.equals(referenceDbDictColumn.dictColumnTypeId)) {
           throw new Exception("Foreign key Column type is mismatch.");
+        }
+
+        // check not text or blob
+        var dictColumnType = Bucket.getInstance().getBucketDict().dbDictColumnTypeList.stream()
+            .filter(c -> c.dictColumnTypeId.equals(dictColumnTypeId))
+            .findFirst()
+            .get();
+        if (dictColumnType.columnType.toLowerCase().contains("text")
+            || dictColumnType.columnType.toLowerCase().contains("blob")) {
+          throw new Exception("Foreign key Column type is disallowed for 'text' or 'blob'.");
         }
 
         con.executeInsert(dbTableForeignKeyColumn);
