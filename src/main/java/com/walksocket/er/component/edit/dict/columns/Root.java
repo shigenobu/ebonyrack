@@ -1,6 +1,6 @@
 package com.walksocket.er.component.edit.dict.columns;
 
-import com.walksocket.er.Size.DialogMedium;
+import com.walksocket.er.Size.DialogLarge;
 import com.walksocket.er.component.EditDictColumns;
 import com.walksocket.er.component.edit.dict.columns.root.Form;
 import java.awt.Component;
@@ -36,7 +36,7 @@ public class Root extends JPanel {
 
     // panel - form
     form = new Form(this);
-    form.setPreferredSize(new Dimension(DialogMedium.WIDTH - 20, DialogMedium.HEIGHT));
+    form.setPreferredSize(new Dimension(DialogLarge.WIDTH - 20, DialogLarge.HEIGHT));
     form.setAlignmentX(Component.LEFT_ALIGNMENT);
     add(form);
   }

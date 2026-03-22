@@ -204,10 +204,11 @@ public class DbDictColumn extends Entity {
   /**
    * get tip text.
    *
-   * @param dbDictColumnType dbDictColumnType
+   * @param dbDictColumnType  dbDictColumnType
+   * @param dbDictColumnAlias dbDictColumnAlias
    * @return tip text
    */
-  public String getTipText(DbDictColumnType dbDictColumnType) {
+  public String getTipText(DbDictColumnType dbDictColumnType, DbDictColumnAlias dbDictColumnAlias) {
     var builder = new StringBuilder();
     builder.append("<html>");
     if (autoIncrementDefinition.equals(AutoIncrement.AUTO_INCREMENT_VALUE)) {
@@ -217,6 +218,21 @@ public class DbDictColumn extends Entity {
         getShowColumnName(),
         dbDictColumnType.columnType,
         notNullValue));
+    if (dbDictColumnAlias != null) {
+      if (!Utils.isNullOrEmpty(dbDictColumnAlias.explanation)) {
+        builder.append(
+            String.format("<br>%s", dbDictColumnAlias.explanation.replaceAll("\n", "<br>")));
+      }
+      if (!Utils.isNullOrEmpty(dbDictColumnAlias.alias1)) {
+        builder.append(String.format("<br>- %s", dbDictColumnAlias.alias1));
+      }
+      if (!Utils.isNullOrEmpty(dbDictColumnAlias.alias2)) {
+        builder.append(String.format("<br>- %s", dbDictColumnAlias.alias2));
+      }
+      if (!Utils.isNullOrEmpty(dbDictColumnAlias.alias3)) {
+        builder.append(String.format("<br>- %s", dbDictColumnAlias.alias3));
+      }
+    }
     builder.append("</html>");
     return builder.toString();
   }

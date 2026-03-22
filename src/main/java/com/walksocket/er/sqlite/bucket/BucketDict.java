@@ -14,6 +14,7 @@ import com.walksocket.er.sqlite.entity.DbDictGroup;
 import com.walksocket.er.sqlite.entity.DbDictGroupColumn;
 import com.walksocket.er.sqlite.entity.DbDictPartition;
 import com.walksocket.er.sqlite.tmp.TmpDictColumn;
+import com.walksocket.er.sqlite.tmp.TmpDictColumnAlias;
 import com.walksocket.er.sqlite.tmp.TmpDictColumnType;
 import com.walksocket.er.sqlite.tmp.TmpDictGroup;
 import com.walksocket.er.sqlite.tmp.TmpDictGroupColumn;
@@ -423,31 +424,39 @@ public class BucketDict {
   /**
    * save dict column alias.
    *
-   * @param newDbDictColumnAliasList dbDictColumnAliasList
+   * @param tmpDictColumnAlias TmpDictColumnAlias
    * @throws Exception
    */
-  public void saveDictColumnAlias(List<DbDictColumnAlias> newDbDictColumnAliasList)
+  public void saveDictColumnAlias(TmpDictColumnAlias tmpDictColumnAlias)
       throws Exception {
     try {
       con.begin();
 
       // database
-      con.execute("DELETE FROM DbDictColumnAlias");
-      for (var newDbDictColumnAlias : newDbDictColumnAliasList) {
-        con.executeInsert(newDbDictColumnAlias);
+      var d = new DbDictColumnAlias();
+      d.dictColumnId = tmpDictColumnAlias.dictColumnId;
+      d.explanation = tmpDictColumnAlias.explanation;
+      d.alias1 = tmpDictColumnAlias.alias1;
+      d.alias2 = tmpDictColumnAlias.alias2;
+      d.alias3 = tmpDictColumnAlias.alias3;
+      var sql = String.format("DELETE FROM DbDictColumnAlias WHERE dictColumnId = '%s'",
+          Utils.quote(d.dictColumnId));
+      con.execute(sql);
+      if (d.isValid()) {
+        con.executeInsert(d);
       }
 
       con.commit();
 
       // memory
-      for (var newDbDictColumnAlias : newDbDictColumnAliasList) {
-        var opt = dbDictColumnAliasList.stream()
-            .filter(d -> d.dictColumnId.equals(newDbDictColumnAlias.dictColumnId))
-            .findFirst();
-        if (opt.isPresent()) {
-          dbDictColumnAliasList.remove(opt.get());
-        }
-        dbDictColumnAliasList.add(newDbDictColumnAlias);
+      var opt = dbDictColumnAliasList.stream()
+          .filter(t -> t.dictColumnId.equals(d.dictColumnId))
+          .findFirst();
+      if (opt.isPresent()) {
+        dbDictColumnAliasList.remove(opt.get());
+      }
+      if (d.isValid()) {
+        dbDictColumnAliasList.add(d);
       }
 
     } catch (Exception e) {

@@ -1,7 +1,7 @@
 package com.walksocket.er.component.edit.dict.columns.root;
 
 import com.walksocket.er.Log;
-import com.walksocket.er.Size.DialogMedium;
+import com.walksocket.er.Size.DialogLarge;
 import com.walksocket.er.Utils;
 import com.walksocket.er.component.UsedDictColumn;
 import com.walksocket.er.component.edit.dict.columns.Root;
@@ -396,7 +396,7 @@ public class Form extends JPanel {
 
     // empty
     var emptyPanel = new JPanel();
-    emptyPanel.setPreferredSize(new Dimension(DialogMedium.WIDTH, DialogMedium.HEIGHT / 40));
+    emptyPanel.setPreferredSize(new Dimension(DialogLarge.WIDTH, DialogLarge.HEIGHT / 40));
     emptyPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
     emptyPanel.setBorder(new ErUnderlineBorder());
     add(emptyPanel);
@@ -484,7 +484,7 @@ public class Form extends JPanel {
       }
     });
     var sp = new JScrollPane(table);
-    sp.setPreferredSize(new Dimension(DialogMedium.WIDTH - 40 + 30, DialogMedium.HEIGHT / 10 * 6));
+    sp.setPreferredSize(new Dimension(DialogLarge.WIDTH - 40 + 30, DialogLarge.HEIGHT / 10 * 7));
     panelTable.add(sp);
 
     // load

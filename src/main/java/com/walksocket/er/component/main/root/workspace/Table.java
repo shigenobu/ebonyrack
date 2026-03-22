@@ -19,6 +19,7 @@ import com.walksocket.er.definition.NotNull;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.context.CtxTable;
 import com.walksocket.er.sqlite.entity.DbDictColumn;
+import com.walksocket.er.sqlite.entity.DbDictColumnAlias;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -205,6 +206,11 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
       Log.error(e);
     }
   }
+
+  /**
+   * color has alias.
+   */
+  private static final Color colorHasAlias = new Color(32, 165, 4);
 
   /**
    * workspace.
@@ -477,6 +483,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
     var dbDictColumnTypeList = Bucket.getInstance().getBucketDict().dbDictColumnTypeList;
     var dbDictColumnList = Bucket.getInstance().getBucketDict().dbDictColumnList;
     var dbDictGroupColumnList = Bucket.getInstance().getBucketDict().dbDictGroupColumnList;
+    var dbDictColumnAliasList = Bucket.getInstance().getBucketDict().dbDictColumnAliasList;
 
     var targetDbDictColumList = new ArrayList<DbDictColumn>();
     if (ctxTable.dbTableColumnList.size() > 0) {
@@ -530,12 +537,19 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
             .filter(d -> d.dictColumnTypeId.equals(dbDictColumn.dictColumnTypeId))
             .findFirst()
             .get();
+        DbDictColumnAlias dbDictColumnAlias = null;
+        var optAlias = dbDictColumnAliasList.stream()
+            .filter(d -> d.dictColumnId.equals(dbDictColumn.dictColumnId))
+            .findFirst();
+        if (optAlias.isPresent()) {
+          dbDictColumnAlias = optAlias.get();
+        }
 
         var p = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         p.setName(dbDictColumn.dictColumnId);
         p.setPreferredSize(new Dimension(w - 10, ph));
         p.setBackground(Color.WHITE);
-        p.setToolTipText(dbDictColumn.getTipText(dbDictColumnType));
+        p.setToolTipText(dbDictColumn.getTipText(dbDictColumnType, dbDictColumnAlias));
         p.addMouseListener(new MouseAdapter() {
           @Override
           public void mousePressed(MouseEvent e) {
@@ -634,6 +648,9 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
         textFieldColumnName.setBackground(null);
         textFieldColumnName.setBorder(null);
         textFieldColumnName.setPreferredSize(new Dimension(w - 120, ph));
+        if (dbDictColumnAlias != null) {
+          textFieldColumnName.setForeground(colorHasAlias);
+        }
         p2.add(textFieldColumnName);
         if (idx >= noGroupLen) {
           textFieldColumnName.setForeground(Color.GRAY);

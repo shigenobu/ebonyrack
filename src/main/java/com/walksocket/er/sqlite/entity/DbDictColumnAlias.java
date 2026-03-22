@@ -84,6 +84,9 @@ public class DbDictColumnAlias extends Entity {
    * @return if valid, return true.
    */
   public boolean isValid() {
-    return !explanation.isEmpty() || !alias1.isEmpty() || !alias2.isEmpty() || !alias3.isEmpty();
+    return !Utils.isNullOrEmpty(explanation)
+        || !Utils.isNullOrEmpty(alias1)
+        || !Utils.isNullOrEmpty(alias2)
+        || !Utils.isNullOrEmpty(alias3);
   }
 }

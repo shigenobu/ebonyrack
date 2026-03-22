@@ -416,20 +416,18 @@ public class Bucket {
           dbDictColumnList, dbDictColumnAliasList)) {
 
         if (!Utils.isNullOrEmpty(tmpColumn.alias.explanation)) {
-          columns.add(String.format("-- %s", tmpColumn.alias.explanation));
+          for (var explanation : tmpColumn.alias.explanation.split("\n")) {
+            columns.add(String.format("-- %s", explanation));
+          }
         }
-        var as = new ArrayList<String>();
         if (!Utils.isNullOrEmpty(tmpColumn.alias.alias1)) {
-          as.add(tmpColumn.alias.alias1);
+          columns.add(String.format("-- - %s", tmpColumn.alias.alias1));
         }
         if (!Utils.isNullOrEmpty(tmpColumn.alias.alias2)) {
-          as.add(tmpColumn.alias.alias2);
+          columns.add(String.format("-- - %s", tmpColumn.alias.alias2));
         }
         if (!Utils.isNullOrEmpty(tmpColumn.alias.alias3)) {
-          as.add(tmpColumn.alias.alias3);
-        }
-        if (as.size() > 0) {
-          columns.add(String.format("-- %s", as.stream().collect(Collectors.joining(", "))));
+          columns.add(String.format("-- - %s", tmpColumn.alias.alias3));
         }
 
         var b = new StringBuilder();

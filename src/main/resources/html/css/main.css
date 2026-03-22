@@ -186,6 +186,7 @@ dialog tbody td {
   word-wrap: break-word;
   text-overflow: ellipsis;
   overflow: hidden;
+  vertical-align: top;
 }
 
 dialog tbody td:hover {
@@ -205,10 +206,6 @@ dialog tbody td.unwrap {
   white-space: normal;
   overflow: scroll;
   text-overflow: unset;
-}
-
-dialog tbody td ul.alias {
-  margin-left: 8px;
 }
 
 dialog a:link {

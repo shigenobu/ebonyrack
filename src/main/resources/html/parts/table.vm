@@ -72,18 +72,16 @@
                   #end
               </td>
               <td>
-                <p>${tmpColumn.alias.explanation}</p>
-                <ul class="alias">
-                    #if($tmpColumn.alias.alias1)
-                      <li>${tmpColumn.alias.alias1}</li>
-                    #end
-                    #if($tmpColumn.alias.alias2)
-                      <li>${tmpColumn.alias.alias2}</li>
-                    #end
-                    #if($tmpColumn.alias.alias3)
-                      <li>${tmpColumn.alias.alias3}</li>
-                    #end
-                </ul>
+                <p>${ErTemplateUtils.nl2br($tmpColumn.alias.explanation)}</p>
+                  #if($tmpColumn.alias.alias1)
+                    <p>- ${tmpColumn.alias.alias1}</p>
+                  #end
+                  #if($tmpColumn.alias.alias2)
+                    <p>- ${tmpColumn.alias.alias2}</p>
+                  #end
+                  #if($tmpColumn.alias.alias3)
+                    <p>- ${tmpColumn.alias.alias3}</p>
+                  #end
               </td>
             </tr>
             #end
