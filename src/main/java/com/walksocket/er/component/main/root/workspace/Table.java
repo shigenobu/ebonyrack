@@ -47,6 +47,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.PopupMenuEvent;
@@ -665,6 +667,23 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
         textFieldColumnName.addMouseListener(new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
+            if (e.isPopupTrigger() || SwingUtilities.isRightMouseButton(e)) {
+              if (textFieldColumnName.getParent().getParent() instanceof JPanel pp) {
+                var ta = new JTextArea(
+                    pp.getToolTipText().replaceAll("<br>", "\n").replaceAll("<[^>]*>", ""),
+                    10, 10);
+                ta.setEditable(false);
+                ta.setLineWrap(true);
+                var sp = new JScrollPane(ta);
+                JOptionPane.showMessageDialog(
+                    textFieldColumnName,
+                    sp,
+                    dbDictColumn.getShowColumnName(),
+                    JOptionPane.PLAIN_MESSAGE);
+              }
+              return;
+            }
+
             if (e.getClickCount() >= 2) {
               if (!Utils.isNullOrEmpty(dbDictColumn.columnComment)) {
                 try {
