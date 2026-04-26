@@ -19,7 +19,7 @@
 「Sequence name」を変更後、 __Save and close__ を押下すると、  
 入力したシーケンスの情報がワークスペース上に表示されます。  
 
-![](../image/section03/01.png)
+![](../image/section03/03.png)
 
 ---
 

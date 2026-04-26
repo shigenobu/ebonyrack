@@ -24,16 +24,16 @@ ER図を作成し、DDLやクラスファイルなどを簡単に生成するこ
 [(section05)テーブルのキー作成](./section.ja/section05.md)  
 [(section06)テーブルの色変更](./section.ja/section06.md)  
 [(section07)テーブルの外部キーの作成](./section.ja/section07.md)  
-[(section08)テーブルの外部キーの多重度表示](./section.ja/section08.md)
-[(section09)テーブルの外部キーの自己相関](./section.ja/section09.md)
+[(section08)テーブルの外部キーの多重度表示](./section.ja/section08.md)  
+[(section09)テーブルの外部キーの自己相関](./section.ja/section09.md)  
 [(section10)DDL表示](./section.ja/section10.md)  
 [(section11)クラス生成](./section.ja/section11.md)  
 [(section12)開始画面](./section.ja/section12.md)  
 [(section13)Fileメニュー](./section.ja/section13.md)  
 [(section14)Editメニュー](./section.ja/section14.md)  
 [(section15)テーブルの共通カラム](./section.ja/section15.md)  
-[(section16)テーブルのパーティション](./section.ja/section16.md)
-[(section17)ワークスペースの領域とアウトライン](./section.ja/section17.md)
+[(section16)テーブルのパーティション](./section.ja/section16.md)  
+[(section17)ワークスペースの領域とアウトライン](./section.ja/section17.md)  
 
 ---
  
