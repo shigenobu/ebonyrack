@@ -82,7 +82,7 @@ public class Logo extends JPanel {
         try {
           var appVersion = App.getVersion();
           if (Utils.isNullOrEmpty(appVersion)) {
-            appVersion = "v0.0.0";
+            return null;
           }
           if (appVersion.startsWith("v")) {
             appVersion = appVersion.substring(1);

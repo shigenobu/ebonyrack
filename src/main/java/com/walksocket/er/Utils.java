@@ -248,4 +248,14 @@ public class Utils {
     }
     return object.toString().trim();
   }
+
+  /**
+   * from boolean to int.
+   *
+   * @param b boolean
+   * @return if true, 1, else 0
+   */
+  public static int FromBooleanToInt(boolean b) {
+    return b ? 1 : 0;
+  }
 }

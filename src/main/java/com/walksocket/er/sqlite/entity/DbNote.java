@@ -25,24 +25,30 @@ public class DbNote extends Entity {
    */
   public String body = "";
 
+  /**
+   * asExpression.
+   */
+  public boolean asExpression = false;
 
   @Override
   public void bind(Record record) {
     noteId = record.getOrEmpty("noteId");
     subject = record.getOrEmpty("subject");
     body = record.getOrEmpty("body");
+    asExpression = record.getByBoolean("asExpression");
   }
 
   @Override
   public String createInsert() {
     return String.format(
         "INSERT INTO DbNote "
-            + "(noteId, subject, body) "
+            + "(noteId, subject, body, asExpression) "
             + "VALUES "
-            + "('%s', '%s', '%s')",
+            + "('%s', '%s', '%s', %s)",
         Utils.quote(noteId),
         Utils.quote(subject),
-        Utils.quote(body)
+        Utils.quote(body),
+        Utils.FromBooleanToInt(asExpression)
     );
   }
 
@@ -51,11 +57,13 @@ public class DbNote extends Entity {
     return String.format(
         "UPDATE DbNote SET "
             + "subject = '%s', "
-            + "body = '%s' "
+            + "body = '%s', "
+            + "asExpression = %s "
             + "WHERE "
             + "noteId = '%s' ",
         Utils.quote(subject),
         Utils.quote(body),
+        Utils.FromBooleanToInt(asExpression),
         Utils.quote(noteId)
     );
   }
@@ -72,5 +80,14 @@ public class DbNote extends Entity {
   @Override
   public List<String> orderColumns() {
     return List.of("noteId");
+  }
+
+  /**
+   * get note subject for sort.
+   *
+   * @return note subject
+   */
+  public String getNoteSubjectForSort() {
+    return subject + "-" + asExpression + "-" + body;
   }
 }

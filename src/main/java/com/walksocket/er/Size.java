@@ -173,11 +173,11 @@ public class Size {
     /**
      * width.
      */
-    public static final int WIDTH = 720;
+    public static final int WIDTH = 800;
 
     /**
      * height.
      */
-    public static final int HEIGHT = 768;
+    public static final int HEIGHT = 900;
   }
 }

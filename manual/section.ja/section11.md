@@ -1,39 +1,38 @@
-### （section11）Fileメニュー
+### (section11)クラス生成
 
-「File」メニューには以下の項目があります。  
+テーブルオブジェクトのヘッダー部分を右クリックして、「Show table class」を押下します。  
+この機能は、テーブルの定義情報に基づき、プログラムで使うクラス用のソースファイルなどを生成する機能です。  
 
-* Close project
-* Export ddl
-* Export image
-* Export html
-* Export table class
+![](../image/section11/01.png)
 
-「Close project」は、プロジェクトを閉じて開始画面に戻ります。  
-「Export image」は、希望の場所にワークスペースの画面キャプチャをPNGとして保存します。  
-「Export html」は、希望の場所にHTMLドキュメントを保存します。  
-上記3つについては、説明を割愛します。  
+ __Generate__ を押下することで、下記のようにクラス用のソースファイルが表示されます。  
 
-「Export ddl」では、テーブルとシーケンスのDDLを出力するのですが、  
-出力にあたって、条件付けが可能です。  
+![](../image/section11/02.png)
 
-![](../image/14_Main_01_ExportDdl.png)
+ __Edit__ を押下すると、現在選択中のテンプレートファイルを編集できます。  
+編集しつつ、 __Generate__ を押下することで、すぐに結果を確認することができます。  
+なお、テンプレートはebonyrackのホームディレクトリ（デフォルトでは`~/.ebonyrack` ）直下の、  
+`template` というディレクトリに格納することで、選択可能となります。  
 
-「Export table class」では、テーブルの情報から、  
-クラス用のソースファイルを一括で出力します。  
-出力にあたって、条件付けが可能です。  
+ファイル名は、  
 
-![](../image/14_Main_02_ExportTableClass.png)
+    {任意のファイル名}.{任意の拡張子}.vm
 
-また、「File name converter」では、  
+としてください。  
+また、`__` で始まるファイル名はテンプレート対象外となります。  
+デフォルトでは、  
 
-    {プレフィックス}{テーブル名変換ルール}{サフィックス}.{拡張子}
+* __SampleMacro.vm
+* Sample.java.vm
+* Sample.txt.vm
 
-というファイル名のカスタム出力が可能です。  
-拡張子は、テンプレートに依存します。  
-なお、出力されるファイル数は、対象のテーブル分となります。  
+の3つが配備されています。  
+Apache Velocityを使っているため、その文法に沿って情報が出力されます。  
+また、「__SampleMacro.vm」は、Velocityのマクロとなっており、  
+他テンプレートからも呼び出し可能となっています。  
 
 ---
 
-[（section12）Editメニュー](section12.md)
+[(section12)開始画面](section12.md)
 
 [一覧に戻る](../manual.ja.md)

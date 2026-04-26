@@ -539,8 +539,10 @@ public class Form extends JPanel {
 
   /**
    * pack tmp foreign key.
+   *
+   * @throws Exception wrong foreign key
    */
-  public void packTmpForeignKey() {
+  public void packTmpForeignKey() throws Exception {
     var forceClear = false;
 
     // -----
@@ -670,6 +672,8 @@ public class Form extends JPanel {
       tmpForeignKey.columnForeignKeyOptionList.clear();
       tmpForeignKey.referenceTableName = "";
       tmpForeignKey.referenceColumnForeignKeyOptionList.clear();
+
+      throw new Exception("First key is not set.");
     }
   }
 }

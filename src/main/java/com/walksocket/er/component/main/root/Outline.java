@@ -395,6 +395,7 @@ public class Outline extends JPanel {
 
       buttonClose.setBorder(null);
       buttonClose.setBackground(null);
+      buttonClose.setToolTipText("Close (Esc)");
       buttonClose.addMouseListener(new MouseAdapter() {
         @Override
         public void mousePressed(MouseEvent e) {
@@ -429,6 +430,7 @@ public class Outline extends JPanel {
 
       buttonPrev.setBorder(null);
       buttonPrev.setBackground(null);
+      buttonPrev.setToolTipText("Prev (Shift + Enter)");
       buttonPrev.addMouseListener(new MouseAdapter() {
         @Override
         public void mousePressed(MouseEvent e) {
@@ -439,6 +441,7 @@ public class Outline extends JPanel {
 
       buttonNext.setBorder(null);
       buttonNext.setBackground(null);
+      buttonNext.setToolTipText("Next (Enter)");
       buttonNext.addMouseListener(new MouseAdapter() {
         @Override
         public void mousePressed(MouseEvent e) {

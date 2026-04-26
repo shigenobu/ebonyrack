@@ -51,11 +51,21 @@
         </thead>
         <tbody>
             #foreach($ctxNote in $relatedCtxNoteList)
+                #set($suffix = "")
+                #if($ctxNote.dbNote.asExpression)
+                    #set($suffix = " [EX]")
+                #end
             <tr>
               <td><a href="javascript:void(0)"
-                     onclick="let aid = 'note-${ctxNote.dbNote.noteId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${ctxNote.dbNote.subject}</a>
+                     onclick="let aid = 'note-${ctxNote.dbNote.noteId}'; let said = '${dialogId}'; openOtherDialog(aid, said);">${ctxNote.dbNote.subject}</a>${suffix}
               </td>
-              <td class="unwrap">${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}</td>
+              <td class="unwrap">
+                  #if(!$ctxNote.dbNote.asExpression)
+                      ${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}
+                  #else
+                    <pre>${ctxNote.dbNote.body}</pre>
+                  #end
+              </td>
             </tr>
             #end
         </tbody>

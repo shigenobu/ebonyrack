@@ -117,6 +117,20 @@ public class Record {
   }
 
   /**
+   * get boolean value. 0: false, 1: true.
+   *
+   * @param columnName column name
+   * @return boolean value
+   */
+  public boolean getByBoolean(String columnName) {
+    var value = getOrDefault(columnName, "0");
+    if (value == null) {
+      return false;
+    }
+    return value.equals("1");
+  }
+
+  /**
    * get all.
    *
    * @return all params

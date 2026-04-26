@@ -1,21 +1,25 @@
-### （section02）テーブルの作成
+### (section02)テーブルの作成
 
 プロジェクト作成直後は、何もない状態となっています。  
 
-![](../image/03_Main_01.png)
+![](../image/section02/01.png)
 
 ここで、右側の罫線がかかった部分（ワークスペース）で、右クリックをして、  
 「New table」を選択します。  
 
-![](../image/03_Main_02.png)
+![](../image/section02/02.png)
 
 右クリックした位置に、新規にテーブルのオブジェクトが作成されます。  
 テーブルの初期名は「000-NT_」という接頭辞を持ち、  
 この接頭辞がついていると、各所で無効なテーブルとして扱われます。  
-テーブルオブジェクトのヘッダー部分（薄赤色の部分）をダブルクリックすると、  
-テーブルの詳細入力画面が開きます。  
+テーブルの詳細入力画面は、以下の動作によって開きます。  
 
-![](../image/04_Table_01.png)
+* テーブルオブジェクトのヘッダー部分（薄赤色の部分）をダブルクリックする
+* テーブルオブジェクトのヘッダー部分（薄赤色の部分）を右クリックして「Edit table」を選択する
+* テーブルオブジェクトがフォーカスされている状態で、「Enter」キーを押下する
+
+
+![](../image/section02/03.png)
 
 「Table name」は、いわゆる物理名で、テーブルの名前を入力します。  
 「Table comment」は、いわゆる論理名で、テーブルのコメントを入力します。  
@@ -26,46 +30,47 @@
 
 次にカラムの設定をします。  
 「Column name」のセルをダブルクリックすると、カラム名の入力もしくはすでに存在しているカラムの情報を参照できます。  
+テーブルセルのような赤文字ヘッダーは、その列がダブルクリックによって動作することを示しています。  
 
-![](../image/04_Table_02_ColumnName.png)
+![](../image/section02/04.png)
 
 初期時点では、カラムが存在していないため、カラム名を入力して __Ok__ を押下します。  
 Enterキーでも同様です。  
 
-![](../image/04_Table_03.png)
+![](../image/section02/05.png)
 
 カラム名がセルに設定された状態なるので、他の項目を入力・選択していきます。  
 
-![](../image/04_Table_04.png)
+![](../image/section02/06.png)
 
 さらにカラムを追加します。  
 
-![](../image/04_Table_05.png)
+![](../image/section02/07.png)
 
 次に主キーの設定をします。  
 
 「primary key」のタブの「Columns and collations」のセルをダブルクリックします。  
 
-![](../image/04_Table_06_PrimaryKey.png)
+![](../image/section02/08.png)
 
 「Seq in index」で、キーの順番を指定し、 __Ok__ ボタンを押下します。  
 
-![](../image/04_Table_07.png)
+![](../image/section02/09.png)
 
 これで、主キーがセットされた状態となりました。  
 「Index comment」と「Index type」は任意入力です。  
 
 次にユニークキーの設定をします。  
 
-![](../image/04_Table_08.png)
+![](../image/section02/10.png)
 
 「unique key」のタブの「Columns and collations」のセルをダブルクリックします。  
 
-![](../image/04_Table_09_UniqueKey.png)
+![](../image/section02/11.png)
 
 「Seq in index」で、キーの順番を指定し、 __Ok__ ボタンを押下します。  
 
-![](../image/04_Table_10.png)
+![](../image/section02/12.png)
 
 これで、ユニークキーがセットされた状態となりました。  
 「Key name」は、未入力の場合、保存時にカラム名がセットされます。  
@@ -74,10 +79,10 @@ Enterキーでも同様です。
  __Save and close__ を押下すると、  
 入力したテーブルの情報がワークスペース上に表示されます。  
 
-![](../image/05_Main_01.png)
+![](../image/section02/13.png)
 
 ---
 
-[（section03）シーケンスの作成](section03.md)
+[(section03)シーケンスの作成](section03.md)
 
 [一覧に戻る](../manual.ja.md)

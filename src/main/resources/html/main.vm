@@ -40,8 +40,12 @@
       <ul>
           #foreach($note in $notes)
               #set($ctxNote = $note.getCtxNote())
+              #set($suffix = "")
+              #if($ctxNote.dbNote.asExpression)
+                  #set($suffix = " [EX]")
+              #end
             <li><a href="javascript:void(0);"
-                   onclick="scrollwindow('note-${ctxNote.dbNote.noteId}');">${ctxNote.dbNote.subject}</a>
+                   onclick="scrollwindow('note-${ctxNote.dbNote.noteId}');">${ctxNote.dbNote.subject}</a>${suffix}
             </li>
           #end
       </ul>

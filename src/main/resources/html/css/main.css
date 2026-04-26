@@ -208,6 +208,15 @@ dialog tbody td.unwrap {
   text-overflow: unset;
 }
 
+dialog tbody td.unwrap pre {
+  background: rgba(94, 94, 94, 0.2);
+  margin-left: 4px;
+  margin-right: 4px;
+  padding: 4px;
+  border-radius: 3px;
+  overflow: scroll;
+}
+
 dialog a:link {
   color: rgb(73, 70, 44);
   text-decoration: underline;

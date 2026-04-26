@@ -32,6 +32,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -98,6 +99,11 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
    * panel subject.
    */
   private final JPanel panelSubject;
+
+  /**
+   * check box as expression.
+   */
+  private final JCheckBox checkBoxAsExpression;
 
   /**
    * panel body.
@@ -175,9 +181,23 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
     panelSide.setBackground(new Color(96, 96, 96));
     panelSide.addMouseListener(new MouseAdapter() {
       @Override
+      public void mousePressed(MouseEvent e) {
+        // focus
+        note.requestFocusInWindow();
+
+        // change cursor
+        var cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+        panelSide.setCursor(cursor);
+      }
+
+      @Override
       public void mouseReleased(MouseEvent e) {
         // focus
         note.requestFocusInWindow();
+
+        // reverse cursor
+        var cursor = Cursor.getDefaultCursor();
+        panelSide.setCursor(cursor);
 
         // connector
         var x = note.getX() + e.getX() + BORDER_SIZE;
@@ -370,12 +390,35 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
         }
       }
     });
-    textFieldSubject.setSize(
-        new Dimension(panelSubject.getWidth() - 20, textFieldSubject.getHeight()));
     textFieldSubject.setColumns(
-        panelSubject.getWidth() / (textFieldSubject.getFont().getSize() + 1));
+        panelSubject.getWidth() / (textFieldSubject.getFont().getSize() + 1) - 2);
     textFieldSubject.setBorder(BorderFactory.createEmptyBorder());
     panelSubject.add(textFieldSubject);
+
+    checkBoxAsExpression = new JCheckBox();
+    checkBoxAsExpression.setToolTipText("As expression");
+    checkBoxAsExpression.addChangeListener(e -> {
+      // check
+      var prevState = ctxNote.dbNote.asExpression;
+      var nowState = checkBoxAsExpression.isSelected();
+      if (prevState == nowState) {
+        return;
+      }
+
+      try {
+        // save
+        ctxNote.dbNote.asExpression = nowState;
+        Bucket.getInstance().getBucketNote().save(ctxNote);
+
+        getWorkspace().reloadNote();
+      } catch (Exception ex) {
+        Log.error(ex);
+
+        JOptionPane.showMessageDialog(note, ex.getMessage());
+      }
+    });
+    checkBoxAsExpression.setSelected(ctxNote.dbNote.asExpression);
+    panelSubject.add(checkBoxAsExpression);
 
     // body
     panelBody = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -581,10 +624,8 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
       resizeSelectingPanel();
 
       // subject
-      textFieldSubject.setSize(
-          new Dimension(panelSubject.getWidth() - 20, textFieldSubject.getHeight()));
       textFieldSubject.setColumns(
-          panelSubject.getWidth() / (textFieldSubject.getFont().getSize() + 1));
+          panelSubject.getWidth() / (textFieldSubject.getFont().getSize() + 1) - 2);
 
       // body
       textAreaBody.setSize(
@@ -777,24 +818,29 @@ public class Note extends ErConnectorEndpoint implements ErConnectorEndpointOrig
 
   @Override
   public String toString() {
+    var suffix = "";
+    if (checkBoxAsExpression != null && checkBoxAsExpression.isSelected()) {
+      suffix = " [EX]";
+    }
+
     var searchText = workspace.getSearchText();
     if (Utils.isNullOrEmpty(searchText)) {
-      return ctxNote.dbNote.subject;
+      return ctxNote.dbNote.subject + suffix;
     }
 
     var targetText = textFieldSubject.getText();
     var startPos = targetText.indexOf(searchText);
     if (startPos >= 0) {
-      return ctxNote.dbNote.subject;
+      return ctxNote.dbNote.subject + suffix;
     }
     targetText = textAreaBody.getText();
     startPos = targetText.indexOf(searchText);
     if (startPos >= 0) {
-      return ctxNote.dbNote.subject;
+      return ctxNote.dbNote.subject + suffix;
     }
 
     return String.format("<html><font color=#dcdcdc>%s</font></html>",
-        ctxNote.dbNote.subject);
+        ctxNote.dbNote.subject + suffix);
   }
 
   /**

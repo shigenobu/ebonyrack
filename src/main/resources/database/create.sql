@@ -298,10 +298,12 @@ create table if not exists DbSequenceOption
 -- note
 create table if not exists DbNote
 (
-    noteId  text,
-    subject text,
-    body    text,
-    primary key (noteId)
+    noteId       text,
+    subject      text,
+    body         text,
+    asExpression integer,
+    primary key (noteId),
+    check (asExpression in (0, 1))
 );
 
 create table if not exists DbNoteOption

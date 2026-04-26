@@ -56,6 +56,8 @@ public class Form extends JPanel {
     columnNameWidthMaps.put(ErHeaderFormatter.format("Table", Type.ordinal), 100);
     columnNameWidthMaps.put(ErHeaderFormatter.format("Foreign key", Type.ordinal), 100);
     columnNameWidthMaps.put(ErHeaderFormatter.format("TFilter", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Expression", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("EFilter", Type.ordinal), 100);
     columnNameWidthMaps.put(ErHeaderFormatter.format("Save path", Type.ordinal), 200);
   }
 
@@ -118,6 +120,21 @@ public class Form extends JPanel {
    * radio button foreign key no.
    */
   private final JRadioButton radioButtonForeignKeyNo = new JRadioButton("No");
+
+  /**
+   * label expression.
+   */
+  private final JLabel labelExpression = new JLabel("Expression:");
+
+  /**
+   * radio button expression yes.
+   */
+  private final JRadioButton radioButtonExpressionYes = new JRadioButton("Yes", true);
+
+  /**
+   * radio button expression no.
+   */
+  private final JRadioButton radioButtonExpressionNo = new JRadioButton("No");
 
   /**
    * label filter sequence.
@@ -208,6 +225,51 @@ public class Form extends JPanel {
    * text field table filter.
    */
   private final JTextField textFieldTableFilter = new JTextField(40);
+
+  /**
+   * label filter expression.
+   */
+  private final JLabel labelFilterExpression = new JLabel("Expression subject filter:");
+
+  /**
+   * button group expression filter.
+   */
+  private final ButtonGroup buttonGroupExpressionFilter = new ButtonGroup();
+
+  /**
+   * radio button expression filter none.
+   */
+  private final JRadioButton radioButtonExpressionFilterNone = new JRadioButton(TmpDdl.FILTER_NONE,
+      true);
+
+  /**
+   * radio button expression filter contains.
+   */
+  private final JRadioButton radioButtonExpressionFilterContains = new JRadioButton(
+      TmpDdl.FILTER_CONTAINS);
+
+  /**
+   * radio button expression filter start with.
+   */
+  private final JRadioButton radioButtonExpressionFilterStartWith = new JRadioButton(
+      TmpDdl.FILTER_START_WITH);
+
+  /**
+   * radio button expression filter end with.
+   */
+  private final JRadioButton radioButtonExpressionFilterEndWith = new JRadioButton(
+      TmpDdl.FILTER_END_WITH);
+
+  /**
+   * radio button expression filter contains in list.
+   */
+  private final JRadioButton radioButtonExpressionFilterContainsInList = new JRadioButton(
+      TmpDdl.FILTER_CONTAINS_IN_LIST);
+
+  /**
+   * text field expression filter.
+   */
+  private final JTextField textFieldExpressionFilter = new JTextField(40);
 
   /**
    * label save path.
@@ -425,6 +487,70 @@ public class Form extends JPanel {
     borderPanel3.setBorder(new ErDottedUnderlineBorder());
     add(borderPanel3);
 
+    // panel expression
+    var panelExpression = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    panelExpression.setPreferredSize(
+        new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20 * 3));
+    add(panelExpression);
+
+    var panelExpressionInnerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    panelExpressionInnerLeft.setPreferredSize(
+        new Dimension(DialogExport.WIDTH / 5, DialogExport.HEIGHT / 20 * 3));
+    panelExpression.add(panelExpressionInnerLeft);
+
+    labelExpression.setPreferredSize(
+        new Dimension(DialogExport.WIDTH / 5, DialogExport.HEIGHT / 20));
+    panelExpressionInnerLeft.add(labelExpression);
+
+    var panelExpressionInnerRight = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
+    panelExpressionInnerRight.setPreferredSize(
+        new Dimension(DialogExport.WIDTH / 5 * 3, DialogExport.HEIGHT / 20 * 3));
+    panelExpression.add(panelExpressionInnerRight);
+
+    var buttonGroupExpression = new ButtonGroup();
+    buttonGroupExpression.add(radioButtonExpressionYes);
+    buttonGroupExpression.add(radioButtonExpressionNo);
+    radioButtonExpressionYes.setPreferredSize(
+        new Dimension(DialogExport.WIDTH / 8, DialogExport.HEIGHT / 20));
+    panelExpressionInnerRight.add(radioButtonExpressionYes);
+    radioButtonExpressionNo.setPreferredSize(
+        new Dimension(DialogExport.WIDTH / 8, DialogExport.HEIGHT / 20));
+    panelExpressionInnerRight.add(radioButtonExpressionNo);
+
+    labelFilterExpression.setPreferredSize(
+        new Dimension(DialogExport.WIDTH / 5 * 3, labelFilterExpression.getFont().getSize() * 2));
+    panelExpressionInnerRight.add(labelFilterExpression);
+
+    radioButtonExpressionFilterNone.addItemListener(itemEvent -> {
+      if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
+        textFieldExpressionFilter.setEditable(false);
+      } else if (itemEvent.getStateChange() == ItemEvent.DESELECTED) {
+        textFieldExpressionFilter.setEditable(true);
+      }
+    });
+    radioButtonExpressionFilterNone.setActionCommand(TmpDdl.FILTER_NONE);
+    radioButtonExpressionFilterContains.setActionCommand(TmpDdl.FILTER_CONTAINS);
+    radioButtonExpressionFilterStartWith.setActionCommand(TmpDdl.FILTER_START_WITH);
+    radioButtonExpressionFilterEndWith.setActionCommand(TmpDdl.FILTER_END_WITH);
+    radioButtonExpressionFilterContainsInList.setActionCommand(TmpDdl.FILTER_CONTAINS_IN_LIST);
+    buttonGroupExpressionFilter.add(radioButtonExpressionFilterNone);
+    buttonGroupExpressionFilter.add(radioButtonExpressionFilterContains);
+    buttonGroupExpressionFilter.add(radioButtonExpressionFilterStartWith);
+    buttonGroupExpressionFilter.add(radioButtonExpressionFilterEndWith);
+    buttonGroupExpressionFilter.add(radioButtonExpressionFilterContainsInList);
+    panelExpressionInnerRight.add(radioButtonExpressionFilterNone);
+    panelExpressionInnerRight.add(radioButtonExpressionFilterContains);
+    panelExpressionInnerRight.add(radioButtonExpressionFilterStartWith);
+    panelExpressionInnerRight.add(radioButtonExpressionFilterEndWith);
+    panelExpressionInnerRight.add(radioButtonExpressionFilterContainsInList);
+    textFieldExpressionFilter.setEditable(false);
+    panelExpressionInnerRight.add(textFieldExpressionFilter);
+
+    var borderPanel4 = new JPanel();
+    borderPanel4.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, 10));
+    borderPanel4.setBorder(new ErDottedUnderlineBorder());
+    add(borderPanel4);
+
     // panel - save path
     var panelSavePath = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
     panelSavePath.setPreferredSize(
@@ -482,10 +608,10 @@ public class Form extends JPanel {
 
     panelSavePathInnerRight.add(textFieldSavePath);
 
-    var borderPanel4 = new JPanel();
-    borderPanel4.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, 10));
-    borderPanel4.setBorder(new ErUnderlineBorder());
-    add(borderPanel4);
+    var borderPanel5 = new JPanel();
+    borderPanel5.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, 10));
+    borderPanel5.setBorder(new ErUnderlineBorder());
+    add(borderPanel5);
 
     // panel - choose from history
     var panelChooseFromHistory = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -603,13 +729,50 @@ public class Form extends JPanel {
           }
           textFieldTableFilter.setText(tableFilterValue);
 
+          // expression
+          var expressionYesNo = Utils.getString(table.getValueAt(r, 7));
+          if (expressionYesNo.equals("Yes")) {
+            radioButtonExpressionYes.setSelected(true);
+          } else {
+            radioButtonExpressionNo.setSelected(true);
+          }
+
+          // expression filter
+          var expressionFilter = TmpDdl.FILTER_NONE;
+          var expressionFilterValue = "";
+          var expressionFilterComplex = Utils.getString(table.getValueAt(r, 8));
+          var expressionFilterPos = expressionFilterComplex.indexOf(SEPARATOR);
+          if (expressionFilterPos >= 0) {
+            expressionFilter = expressionFilterComplex.substring(0, expressionFilterPos);
+            expressionFilterValue = expressionFilterComplex.substring(
+                expressionFilterPos + SEPARATOR.length());
+          }
+          switch (expressionFilter) {
+            case TmpDdl.FILTER_NONE:
+              radioButtonExpressionFilterNone.setSelected(true);
+              break;
+            case TmpDdl.FILTER_CONTAINS:
+              radioButtonExpressionFilterContains.setSelected(true);
+              break;
+            case TmpDdl.FILTER_START_WITH:
+              radioButtonExpressionFilterStartWith.setSelected(true);
+              break;
+            case TmpDdl.FILTER_END_WITH:
+              radioButtonExpressionFilterEndWith.setSelected(true);
+              break;
+            case TmpDdl.FILTER_CONTAINS_IN_LIST:
+              radioButtonExpressionFilterContainsInList.setSelected(true);
+              break;
+          }
+          textFieldExpressionFilter.setText(expressionFilterValue);
+
           // save path
-          textFieldSavePath.setText(Utils.getString(table.getValueAt(r, 7)));
+          textFieldSavePath.setText(Utils.getString(table.getValueAt(r, 9)));
         }
       }
     });
     var sp = new JScrollPane(table);
-    sp.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20 * 4));
+    sp.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20 * 2));
     panelChooseFromHistory.add(sp);
 
     // button remove
@@ -630,10 +793,10 @@ public class Form extends JPanel {
     });
     panelRemove.add(buttonRemove);
 
-    var borderPanel5 = new JPanel();
-    borderPanel5.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, 10));
-    borderPanel5.setBorder(new ErUnderlineBorder());
-    add(borderPanel5);
+    var borderPanel6 = new JPanel();
+    borderPanel6.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, 10));
+    borderPanel6.setBorder(new ErUnderlineBorder());
+    add(borderPanel6);
 
     // reload
     reloadTable();
@@ -667,7 +830,14 @@ public class Form extends JPanel {
       }
       table.setValueAt(tFilter, i, 6);
 
-      table.setValueAt(history.ddl.savePath, i, 7);
+      table.setValueAt(history.ddl.selectedExpression ? "Yes" : "No", i, 7);
+      var eFilter = history.ddl.filterExpressionActionCommand;
+      if (!Utils.isNullOrEmpty(history.ddl.filterExpressionValue)) {
+        eFilter += String.format("%s%s", SEPARATOR, history.ddl.filterExpressionValue);
+      }
+      table.setValueAt(eFilter, i, 8);
+
+      table.setValueAt(history.ddl.savePath, i, 9);
     }
   }
 
@@ -688,12 +858,18 @@ public class Form extends JPanel {
     if (radioButtonForeignKeyYes.isSelected()) {
       tmpDdl.selectedForeignKey = true;
     }
+    if (radioButtonExpressionYes.isSelected()) {
+      tmpDdl.selectedExpression = true;
+    }
 
     tmpDdl.filterSequenceActionCommand = buttonGroupSequenceFilter.getSelection()
         .getActionCommand();
     tmpDdl.filterSequenceValue = Utils.getString(textFieldSequenceFilter);
     tmpDdl.filterTableActionCommand = buttonGroupTableFilter.getSelection().getActionCommand();
     tmpDdl.filterTableValue = Utils.getString(textFieldTableFilter);
+    tmpDdl.filterExpressionActionCommand = buttonGroupExpressionFilter.getSelection()
+        .getActionCommand();
+    tmpDdl.filterExpressionValue = Utils.getString(textFieldExpressionFilter);
 
     tmpDdl.savePath = Utils.getString(textFieldSavePath);
 

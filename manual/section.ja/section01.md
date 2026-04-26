@@ -1,12 +1,12 @@
-### （section01）プロジェクトの作成
+### (section01)プロジェクトの作成
 
 ebonyrack の初回起動時は以下のような画面となります。  
 
-![](../image/00_Startup_01.png)
+![](../image/section01/01.png)
 
 ここで「New project」を押下して、新規にプロジェクトを作ります。  
 
-![](../image/01_Project_01.png)
+![](../image/section01/02.png)
 
 「Name」はプロジェクト名となります。一意の名前を設定してください。  
 「Db path」の入力欄をクリックすると、プロジェクトデータの保存先となるSQLITEファイルが選択されます。  
@@ -17,15 +17,15 @@ ebonyrack の初回起動時は以下のような画面となります。
 入力が完了したら、 __Ok__ ボタンを押下してください。  
 なお、ワークスペースサイズは、可変であり、最大9999まで拡張します。  
 
-![](../image/02_Startup_02.png)
+![](../image/section01/03.png)
 
 作成したプロジェクトが一覧表示されます。  
  __Open__ ボタンを押下することで、プロジェクトが開きます。  
 
-![](../image/03_Main_01.png)
+![](../image/section01/04.png)
 
 ---
 
-[（section02）テーブルの作成](section02.md)
+[(section02)テーブルの作成](section02.md)
 
 [一覧に戻る](../manual.ja.md)

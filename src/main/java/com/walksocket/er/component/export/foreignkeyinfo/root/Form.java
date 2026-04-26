@@ -204,12 +204,12 @@ public class Form extends JPanel {
     // panel - table
     var panelTable = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
     panelTable.setPreferredSize(
-        new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20 * 4));
+        new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20 * 2));
     add(panelTable);
 
     var panelTableInnerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
     panelTableInnerLeft.setPreferredSize(
-        new Dimension(DialogExport.WIDTH / 5, DialogExport.HEIGHT / 20 * 4));
+        new Dimension(DialogExport.WIDTH / 5, DialogExport.HEIGHT / 20 * 2));
     panelTable.add(panelTableInnerLeft);
 
     labelTable.setPreferredSize(
@@ -218,7 +218,7 @@ public class Form extends JPanel {
 
     var panelTableInnerRight = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
     panelTableInnerRight.setPreferredSize(
-        new Dimension(DialogExport.WIDTH / 5 * 3, DialogExport.HEIGHT / 20 * 4));
+        new Dimension(DialogExport.WIDTH / 5 * 3, DialogExport.HEIGHT / 20 * 2));
     panelTable.add(panelTableInnerRight);
 
     labelFilterTable.setPreferredSize(
@@ -259,12 +259,12 @@ public class Form extends JPanel {
     // panel - reference table
     var panelReferenceTable = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
     panelReferenceTable.setPreferredSize(
-        new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20 * 4));
+        new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20 * 2));
     add(panelReferenceTable);
 
     var panelReferenceTableInnerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
     panelReferenceTableInnerLeft.setPreferredSize(
-        new Dimension(DialogExport.WIDTH / 5, DialogExport.HEIGHT / 20 * 4));
+        new Dimension(DialogExport.WIDTH / 5, DialogExport.HEIGHT / 20 * 2));
     panelReferenceTable.add(panelReferenceTableInnerLeft);
 
     labelReferenceTable.setPreferredSize(
@@ -273,7 +273,7 @@ public class Form extends JPanel {
 
     var panelReferenceTableInnerRight = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
     panelReferenceTableInnerRight.setPreferredSize(
-        new Dimension(DialogExport.WIDTH / 5 * 3, DialogExport.HEIGHT / 20 * 4));
+        new Dimension(DialogExport.WIDTH / 5 * 3, DialogExport.HEIGHT / 20 * 2));
     panelReferenceTable.add(panelReferenceTableInnerRight);
 
     labelFilterReferenceTable.setPreferredSize(
@@ -376,7 +376,7 @@ public class Form extends JPanel {
     // panel - choose from history
     var panelChooseFromHistory = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
     panelChooseFromHistory.setPreferredSize(
-        new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20 * 6));
+        new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20 * 10));
     add(panelChooseFromHistory);
 
     labelChooseFromHistory.setPreferredSize(
@@ -469,7 +469,7 @@ public class Form extends JPanel {
       }
     });
     var sp = new JScrollPane(table);
-    sp.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20 * 4));
+    sp.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20 * 8));
     panelChooseFromHistory.add(sp);
 
     // button remove

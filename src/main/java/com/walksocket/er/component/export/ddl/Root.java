@@ -22,7 +22,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.stream.Collectors;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -136,8 +135,8 @@ public class Root extends JPanel {
       builder.append("-- ----------------------------------------\n");
       for (var ctxSequence : Bucket.getInstance().getBucketSequence().ctxSequenceList
           .stream()
-          .sorted(Comparator.comparing(s -> s.dbSequence.sequenceName))
-          .collect(Collectors.toList())) {
+          .sorted(Comparator.comparing(s -> s.dbSequence.getSequenceNameForSort()))
+          .toList()) {
         var actionCommand = tmpDdl.filterSequenceActionCommand;
         var filterValue = tmpDdl.filterSequenceValue;
         if (actionCommand.equals(TmpDdl.FILTER_CONTAINS)
@@ -175,7 +174,7 @@ public class Root extends JPanel {
       for (var ctxTable : Bucket.getInstance().getBucketTable().ctxTableList
           .stream()
           .sorted(Comparator.comparing(t -> t.dbTable.tableName))
-          .collect(Collectors.toList())) {
+          .toList()) {
         var actionCommand = tmpDdl.filterTableActionCommand;
         var filterValue = tmpDdl.filterTableValue;
         if (actionCommand.equals(TmpDdl.FILTER_CONTAINS)
@@ -212,8 +211,8 @@ public class Root extends JPanel {
       builder.append("-- ----------------------------------------\n");
       for (var ctxTable : Bucket.getInstance().getBucketTable().ctxTableList
           .stream()
-          .sorted(Comparator.comparing(t -> t.dbTable.tableName))
-          .collect(Collectors.toList())) {
+          .sorted(Comparator.comparing(t -> t.dbTable.getTableNameForSort()))
+          .toList()) {
         var actionCommand = tmpDdl.filterTableActionCommand;
         var filterValue = tmpDdl.filterTableValue;
         if (actionCommand.equals(TmpDdl.FILTER_CONTAINS)
@@ -239,6 +238,47 @@ public class Root extends JPanel {
           continue;
         }
         builder.append(ddl);
+      }
+    }
+
+    // expression
+    if (tmpDdl.selectedExpression) {
+      builder.append("-- ----------------------------------------\n");
+      builder.append("-- expression\n");
+      builder.append("-- ----------------------------------------\n");
+      for (var ctxNote : Bucket.getInstance().getBucketNote().ctxNoteList
+          .stream()
+          .filter(t -> t.dbNote.asExpression)
+          .sorted(Comparator.comparing(t -> t.dbNote.getNoteSubjectForSort()))
+          .toList()) {
+        var actionCommand = tmpDdl.filterExpressionActionCommand;
+        var filterValue = tmpDdl.filterExpressionValue;
+        if (actionCommand.equals(TmpDdl.FILTER_CONTAINS)
+            && !ctxNote.dbNote.subject.contains(filterValue)) {
+          continue;
+        } else if (actionCommand.equals(TmpDdl.FILTER_START_WITH)
+            && !ctxNote.dbNote.subject.startsWith(filterValue)) {
+          continue;
+        } else if (actionCommand.equals(TmpDdl.FILTER_END_WITH)
+            && !ctxNote.dbNote.subject.endsWith(filterValue)) {
+          continue;
+        } else if (actionCommand.equals(TmpDdl.FILTER_CONTAINS_IN_LIST)) {
+          var includeList = Arrays.stream(filterValue.split(","))
+              .map(v -> v.trim())
+              .toList();
+          if (!includeList.contains(ctxNote.dbNote.subject)) {
+            continue;
+          }
+        }
+
+        builder.append("-- ");
+        builder.append(ctxNote.dbNote.subject);
+        builder.append("\n");
+        builder.append(ctxNote.dbNote.body);
+        if (!ctxNote.dbNote.body.endsWith("\n")) {
+          builder.append("\n");
+        }
+        builder.append("\n");
       }
     }
 

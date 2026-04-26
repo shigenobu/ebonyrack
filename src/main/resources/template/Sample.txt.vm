@@ -143,6 +143,7 @@ note \$relatedCtxNoteList
     ${i} ----------
     subject: ${ctxNote.dbNote.subject}
     body: ${ctxNote.dbNote.body}
+    asExpression: ${ctxNote.dbNote.asExpression}
     #set($i = $i + 1)
 #end
 

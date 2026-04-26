@@ -54,6 +54,11 @@ public class TmpDdl implements Tmp {
   public boolean selectedForeignKey;
 
   /**
+   * selected expression.
+   */
+  public boolean selectedExpression;
+
+  /**
    * filter sequence action command.
    */
   public String filterSequenceActionCommand;
@@ -74,6 +79,16 @@ public class TmpDdl implements Tmp {
   public String filterTableValue;
 
   /**
+   * filter expression action command.
+   */
+  public String filterExpressionActionCommand;
+
+  /**
+   * filter expression value.
+   */
+  public String filterExpressionValue;
+
+  /**
    * save path.
    */
   public String savePath;
@@ -84,10 +99,11 @@ public class TmpDdl implements Tmp {
    * @return hash
    */
   public String getHash() {
-    return Utils.getHash(String.format("%s-%s-%s-%s-%s-%s-%s-%s-%s",
+    return Utils.getHash(String.format("%s-%s-%s-%s-%s-%s-%s-%s-%s-%s-%s-%s",
         schemaValue,
         selectedSequence, filterSequenceActionCommand, filterSequenceValue,
         selectedTable, selectedForeignKey, filterTableActionCommand, filterTableValue,
+        selectedExpression, filterExpressionActionCommand, filterExpressionValue,
         savePath));
   }
 }

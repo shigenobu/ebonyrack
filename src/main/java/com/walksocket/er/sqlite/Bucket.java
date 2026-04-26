@@ -308,7 +308,7 @@ public class Bucket {
         .map(c -> c.noteId)
         .collect(Collectors.toList());
     var relatedCtxNoteList = getBucketNote().ctxNoteList.stream()
-        .filter(n -> relatedNoteIdList.contains(n.dbNote.noteId))
+        .filter(n -> relatedNoteIdList.contains(n.dbNote.noteId) && !n.dbNote.asExpression)
         .sorted(
             Comparator.comparing(n -> String.format("%s-%s", n.dbNote.subject, n.dbNote.noteId)))
         .collect(Collectors.toList());
@@ -380,7 +380,7 @@ public class Bucket {
         .map(c -> c.noteId)
         .collect(Collectors.toList());
     var relatedCtxNoteList = getBucketNote().ctxNoteList.stream()
-        .filter(n -> relatedNoteIdList.contains(n.dbNote.noteId))
+        .filter(n -> relatedNoteIdList.contains(n.dbNote.noteId) && !n.dbNote.asExpression)
         .sorted(
             Comparator.comparing(n -> String.format("%s-%s", n.dbNote.subject, n.dbNote.noteId)))
         .collect(Collectors.toList());

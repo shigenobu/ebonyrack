@@ -324,6 +324,7 @@ public class Main extends JFrame {
       }
     });
     menuFile.add(menuItemExportHtml);
+    menuFile.addSeparator();
 
     var menuItemExportDdl = new JMenuItem("Export ddl");
     menuItemExportDdl.addActionListener(actionEvent -> {
@@ -368,22 +369,7 @@ public class Main extends JFrame {
       editDefault.setVisible(true);
     });
     menuEdit.add(menuItemEditDefault);
-    menuEdit.addSeparator();
-    var menuItemEditTables = new JMenuItem("Edit tables");
-    menuItemEditTables.addActionListener(actionEvent -> {
-      var editTables = new EditTables(main);
-      editTables.setModal(true);
-      editTables.setVisible(true);
-    });
-    menuEdit.add(menuItemEditTables);
-    var menuItemEditSequences = new JMenuItem("Edit sequences");
-    menuItemEditSequences.addActionListener(actionEvent -> {
-      var editSequences = new EditSequences(main);
-      editSequences.setModal(true);
-      editSequences.setVisible(true);
-    });
-    menuEdit.add(menuItemEditSequences);
-    menuEdit.addSeparator();
+
     var menuItemEditDictColumnTypes = new JMenuItem("Edit dict column types");
     menuItemEditDictColumnTypes.addActionListener(actionEvent -> {
       var editDictColumnTypes = new EditDictColumnTypes(main);
@@ -420,6 +406,23 @@ public class Main extends JFrame {
     });
     menuEdit.add(menuItemEditDictPartitions);
     menuEdit.addSeparator();
+
+    var menuItemEditTables = new JMenuItem("Edit tables");
+    menuItemEditTables.addActionListener(actionEvent -> {
+      var editTables = new EditTables(main);
+      editTables.setModal(true);
+      editTables.setVisible(true);
+    });
+    menuEdit.add(menuItemEditTables);
+    var menuItemEditSequences = new JMenuItem("Edit sequences");
+    menuItemEditSequences.addActionListener(actionEvent -> {
+      var editSequences = new EditSequences(main);
+      editSequences.setModal(true);
+      editSequences.setVisible(true);
+    });
+    menuEdit.add(menuItemEditSequences);
+    menuEdit.addSeparator();
+
     var menuItemSearch = new JMenuItem("Search");
     menuItemSearch.addActionListener(actionEvent -> {
       root.getOutline().getSearchSpace().showSpace();

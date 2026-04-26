@@ -13,6 +13,7 @@ import java.awt.FlowLayout;
 import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -64,9 +65,14 @@ public class Root extends JPanel {
     panel.setAlignmentX(Component.LEFT_ALIGNMENT);
     add(panel);
     buttonOk.addActionListener(actionEvent -> {
-      form.packTmpForeignKey();
-      inputForeignKey.getForeignKey().resetTable(row, tmpForeignKey);
-      inputForeignKey.dispose();
+      try {
+        form.packTmpForeignKey();
+        inputForeignKey.getForeignKey().resetTable(row, tmpForeignKey);
+        inputForeignKey.dispose();
+      } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, e.getMessage(), "Foreign key error",
+            JOptionPane.ERROR_MESSAGE);
+      }
     });
     panel.add(buttonOk);
   }

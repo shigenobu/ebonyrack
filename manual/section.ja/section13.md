@@ -1,37 +1,50 @@
-### （section13）テーブルの共通カラム
+### (section13)Fileメニュー
 
-複数のテーブルで共通で使うカラムをグループ化します。
+「File」メニューには以下の項目があります。  
 
-![](../image/21_Main_01.png)
+* Close project
+* Export image
+* Export html
+* Export ddl
+* Export foreign key info
+* Export table class
 
-「Edit dict columns」から、2つのカラムを登録します。  
+「Close project」は、プロジェクトを閉じて開始画面に戻ります。  
+「Export image」は、希望の場所にワークスペースの画面キャプチャをPNGとして保存します。  
+「Export html」は、希望の場所にHTMLドキュメントを保存します。  
+上記3つについては、説明を割愛します。  
 
-![](../image/21_Main_02_DictColums.png)
-![](../image/21_Main_03_DictColums.png)
-![](../image/21_Main_04_DictColums.png)
+- Export ddl  
+テーブルとシーケンスのDDLを出力します。  
+出力にあたって、条件付けが可能です。  
+条件は履歴として、直近10件が呼び出し可能です。  
 
-「Used」が空になっているのが新規に登録した2つのカラムとなります。  
+![](../image/section13/01.png)
 
-「Edit dict groups」から、2つのカラムを1つのグループに登録します。  
+- Export foreign key info  
+外部キーの情報から、テーブル同士の関係を定義したJSONファイルを出力します。  
+出力にあたって、条件付けが可能です。  
+条件は履歴として、直近10件が呼び出し可能です。  
 
-![](../image/21_Main_05_DictGroups.png)
-![](../image/21_Main_06_DictGroups.png)
+![](../image/section13/02.png)
 
-登録したカラムグループをテーブルに紐付けします。  
+- Export table class  
+テーブルの情報から、クラス用のソースファイルを一括で出力します。  
+出力にあたって、条件付けが可能です。  
+条件は履歴として、直近10件が呼び出し可能です。  
 
-![](../image/22_Table_01.png)
+![](../image/section13/03.png)
 
-ワークスペースでカラムグループの情報が表示されます。  
-カラムグループのカラムは、灰色の文字で表示されます。  
+また、「File name converter」では、  
 
-![](../image/23_Main_01.png)
+    {プレフィックス}{テーブル名変換ルール}{サフィックス}.{拡張子}
 
-異なるテーブルにも、同じカラムグループを紐付けします。  
-
-![](../image/23_Main_02.png)
+というファイル名のカスタム出力が可能です。  
+拡張子は、テンプレートに依存します。  
+なお、出力されるファイル数は、対象のテーブル分となります。  
 
 ---
 
-[（section14）テーブルのパーティション](section14.md)
+[(section14)Editメニュー](section14.md)
 
 [一覧に戻る](../manual.ja.md)

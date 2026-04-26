@@ -5,13 +5,23 @@
       <h3>Note:</h3>
       <table>
         <tbody>
+            #set($suffix = "")
+            #if($ctxNote.dbNote.asExpression)
+                #set($suffix = " [EX]")
+            #end
         <tr>
           <td class="headline">Subject</td>
-          <td>${ctxNote.dbNote.subject}</td>
+          <td>${ctxNote.dbNote.subject}${suffix}</td>
         </tr>
         <tr>
           <td class="headline">Body</td>
-          <td class="unwrap">${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}</td>
+          <td class="unwrap">
+              #if(!$ctxNote.dbNote.asExpression)
+                  ${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}
+              #else
+                <pre>${ctxNote.dbNote.body}</pre>
+              #end
+          </td>
         </tr>
         </tbody>
       </table>
