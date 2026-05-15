@@ -6,6 +6,7 @@ import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
+import com.walksocket.er.custom.ErTable;
 import com.walksocket.er.custom.ErUnderlineBorder;
 import com.walksocket.er.parts.ColumnForeignKeyOption;
 import com.walksocket.er.sqlite.Bucket;
@@ -30,7 +31,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -86,7 +86,7 @@ public class Form extends JPanel {
   /**
    * table.
    */
-  private final JTable table;
+  private final ErTable table;
 
   /**
    * table model.
@@ -116,7 +116,7 @@ public class Form extends JPanel {
   /**
    * table reference.
    */
-  private final JTable tableReference;
+  private final ErTable tableReference;
 
   /**
    * table model reference.
@@ -176,9 +176,7 @@ public class Form extends JPanel {
         .collect(Collectors.toList()));
 
     var widthList = columnNameWidthMaps.values().toArray(new Integer[columnNameWidthMaps.size()]);
-    table = new JTable(tableModel);
-    table.putClientProperty("terminateEditOnFocusLost", true);
-    table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    table = new ErTable(tableModel);
     for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
       var tc = table.getColumnModel().getColumn(i);
       tc.setPreferredWidth(widthList[i]);
@@ -281,9 +279,7 @@ public class Form extends JPanel {
 
     var widthListReference = columnNameWidthMaps.values()
         .toArray(new Integer[columnNameWidthMaps.size()]);
-    tableReference = new JTable(tableModelReference);
-    tableReference.putClientProperty("terminateEditOnFocusLost", true);
-    tableReference.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    tableReference = new ErTable(tableModelReference);
     for (int i = 0; i < tableReference.getColumnModel().getColumnCount(); i++) {
       var tc = tableReference.getColumnModel().getColumn(i);
       tc.setPreferredWidth(widthListReference[i]);

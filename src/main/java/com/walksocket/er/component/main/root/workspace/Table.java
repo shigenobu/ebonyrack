@@ -495,7 +495,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
             .filter(d -> d.dictColumnId.equals(dbTableColumn.dictColumnId)).findFirst().get();
         targetDbDictColumList.add(dbDictColumn);
         var tmpW = labelTableName.getFontMetrics(labelTableName.getFont())
-            .stringWidth(dbDictColumn.getShowColumnName()) + 150;
+            .stringWidth(dbDictColumn.getShowColumnName()) + 160;
         if (tmpW > w) {
           w = tmpW;
         }
@@ -512,7 +512,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
             .filter(d -> d.dictColumnId.equals(dbDictGroupColumn.dictColumnId)).findFirst().get();
         targetDbDictColumList.add(dbDictColumn);
         var tmpW = labelTableName.getFontMetrics(labelTableName.getFont())
-            .stringWidth(dbDictColumn.getShowColumnName()) + 150;
+            .stringWidth(dbDictColumn.getShowColumnName()) + 160;
         if (tmpW > w) {
           w = tmpW;
         }
@@ -612,7 +612,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
         // column
         var p2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         p2.setBackground(Color.WHITE);
-        p2.setPreferredSize(new Dimension(w - 110, ph));
+        p2.setPreferredSize(new Dimension(w - 120, ph));
         p.add(p2);
         var showColumnName = dbDictColumn.getShowColumnName();
         var textFieldColumnName = new JTextField() {
@@ -675,6 +675,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
                 ta.setEditable(false);
                 ta.setLineWrap(true);
                 var sp = new JScrollPane(ta);
+                sp.setPreferredSize(new Dimension(400, 100));
                 JOptionPane.showMessageDialog(
                     textFieldColumnName,
                     sp,
@@ -745,8 +746,19 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
         }
         p4.add(new JLabel(notNull));
 
+        // option
+        var p5 = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        p5.setBackground(Color.WHITE);
+        p5.setPreferredSize(new Dimension(10, ph));
+        p.add(p5);
+        var option = "";
+        if (!Utils.isNullOrEmpty(dbDictColumn.option)) {
+          option = "*";
+        }
+        p5.add(new JLabel(option));
+
         // fk
-        var p5 = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
+        var p6 = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
           @Override
           protected void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -762,9 +774,9 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
             }
           }
         };
-        p5.setBackground(Color.WHITE);
-        p5.setPreferredSize(new Dimension(20, ph));
-        p.add(p5);
+        p6.setBackground(Color.WHITE);
+        p6.setPreferredSize(new Dimension(20, ph));
+        p.add(p6);
 
         idx++;
       }

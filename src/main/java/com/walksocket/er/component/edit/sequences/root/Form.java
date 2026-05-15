@@ -9,6 +9,7 @@ import com.walksocket.er.component.edit.sequences.Root;
 import com.walksocket.er.custom.ErColorChooser;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
+import com.walksocket.er.custom.ErTable;
 import com.walksocket.er.definition.Cycle;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.entity.DbSequence;
@@ -74,7 +75,7 @@ public class Form extends JPanel {
   /**
    * table.
    */
-  private final JTable table;
+  private final ErTable table;
 
   /**
    * table model.
@@ -121,9 +122,7 @@ public class Form extends JPanel {
         .toArray();
 
     var widthList = columnNameWidthMaps.values().toArray(new Integer[columnNameWidthMaps.size()]);
-    table = new JTable(tableModel);
-    table.putClientProperty("terminateEditOnFocusLost", true);
-    table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    table = new ErTable(tableModel);
     for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
       var tc = table.getColumnModel().getColumn(i);
       tc.setPreferredWidth(widthList[i]);
@@ -213,7 +212,7 @@ public class Form extends JPanel {
     });
 
     var sp = new JScrollPane(table);
-    sp.setPreferredSize(new Dimension(DialogLarge.WIDTH - 40 + 30, DialogLarge.HEIGHT / 10 * 9));
+    sp.setPreferredSize(new Dimension(DialogLarge.WIDTH - 40 + 20, DialogLarge.HEIGHT / 10 * 9));
     panelTable.add(sp);
 
     // button

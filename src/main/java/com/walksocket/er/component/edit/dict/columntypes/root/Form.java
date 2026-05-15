@@ -7,6 +7,7 @@ import com.walksocket.er.component.UsedDictColumnTypes;
 import com.walksocket.er.component.edit.dict.columntypes.Root;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
+import com.walksocket.er.custom.ErTable;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.entity.DbDictColumnType;
 import com.walksocket.er.sqlite.tmp.TmpDictColumnType;
@@ -24,7 +25,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -109,7 +109,7 @@ public class Form extends JPanel {
   /**
    * table.
    */
-  private final JTable table;
+  private final ErTable table;
 
   /**
    * table model.
@@ -247,9 +247,7 @@ public class Form extends JPanel {
     };
 
     var widthList = columnNameWidthMaps.values().toArray(new Integer[columnNameWidthMaps.size()]);
-    table = new JTable(tableModel);
-    table.putClientProperty("terminateEditOnFocusLost", true);
-    table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    table = new ErTable(tableModel);
     for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
       var tc = table.getColumnModel().getColumn(i);
       tc.setPreferredWidth(widthList[i]);
@@ -270,7 +268,8 @@ public class Form extends JPanel {
                 .findFirst()
                 .get();
 
-            var usedDictColumnTypes = new UsedDictColumnTypes(form, dbDictColumnType);
+            var usedDictColumnTypes = new UsedDictColumnTypes(
+                form.getRoot().getEditDictColumnTypes(), dbDictColumnType);
             usedDictColumnTypes.setAlwaysOnTop(true);
             usedDictColumnTypes.setModal(true);
             usedDictColumnTypes.setVisible(true);
@@ -295,7 +294,7 @@ public class Form extends JPanel {
       }
     });
     var sp = new JScrollPane(table);
-    sp.setPreferredSize(new Dimension(DialogMedium.WIDTH - 40 + 30, DialogMedium.HEIGHT / 10 * 8));
+    sp.setPreferredSize(new Dimension(DialogMedium.WIDTH - 40 + 20, DialogMedium.HEIGHT / 10 * 8));
     panelTable.add(sp);
 
     // load

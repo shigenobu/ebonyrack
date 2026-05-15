@@ -7,6 +7,7 @@ import com.walksocket.er.component.UsedDictColumn;
 import com.walksocket.er.component.edit.dict.columns.Root;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
+import com.walksocket.er.custom.ErTable;
 import com.walksocket.er.custom.ErUnderlineBorder;
 import com.walksocket.er.definition.AutoIncrement;
 import com.walksocket.er.definition.Charset;
@@ -35,7 +36,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -202,7 +202,7 @@ public class Form extends JPanel {
   /**
    * table.
    */
-  private final JTable table;
+  private final ErTable table;
 
   /**
    * table model.
@@ -429,9 +429,7 @@ public class Form extends JPanel {
     };
 
     var widthList = columnNameWidthMaps.values().toArray(new Integer[columnNameWidthMaps.size()]);
-    table = new JTable(tableModel);
-    table.putClientProperty("terminateEditOnFocusLost", true);
-    table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    table = new ErTable(tableModel);
     for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
       var tc = table.getColumnModel().getColumn(i);
       tc.setPreferredWidth(widthList[i]);
@@ -446,13 +444,14 @@ public class Form extends JPanel {
           var used = Utils.getString(table.getValueAt(row, 11));
           if (row >= 0 && col == 11 && used.equals("yes")) {
             var dictColumnId = Utils.getString(table.getValueAt(row, 0));
-            var dbDictColumnType = Bucket.getInstance()
+            var dbDictColumn = Bucket.getInstance()
                 .getBucketDict().dbDictColumnList.stream()
                 .filter(d -> d.dictColumnId.equals(dictColumnId))
                 .findFirst()
                 .get();
 
-            var usedDictColumn = new UsedDictColumn(form, dbDictColumnType);
+            var usedDictColumn = new UsedDictColumn(form.getRoot().getEditDictColumns(),
+                dbDictColumn);
             usedDictColumn.setAlwaysOnTop(true);
             usedDictColumn.setModal(true);
             usedDictColumn.setVisible(true);
@@ -484,7 +483,7 @@ public class Form extends JPanel {
       }
     });
     var sp = new JScrollPane(table);
-    sp.setPreferredSize(new Dimension(DialogLarge.WIDTH - 40 + 30, DialogLarge.HEIGHT / 10 * 7));
+    sp.setPreferredSize(new Dimension(DialogLarge.WIDTH - 40 + 20, DialogLarge.HEIGHT / 10 * 7));
     panelTable.add(sp);
 
     // load
@@ -570,7 +569,7 @@ public class Form extends JPanel {
             found = true;
             break;
           }
-
+/*
           // primary
           var optPrimaryKey = ctxTable.ctxInnerPrimaryKey.dbTablePrimaryKeyColumnList.stream()
               .filter(c -> c.dictColumnId.equals(dbDictColumn.dictColumnId))
@@ -639,6 +638,7 @@ public class Form extends JPanel {
           if (found) {
             break;
           }
+*/
         }
       }
 

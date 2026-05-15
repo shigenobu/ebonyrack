@@ -2,7 +2,6 @@ package com.walksocket.er.component;
 
 import com.walksocket.er.Const;
 import com.walksocket.er.Size.DialogUsed;
-import com.walksocket.er.component.edit.dict.partitions.root.Form;
 import com.walksocket.er.component.used.dict.partitions.Root;
 import com.walksocket.er.custom.ErDialog;
 import com.walksocket.er.sqlite.entity.DbDictPartition;
@@ -18,14 +17,14 @@ public class UsedDictPartition extends ErDialog {
   /**
    * Constructor.
    *
-   * @param form            form
+   * @param erDialog        erDialog
    * @param dbDictPartition dbDictPartition
    */
-  public UsedDictPartition(Form form, DbDictPartition dbDictPartition) {
+  public UsedDictPartition(ErDialog erDialog, DbDictPartition dbDictPartition) {
     super();
 
     // pos
-    var b = form.getRoot().getEditDictPartitions().getGraphicsConfiguration().getBounds();
+    var b = erDialog.getGraphicsConfiguration().getBounds();
     var x = (b.getWidth() - DialogUsed.WIDTH) / 2 + b.getX();
     var y = (b.getHeight() - DialogUsed.HEIGHT) / 2 + b.getY();
 

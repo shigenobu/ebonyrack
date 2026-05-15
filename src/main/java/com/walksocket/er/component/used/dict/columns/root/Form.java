@@ -3,6 +3,7 @@ package com.walksocket.er.component.used.dict.columns.root;
 import com.walksocket.er.Size.DialogUsed;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
+import com.walksocket.er.custom.ErTable;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.entity.DbDictColumn;
 import java.awt.Dimension;
@@ -13,7 +14,6 @@ import java.util.stream.Collectors;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -150,7 +150,7 @@ public class Form extends JPanel {
   /**
    * table for group.
    */
-  private final JTable tableForGroup;
+  private final ErTable tableForGroup;
 
   /**
    * table model for group.
@@ -173,7 +173,7 @@ public class Form extends JPanel {
   /**
    * table for db table.
    */
-  private final JTable tableForDbTable;
+  private final ErTable tableForDbTable;
 
   /**
    * table model for db table.
@@ -201,7 +201,7 @@ public class Form extends JPanel {
   /**
    * table for reference.
    */
-  private final JTable tableForReference;
+  private final ErTable tableForReference;
 
   /**
    * table model for reference.
@@ -315,9 +315,7 @@ public class Form extends JPanel {
 
     var widthListForGroup = columnNameWidthMapsForGroup.values()
         .toArray(new Integer[columnNameWidthMapsForGroup.size()]);
-    tableForGroup = new JTable(tableModelForGroup);
-    tableForGroup.putClientProperty("terminateEditOnFocusLost", true);
-    tableForGroup.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    tableForGroup = new ErTable(tableModelForGroup);
     for (int i = 0; i < tableForGroup.getColumnModel().getColumnCount(); i++) {
       var tc = tableForGroup.getColumnModel().getColumn(i);
       tc.setPreferredWidth(widthListForGroup[i]);
@@ -345,9 +343,7 @@ public class Form extends JPanel {
 
     var widthListForDbTable = columnNameWidthMapsForDbTable.values()
         .toArray(new Integer[columnNameWidthMapsForDbTable.size()]);
-    tableForDbTable = new JTable(tableModelForDbTable);
-    tableForDbTable.putClientProperty("terminateEditOnFocusLost", true);
-    tableForDbTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    tableForDbTable = new ErTable(tableModelForDbTable);
     for (int i = 0; i < tableForDbTable.getColumnModel().getColumnCount(); i++) {
       var tc = tableForDbTable.getColumnModel().getColumn(i);
       tc.setPreferredWidth(widthListForDbTable[i]);
@@ -375,9 +371,7 @@ public class Form extends JPanel {
 
     var widthListForReference = columnNameWidthMapsForReference.values()
         .toArray(new Integer[columnNameWidthMapsForReference.size()]);
-    tableForReference = new JTable(tableModelForReference);
-    tableForReference.putClientProperty("terminateEditOnFocusLost", true);
-    tableForReference.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    tableForReference = new ErTable(tableModelForReference);
     for (int i = 0; i < tableForReference.getColumnModel().getColumnCount(); i++) {
       var tc = tableForReference.getColumnModel().getColumn(i);
       tc.setPreferredWidth(widthListForReference[i]);

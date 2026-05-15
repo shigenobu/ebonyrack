@@ -7,6 +7,7 @@ import com.walksocket.er.component.InputColumnName;
 import com.walksocket.er.component.input.table.root.form.Column;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
+import com.walksocket.er.custom.ErTable;
 import com.walksocket.er.custom.ErTableButtons;
 import com.walksocket.er.definition.AutoIncrement;
 import com.walksocket.er.definition.Charset;
@@ -84,7 +85,7 @@ public class Columns extends JPanel {
   /**
    * table.
    */
-  private final JTable table;
+  private final ErTable table;
 
   /**
    * table model.
@@ -129,9 +130,7 @@ public class Columns extends JPanel {
     var dbDictColumnAliasList = Bucket.getInstance().getBucketDict().dbDictColumnAliasList;
 
     var widthList = columnNameWidthMaps.values().toArray(new Integer[columnNameWidthMaps.size()]);
-    table = new JTable(tableModel);
-    table.putClientProperty("terminateEditOnFocusLost", true);
-    table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    table = new ErTable(tableModel);
     for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
       var tc = table.getColumnModel().getColumn(i);
       tc.setPreferredWidth(widthList[i]);

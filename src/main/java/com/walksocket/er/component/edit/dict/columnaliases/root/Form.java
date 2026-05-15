@@ -3,11 +3,17 @@ package com.walksocket.er.component.edit.dict.columnaliases.root;
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogLarge;
 import com.walksocket.er.Utils;
+import com.walksocket.er.component.UsedDictColumn;
 import com.walksocket.er.component.edit.dict.columnaliases.Root;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
+import com.walksocket.er.custom.ErTable;
 import com.walksocket.er.custom.ErUnderlineBorder;
+import com.walksocket.er.definition.AutoIncrement;
+import com.walksocket.er.definition.Charset;
+import com.walksocket.er.definition.Collate;
 import com.walksocket.er.definition.NotNull;
+import com.walksocket.er.definition.OnUpdate;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.entity.DbDictColumn;
 import com.walksocket.er.sqlite.entity.DbDictColumnAlias;
@@ -32,7 +38,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -91,6 +96,68 @@ public class Form extends JPanel {
    * combo box not null.
    */
   private final JComboBox comboBoxNotNull;
+
+  // ----------
+
+  /**
+   * label charset.
+   */
+  private final JLabel labelCharset = new JLabel("Charset:");
+
+  /**
+   * combo box charset.
+   */
+  private final JComboBox comboBoxCharset;
+
+  /**
+   * label collate.
+   */
+  private final JLabel labelCollate = new JLabel("Collate:");
+
+  /**
+   * combo box collate.
+   */
+  private final JComboBox comboBoxCollate;
+
+  /**
+   * label default.
+   */
+  private final JLabel labelDefault = new JLabel("Default:");
+
+  /**
+   * text field default.
+   */
+  private final JTextField textFieldDefault = new JTextField(20);
+
+  /**
+   * label on update.
+   */
+  private final JLabel labelOnUpdate = new JLabel("On update:");
+
+  /**
+   * combo box on update.
+   */
+  private final JComboBox comboBoxOnUpdate;
+
+  /**
+   * label auto increment.
+   */
+  private final JLabel labelAutoIncrement = new JLabel("Auto increment:");
+
+  /**
+   * combo box auto increment.
+   */
+  private final JComboBox comboBoxAutoIncrement;
+
+  /**
+   * label option.
+   */
+  private final JLabel labelOption = new JLabel("Option:");
+
+  /**
+   * text field option.
+   */
+  private final JTextField textFieldOption = new JTextField(50);
 
   /**
    * label explanation.
@@ -167,6 +234,7 @@ public class Form extends JPanel {
     columnNameWidthMaps.put(ErHeaderFormatter.format("Alias1", Type.showOnly), 300);
     columnNameWidthMaps.put(ErHeaderFormatter.format("Alias2", Type.showOnly), 300);
     columnNameWidthMaps.put(ErHeaderFormatter.format("Alias3", Type.showOnly), 300);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Used", Type.openDialog), 100);
   }
 
   /**
@@ -177,7 +245,7 @@ public class Form extends JPanel {
   /**
    * table.
    */
-  private final JTable table;
+  private final ErTable table;
 
   /**
    * table model.
@@ -239,6 +307,61 @@ public class Form extends JPanel {
     comboBoxNotNull.setEnabled(false);
     panel5.add(comboBoxNotNull);
 
+    // charset
+    var panel6 = new JPanel();
+    add(panel6);
+    panel6.add(labelCharset);
+    comboBoxCharset = new JComboBox(
+        new DefaultComboBoxModel(Charset.getCharsetListForColumn().toArray()));
+    comboBoxCharset.setPreferredSize(new Dimension(150, comboBoxCharset.getFont().getSize() * 2));
+    comboBoxCharset.setEnabled(false);
+    panel6.add(comboBoxCharset);
+
+    // collate
+    var panel7 = new JPanel();
+    add(panel7);
+    panel7.add(labelCollate);
+    comboBoxCollate = new JComboBox(
+        new DefaultComboBoxModel(Collate.getCollateListForColumn().toArray()));
+    comboBoxCollate.setPreferredSize(new Dimension(150, comboBoxCollate.getFont().getSize() * 2));
+    comboBoxCollate.setEnabled(false);
+    panel7.add(comboBoxCollate);
+
+    // default
+    var panel8 = new JPanel();
+    add(panel8);
+    panel8.add(labelDefault);
+    textFieldDefault.setEditable(false);
+    panel8.add(textFieldDefault);
+
+    // on update
+    var panel9 = new JPanel();
+    add(panel9);
+    panel9.add(labelOnUpdate);
+    comboBoxOnUpdate = new JComboBox(
+        new DefaultComboBoxModel(OnUpdate.getOnUpdateListForColumn()
+            .toArray()));
+    comboBoxOnUpdate.setPreferredSize(new Dimension(170, comboBoxOnUpdate.getFont().getSize() * 2));
+    comboBoxOnUpdate.setEnabled(false);
+    panel9.add(comboBoxOnUpdate);
+
+    // auto increment
+    var panel10 = new JPanel();
+    add(panel10);
+    panel10.add(labelAutoIncrement);
+    comboBoxAutoIncrement = new JComboBox(
+        new DefaultComboBoxModel(AutoIncrement.getAutoIncrementForColumn()
+            .toArray()));
+    comboBoxAutoIncrement.setEnabled(false);
+    panel10.add(comboBoxAutoIncrement);
+
+    // option
+    var panel11 = new JPanel();
+    add(panel11);
+    panel11.add(labelOption);
+    textFieldOption.setEditable(false);
+    panel11.add(textFieldOption);
+
     // alias
     var panelAlias = new JPanel();
     add(panelAlias);
@@ -249,10 +372,10 @@ public class Form extends JPanel {
     panelAlias.add(panelAliasLeft);
 
     // explanation
-    var panel6 = new JPanel();
-    panelAliasLeft.add(panel6);
-    panel6.add(labelExplanation);
-    panel6.add(new JScrollPane(textAreaExplanation));
+    var panelExplanation = new JPanel();
+    panelAliasLeft.add(panelExplanation);
+    panelExplanation.add(labelExplanation);
+    panelExplanation.add(new JScrollPane(textAreaExplanation));
 
     // alias right
     var panelAliasRight = new JPanel();
@@ -260,22 +383,22 @@ public class Form extends JPanel {
     panelAlias.add(panelAliasRight);
 
     // alias1
-    var panel7 = new JPanel();
-    panelAliasRight.add(panel7);
-    panel7.add(labelAlias1);
-    panel7.add(textFieldAlias1);
+    var panelAlias1 = new JPanel();
+    panelAliasRight.add(panelAlias1);
+    panelAlias1.add(labelAlias1);
+    panelAlias1.add(textFieldAlias1);
 
     // alias2
-    var panel8 = new JPanel();
-    panelAliasRight.add(panel8);
-    panel8.add(labelAlias2);
-    panel8.add(textFieldAlias2);
+    var panelAlias2 = new JPanel();
+    panelAliasRight.add(panelAlias2);
+    panelAlias2.add(labelAlias2);
+    panelAlias2.add(textFieldAlias2);
 
     // alias3
-    var panel9 = new JPanel();
-    panelAliasRight.add(panel9);
-    panel9.add(labelAlias3);
-    panel9.add(textFieldAlias3);
+    var panelAlias3 = new JPanel();
+    panelAliasRight.add(panelAlias3);
+    panelAlias3.add(labelAlias3);
+    panelAlias3.add(textFieldAlias3);
 
     // button
     var panelButton = new JPanel();
@@ -366,6 +489,9 @@ public class Form extends JPanel {
     var panelTable = new JPanel();
     add(panelTable);
 
+    var tmpDbDictColumnTypeList = Bucket.getInstance().getBucketDict().dbDictColumnTypeList;
+    var tmpDbDictColumnList = Bucket.getInstance().getBucketDict().dbDictColumnList;
+
     var columnNames = columnNameWidthMaps.keySet().toArray();
     tableModel = new DefaultTableModel(columnNames, 0) {
       @Override
@@ -375,9 +501,7 @@ public class Form extends JPanel {
     };
 
     var widthList = columnNameWidthMaps.values().toArray(new Integer[columnNameWidthMaps.size()]);
-    table = new JTable(tableModel);
-    table.putClientProperty("terminateEditOnFocusLost", true);
-    table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    table = new ErTable(tableModel);
     for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
       var tc = table.getColumnModel().getColumn(i);
       tc.setPreferredWidth(widthList[i]);
@@ -385,14 +509,54 @@ public class Form extends JPanel {
     table.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
+        if (e.getClickCount() == 2) {
+          Point pt = e.getPoint();
+          int row = table.rowAtPoint(pt);
+          int col = table.columnAtPoint(pt);
+          var used = Utils.getString(table.getValueAt(row, 9));
+          if (row >= 0 && col == 9 && used.equals("yes")) {
+            var dictColumnId = Utils.getString(table.getValueAt(row, 0));
+            var dbDictColumn = Bucket.getInstance()
+                .getBucketDict().dbDictColumnList.stream()
+                .filter(d -> d.dictColumnId.equals(dictColumnId))
+                .findFirst()
+                .get();
+
+            var usedDictColumn = new UsedDictColumn(form.getRoot().getEditColumnAliases(),
+                dbDictColumn);
+            usedDictColumn.setAlwaysOnTop(true);
+            usedDictColumn.setModal(true);
+            usedDictColumn.setVisible(true);
+          }
+          return;
+        }
+
         Point pt = e.getPoint();
         int r = table.rowAtPoint(pt);
         if (r >= 0) {
-          textFieldDictColumnId.setText(Utils.getString(table.getValueAt(r, 0)));
-          textFieldColumnName.setText(Utils.getString(table.getValueAt(r, 1)));
-          textFieldColumnComment.setText(Utils.getString(table.getValueAt(r, 2)));
-          comboBoxColumnType.setSelectedItem(Utils.getString(table.getValueAt(r, 3)));
-          comboBoxNotNull.setSelectedItem(Utils.getString(table.getValueAt(r, 4)));
+          var tmpDictColumnId = Utils.getString(table.getValueAt(r, 0));
+          var dbDictColumn = tmpDbDictColumnList.stream()
+              .filter(d -> d.dictColumnId.equals(tmpDictColumnId))
+              .findFirst()
+              .get();
+
+          var tmpColumnType = tmpDbDictColumnTypeList.stream()
+              .filter(d -> d.dictColumnTypeId.equals(dbDictColumn.dictColumnTypeId))
+              .findFirst()
+              .get();
+
+          textFieldDictColumnId.setText(dbDictColumn.dictColumnId);
+          textFieldColumnName.setText(dbDictColumn.columnName);
+          textFieldColumnComment.setText(dbDictColumn.columnComment);
+          comboBoxColumnType.setSelectedItem(tmpColumnType.columnType);
+          comboBoxNotNull.setSelectedItem(dbDictColumn.notNullValue);
+          comboBoxCharset.setSelectedItem(dbDictColumn.charsetValue);
+          comboBoxCollate.setSelectedItem(dbDictColumn.collateValue);
+          textFieldDefault.setText(dbDictColumn.defaultValue);
+          comboBoxOnUpdate.setSelectedItem(dbDictColumn.onUpdate);
+          comboBoxAutoIncrement.setSelectedItem(dbDictColumn.autoIncrementDefinition);
+          textFieldOption.setText(dbDictColumn.option);
+
           textAreaExplanation.setText(Utils.getString(table.getValueAt(r, 5)));
           textFieldAlias1.setText(Utils.getString(table.getValueAt(r, 6)));
           textFieldAlias2.setText(Utils.getString(table.getValueAt(r, 7)));
@@ -413,7 +577,7 @@ public class Form extends JPanel {
     });
 
     var sp = new JScrollPane(table);
-    sp.setPreferredSize(new Dimension(DialogLarge.WIDTH - 40 + 30, DialogLarge.HEIGHT / 10 * 6));
+    sp.setPreferredSize(new Dimension(DialogLarge.WIDTH - 40 + 20, DialogLarge.HEIGHT / 10 * 5));
     panelTable.add(sp);
 
     // load
@@ -436,8 +600,11 @@ public class Form extends JPanel {
   private void loadTable(String columnName) {
     tableModel.setRowCount(0);
 
+    var ctxTableList = Bucket.getInstance().getBucketTable().ctxTableList;
+
     var dbDictColumnTypeList = Bucket.getInstance().getBucketDict().dbDictColumnTypeList;
     var dbDictColumnList = Bucket.getInstance().getBucketDict().dbDictColumnList;
+    var dbDictGroupColumnList = Bucket.getInstance().getBucketDict().dbDictGroupColumnList;
     var dbDictColumnAliasList = Bucket.getInstance().getBucketDict().dbDictColumnAliasList;
 
     var i = 0;
@@ -471,6 +638,33 @@ public class Form extends JPanel {
         tableModel.setValueAt(opt.get().alias3, i, 8);
       }
 
+      // used
+      table.setValueAt("", i, 9);
+      var found = false;
+      if (!found) {
+        // dict group column
+        var o = dbDictGroupColumnList.stream()
+            .filter(c -> c.dictColumnId.equals(dbDictColumn.dictColumnId))
+            .findFirst();
+        if (o.isPresent()) {
+          table.setValueAt("yes", i, 9);
+          found = true;
+        }
+      }
+      if (!found) {
+        for (var ctxTable : ctxTableList) {
+          // table column
+          var optColumn = ctxTable.dbTableColumnList.stream()
+              .filter(c -> c.dictColumnId.equals(dbDictColumn.dictColumnId))
+              .findFirst();
+          if (optColumn.isPresent()) {
+            table.setValueAt("yes", i, 9);
+            found = true;
+            break;
+          }
+        }
+      }
+
       i++;
     }
   }
@@ -483,5 +677,14 @@ public class Form extends JPanel {
     textFieldAlias1.setText("");
     textFieldAlias2.setText("");
     textFieldAlias3.setText("");
+  }
+
+  /**
+   * get root.
+   *
+   * @return root
+   */
+  public Root getRoot() {
+    return root;
   }
 }

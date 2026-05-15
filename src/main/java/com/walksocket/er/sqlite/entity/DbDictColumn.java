@@ -218,10 +218,13 @@ public class DbDictColumn extends Entity {
         getShowColumnName(),
         dbDictColumnType.columnType,
         notNullValue));
+    if (!Utils.isNullOrEmpty(option)) {
+      builder.append(String.format(" (%s)", option));
+    }
     if (dbDictColumnAlias != null) {
       if (!Utils.isNullOrEmpty(dbDictColumnAlias.explanation)) {
         builder.append(
-            String.format("<br>%s", dbDictColumnAlias.explanation.replaceAll("\n", "<br>")));
+            String.format("<br><br>%s", dbDictColumnAlias.explanation.replaceAll("\n", "<br>")));
       }
       if (!Utils.isNullOrEmpty(dbDictColumnAlias.alias1)) {
         builder.append(String.format("<br>- %s", dbDictColumnAlias.alias1));
