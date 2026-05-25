@@ -1,5 +1,6 @@
 package com.walksocket.er.component.edit.dict.columntypes.root;
 
+import com.walksocket.er.App;
 import com.walksocket.er.Log;
 import com.walksocket.er.Size.DialogMedium;
 import com.walksocket.er.Utils;
@@ -8,9 +9,13 @@ import com.walksocket.er.component.edit.dict.columntypes.Root;
 import com.walksocket.er.custom.ErHeaderFormatter;
 import com.walksocket.er.custom.ErHeaderFormatter.Type;
 import com.walksocket.er.custom.ErTable;
+import com.walksocket.er.definition.DataType;
+import com.walksocket.er.definition.DataType.TypeGroup;
 import com.walksocket.er.sqlite.Bucket;
 import com.walksocket.er.sqlite.entity.DbDictColumnType;
 import com.walksocket.er.sqlite.tmp.TmpDictColumnType;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Point;
@@ -20,18 +25,51 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
  * Form.
  */
 public class Form extends JPanel {
+
+  /**
+   * icon group number.
+   */
+  private static final ImageIcon iconGroupNumber = new ImageIcon(
+      App.class.getClassLoader().getResource("image/type_number.png"));
+
+  /**
+   * icon group text.
+   */
+  private static final ImageIcon iconGroupText = new ImageIcon(
+      App.class.getClassLoader().getResource("image/type_text.png"));
+
+  /**
+   * icon group date.
+   */
+  private static final ImageIcon iconGroupDate = new ImageIcon(
+      App.class.getClassLoader().getResource("image/type_date.png"));
+
+  /**
+   * icon group binary.
+   */
+  private static final ImageIcon iconGroupBinary = new ImageIcon(
+      App.class.getClassLoader().getResource("image/type_binary.png"));
+
+  /**
+   * icon group other.
+   */
+  private static final ImageIcon iconGroupOther = new ImageIcon(
+      App.class.getClassLoader().getResource("image/type_other.png"));
 
   /**
    * label dict column type id.
@@ -97,6 +135,7 @@ public class Form extends JPanel {
     columnNameWidthMaps.put(ErHeaderFormatter.format("Dict column type id", Type.showOnly), 400);
     columnNameWidthMaps.put(ErHeaderFormatter.format("Seq", Type.showOnly), 200);
     columnNameWidthMaps.put(ErHeaderFormatter.format("Column type", Type.showOnly), 400);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Icon", Type.showOnly), 50);
     columnNameWidthMaps.put(ErHeaderFormatter.format("Remarks", Type.showOnly), 400);
     columnNameWidthMaps.put(ErHeaderFormatter.format("Used", Type.openDialog), 100);
   }
@@ -244,6 +283,13 @@ public class Form extends JPanel {
       public boolean isCellEditable(int row, int column) {
         return false;
       }
+
+      public Class<?> getColumnClass(int columnIndex) {
+        if (columnIndex == 3) {
+          return ImageIcon.class;
+        }
+        return super.getColumnClass(columnIndex);
+      }
     };
 
     var widthList = columnNameWidthMaps.values().toArray(new Integer[columnNameWidthMaps.size()]);
@@ -251,6 +297,25 @@ public class Form extends JPanel {
     for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
       var tc = table.getColumnModel().getColumn(i);
       tc.setPreferredWidth(widthList[i]);
+
+      // group
+      if (i == 3) {
+        tc.setCellRenderer(new DefaultTableCellRenderer() {
+          @Override
+          public Component getTableCellRendererComponent(JTable table, Object value,
+              boolean isSelected, boolean hasFocus, int row, int column) {
+            setBackground(new Color(160, 160, 160, 20));
+            var label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected,
+                hasFocus, row, column);
+            if (value instanceof ImageIcon icon) {
+              label.setIcon(icon);
+              label.setText(null);
+              label.setHorizontalAlignment(CENTER);
+            }
+            return label;
+          }
+        });
+      }
     }
     table.addMouseListener(new MouseAdapter() {
       @Override
@@ -259,8 +324,8 @@ public class Form extends JPanel {
           Point pt = e.getPoint();
           int row = table.rowAtPoint(pt);
           int col = table.columnAtPoint(pt);
-          var used = Utils.getString(table.getValueAt(row, 4));
-          if (row >= 0 && col == 4 && used.equals("yes")) {
+          var used = Utils.getString(table.getValueAt(row, 5));
+          if (row >= 0 && col == 5 && used.equals("yes")) {
             var dictColumnTypeId = Utils.getString(table.getValueAt(row, 0));
             var dbDictColumnType = Bucket.getInstance()
                 .getBucketDict().dbDictColumnTypeList.stream()
@@ -283,10 +348,10 @@ public class Form extends JPanel {
           textFieldDictColumnTypeId.setText(Utils.getString(table.getValueAt(r, 0)));
           textFieldSeq.setText(Utils.getString(table.getValueAt(r, 1)));
           textFieldColumnType.setText(Utils.getString(table.getValueAt(r, 2)));
-          textFieldRemarks.setText(Utils.getString(table.getValueAt(r, 3)));
+          textFieldRemarks.setText(Utils.getString(table.getValueAt(r, 4)));
 
           buttonRemove.setEnabled(false);
-          var used = Utils.getString(table.getValueAt(r, 4));
+          var used = Utils.getString(table.getValueAt(r, 5));
           if (!used.equals("yes")) {
             buttonRemove.setEnabled(true);
           }
@@ -320,15 +385,29 @@ public class Form extends JPanel {
       table.setValueAt(dbDictColumnType.dictColumnTypeId, i, 0);
       table.setValueAt(dbDictColumnType.seq, i, 1);
       table.setValueAt(dbDictColumnType.columnType, i, 2);
-      table.setValueAt(dbDictColumnType.remarks, i, 3);
+
+      var group = DataType.getTypeGroup(dbDictColumnType.columnType);
+      var icon = iconGroupOther;
+      if (group.equals(DataType.TypeGroup.NUMBER)) {
+        icon = iconGroupNumber;
+      } else if (group.equals(TypeGroup.TEXT)) {
+        icon = iconGroupText;
+      } else if (group.equals(DataType.TypeGroup.DATE)) {
+        icon = iconGroupDate;
+      } else if (group.equals(DataType.TypeGroup.BINARY)) {
+        icon = iconGroupBinary;
+      }
+      table.setValueAt(icon, i, 3);
+
+      table.setValueAt(dbDictColumnType.remarks, i, 4);
 
       // used
-      table.setValueAt("", i, 4);
+      table.setValueAt("", i, 5);
       var opt = dbDictColumnList.stream()
           .filter(d -> d.dictColumnTypeId.equals(dbDictColumnType.dictColumnTypeId))
           .findFirst();
       if (opt.isPresent()) {
-        table.setValueAt("yes", i, 4);
+        table.setValueAt("yes", i, 5);
       }
 
       i++;
