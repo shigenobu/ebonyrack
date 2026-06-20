@@ -126,6 +126,21 @@ public class Root extends JPanel {
    * @throws IOException
    */
   private void saveTableClass(File dir, TmpTableClass tmpTableClass) throws IOException {
+    var files = FileUtils.listFiles(dir);
+    if (tmpTableClass.exportJustBeforeValue.equals(
+        TmpTableClass.EXPORT_JUST_BEFORE_REMOVE_FILES_WITH_SAME_EXTENSION)) {
+      for (var file : files) {
+        if (file.getName().endsWith(tmpTableClass.convertFileExtensionValue)) {
+          file.delete();
+        }
+      }
+    } else if (tmpTableClass.exportJustBeforeValue.equals(
+        TmpTableClass.EXPORT_JUST_BEFORE_REMOVE_ALL_FILES)) {
+      for (var file : files) {
+        file.delete();
+      }
+    }
+
     for (var ctxTable : Bucket.getInstance().getBucketTable().ctxTableList
         .stream()
         .sorted(Comparator.comparing(t -> t.dbTable.tableName))

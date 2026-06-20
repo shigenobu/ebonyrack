@@ -58,6 +58,7 @@ public class Form extends JPanel {
     columnNameWidthMaps.put(ErHeaderFormatter.format("FSuffix", Type.ordinal), 100);
     columnNameWidthMaps.put(ErHeaderFormatter.format("FExtension", Type.ordinal), 100);
     columnNameWidthMaps.put(ErHeaderFormatter.format("Save path", Type.ordinal), 200);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Export JB", Type.ordinal), 200);
   }
 
   /**
@@ -162,6 +163,35 @@ public class Form extends JPanel {
    * text field save path.
    */
   private final JTextField textFieldSavePath = new JTextField(30);
+
+  /**
+   * label export just before.
+   */
+  private final JLabel labelExportJustBefore = new JLabel("Export just before:");
+
+  /**
+   * button group export just before
+   */
+  private final ButtonGroup buttonGroupExportJustBefore = new ButtonGroup();
+
+  /**
+   * radio button export just before none.
+   */
+  private final JRadioButton radioButtonExportJustBeforeNone = new JRadioButton(
+      TmpTableClass.EXPORT_JUST_BEFORE_NONE,
+      true);
+
+  /**
+   * radio button export just before remove files with same extension.
+   */
+  private final JRadioButton radioButtonExportJustBeforeRemoveFilesWithSameExtension = new JRadioButton(
+      TmpTableClass.EXPORT_JUST_BEFORE_REMOVE_FILES_WITH_SAME_EXTENSION);
+
+  /**
+   * radio button export just before remove all files.
+   */
+  private final JRadioButton radioButtonExportJustBeforeRemoveAllFiles = new JRadioButton(
+      TmpTableClass.EXPORT_JUST_BEFORE_REMOVE_ALL_FILES);
 
   /**
    * label choose from history.
@@ -346,6 +376,39 @@ public class Form extends JPanel {
 
     panelSavePathInnerRight.add(textFieldSavePath);
 
+    // panel - export just before
+    var panelExportJustBefore = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    panelExportJustBefore.setPreferredSize(
+        new Dimension(DialogExport.WIDTH - 20, DialogExport.HEIGHT / 20));
+    add(panelExportJustBefore);
+
+    var panelExportJustBeforeInnerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 2));
+    panelExportJustBeforeInnerLeft.setPreferredSize(
+        new Dimension(DialogExport.WIDTH / 5, DialogExport.HEIGHT / 20));
+    panelExportJustBefore.add(panelExportJustBeforeInnerLeft);
+
+    labelExportJustBefore.setPreferredSize(
+        new Dimension(DialogExport.WIDTH / 5, DialogExport.HEIGHT / 20));
+    panelExportJustBeforeInnerLeft.add(labelExportJustBefore);
+
+    var panelExportJustBeforeInnerRight = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 14));
+    panelExportJustBeforeInnerRight.setPreferredSize(
+        new Dimension(DialogExport.WIDTH / 5 * 3, DialogExport.HEIGHT / 20));
+    panelExportJustBefore.add(panelExportJustBeforeInnerRight);
+
+    radioButtonExportJustBeforeNone.setActionCommand(
+        TmpTableClass.EXPORT_JUST_BEFORE_NONE);
+    radioButtonExportJustBeforeRemoveFilesWithSameExtension.setActionCommand(
+        TmpTableClass.EXPORT_JUST_BEFORE_REMOVE_FILES_WITH_SAME_EXTENSION);
+    radioButtonExportJustBeforeRemoveAllFiles.setActionCommand(
+        TmpTableClass.EXPORT_JUST_BEFORE_REMOVE_ALL_FILES);
+    buttonGroupExportJustBefore.add(radioButtonExportJustBeforeNone);
+    buttonGroupExportJustBefore.add(radioButtonExportJustBeforeRemoveFilesWithSameExtension);
+    buttonGroupExportJustBefore.add(radioButtonExportJustBeforeRemoveAllFiles);
+    panelExportJustBeforeInnerRight.add(radioButtonExportJustBeforeNone);
+    panelExportJustBeforeInnerRight.add(radioButtonExportJustBeforeRemoveFilesWithSameExtension);
+    panelExportJustBeforeInnerRight.add(radioButtonExportJustBeforeRemoveAllFiles);
+
     var borderPanel3 = new JPanel();
     borderPanel3.setPreferredSize(new Dimension(DialogExport.WIDTH - 20, 10));
     borderPanel3.setBorder(new ErUnderlineBorder());
@@ -427,6 +490,20 @@ public class Form extends JPanel {
 
           // save path
           textFieldSavePath.setText(Utils.getString(table.getValueAt(r, 7)));
+
+          // export just before
+          var exportJustBefore = Utils.getString(table.getValueAt(r, 8));
+          switch (exportJustBefore) {
+            case TmpTableClass.EXPORT_JUST_BEFORE_NONE:
+              radioButtonExportJustBeforeNone.setSelected(true);
+              break;
+            case TmpTableClass.EXPORT_JUST_BEFORE_REMOVE_FILES_WITH_SAME_EXTENSION:
+              radioButtonExportJustBeforeRemoveFilesWithSameExtension.setSelected(true);
+              break;
+            case TmpTableClass.EXPORT_JUST_BEFORE_REMOVE_ALL_FILES:
+              radioButtonExportJustBeforeRemoveAllFiles.setSelected(true);
+              break;
+          }
         }
       }
     });
@@ -486,6 +563,7 @@ public class Form extends JPanel {
       table.setValueAt(history.tableClass.convertFileExtensionValue, i, 6);
 
       table.setValueAt(history.tableClass.savePath, i, 7);
+      table.setValueAt(history.tableClass.exportJustBeforeValue, i, 8);
     }
   }
 
@@ -524,6 +602,12 @@ public class Form extends JPanel {
     tmpTableClass.convertFileSuffixValue = Utils.getString(textFieldFileSuffixConverter);
     tmpTableClass.convertFileExtensionValue = Utils.getString(textFieldFileExtensionConverter);
     tmpTableClass.savePath = Utils.getString(textFieldSavePath);
+    tmpTableClass.exportJustBeforeValue = TmpTableClass.EXPORT_JUST_BEFORE_NONE;
+    if (radioButtonExportJustBeforeRemoveFilesWithSameExtension.isSelected()) {
+      tmpTableClass.exportJustBeforeValue = TmpTableClass.EXPORT_JUST_BEFORE_REMOVE_FILES_WITH_SAME_EXTENSION;
+    } else if (radioButtonExportJustBeforeRemoveAllFiles.isSelected()) {
+      tmpTableClass.exportJustBeforeValue = TmpTableClass.EXPORT_JUST_BEFORE_REMOVE_ALL_FILES;
+    }
 
     return new TmpResult<TmpTableClass>(tmpTableClass) {
       @Override

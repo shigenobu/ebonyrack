@@ -75,6 +75,21 @@ public class TmpTableClass implements Tmp {
   }
 
   /**
+   * export just before - none.
+   */
+  public static final String EXPORT_JUST_BEFORE_NONE = "None";
+
+  /**
+   * export just before - remove files with the same extension.
+   */
+  public static final String EXPORT_JUST_BEFORE_REMOVE_FILES_WITH_SAME_EXTENSION = "Remove files with the same extension";
+
+  /**
+   * export just before - remove all files.
+   */
+  public static final String EXPORT_JUST_BEFORE_REMOVE_ALL_FILES = "Remove all files";
+
+  /**
    * template value.
    */
   public String templateValue;
@@ -115,17 +130,22 @@ public class TmpTableClass implements Tmp {
   public String savePath;
 
   /**
+   * export just before value.
+   */
+  public String exportJustBeforeValue;
+
+  /**
    * get hash.
    *
    * @return hash
    */
   public String getHash() {
-    return Utils.getHash(String.format("%s-%s-%s-%s-%s-%s-%s-%s",
+    return Utils.getHash(String.format("%s-%s-%s-%s-%s-%s-%s-%s-%s",
         templateValue,
         filterTableActionCommand, filterTableValue,
         convertFilePrefixValue, convertFileNameValue, convertFileSuffixValue,
         convertFileExtensionValue,
-        savePath));
+        savePath, exportJustBeforeValue));
   }
 
   /**

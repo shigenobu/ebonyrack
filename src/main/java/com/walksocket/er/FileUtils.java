@@ -1,6 +1,7 @@
 package com.walksocket.er;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -8,6 +9,9 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * FileUtils.
@@ -60,6 +64,20 @@ public class FileUtils {
       var buffer = ByteBuffer.wrap(data.getBytes(StandardCharsets.UTF_8));
       channel.write(buffer);
     }
+  }
+
+  /**
+   * list files.
+   *
+   * @param dir dir
+   * @return files
+   */
+  public static List<File> listFiles(File dir) {
+    var files = dir.listFiles();
+    if (files == null) {
+      return new ArrayList<>();
+    }
+    return Arrays.stream(files).filter(f -> !f.isDirectory()).toList();
   }
 
   /**
