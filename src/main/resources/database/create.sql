@@ -147,6 +147,7 @@ create table if not exists DbTablePrimaryKey
     keyName        text,
     indexComment   text,
     indexType      text,
+    indexOption    text,
     primary key (tableId, seq),
     unique (tableId, keyName),
     foreign key (tableId) references DbTable (tableId) on delete cascade
@@ -175,6 +176,7 @@ create table if not exists DbTableUniqueKey
     keyName        text,
     indexComment   text,
     indexType      text,
+    indexOption    text,
     primary key (tableId, seq),
     unique (tableId, keyName),
     foreign key (tableId) references DbTable (tableId) on delete cascade
@@ -202,6 +204,7 @@ create table if not exists DbTableKey
     keyName      text,
     indexComment text,
     indexType    text,
+    indexOption  text,
     primary key (tableId, seq),
     unique (tableId, keyName),
     foreign key (tableId) references DbTable (tableId) on delete cascade

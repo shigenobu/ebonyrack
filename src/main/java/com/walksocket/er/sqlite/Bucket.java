@@ -535,6 +535,9 @@ public class Bucket {
         if (!Utils.isNullOrEmpty(tmpPrimaryKey.indexType)) {
           builder.append(String.format(" USING %s", tmpPrimaryKey.indexType));
         }
+        if (!Utils.isNullOrEmpty(tmpPrimaryKey.indexOption)) {
+          builder.append(String.format(" %s", tmpPrimaryKey.indexOption));
+        }
         if (!Utils.isNullOrEmpty(tmpPrimaryKey.indexComment)) {
           builder.append(String.format(" COMMENT '%s'", Utils.quote(tmpPrimaryKey.indexComment)));
         }
@@ -552,6 +555,9 @@ public class Bucket {
           if (!Utils.isNullOrEmpty(tmpUniqueKey.indexType)) {
             builder.append(String.format(" USING %s", tmpUniqueKey.indexType));
           }
+          if (!Utils.isNullOrEmpty(tmpUniqueKey.indexOption)) {
+            builder.append(String.format(" %s", tmpUniqueKey.indexOption));
+          }
           if (!Utils.isNullOrEmpty(tmpUniqueKey.indexComment)) {
             builder.append(String.format(" COMMENT '%s'", Utils.quote(tmpUniqueKey.indexComment)));
           }
@@ -568,6 +574,9 @@ public class Bucket {
               String.format(",\n    KEY `%s` (%s)", tmpKey.keyName, keyColumnAndCollation));
           if (!Utils.isNullOrEmpty(tmpKey.indexType)) {
             builder.append(String.format(" USING %s", tmpKey.indexType));
+          }
+          if (!Utils.isNullOrEmpty(tmpKey.indexOption)) {
+            builder.append(String.format(" %s", tmpKey.indexOption));
           }
           if (!Utils.isNullOrEmpty(tmpKey.indexComment)) {
             builder.append(String.format(" COMMENT '%s'", Utils.quote(tmpKey.indexComment)));

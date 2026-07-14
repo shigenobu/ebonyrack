@@ -45,6 +45,7 @@ public class PrimaryKey extends JPanel {
         ErHeaderFormatter.format("Columns and collations", Type.required, Type.openDialog), 400);
     columnNameWidthMaps.put(ErHeaderFormatter.format("Index comment", Type.ordinal), 200);
     columnNameWidthMaps.put(ErHeaderFormatter.format("Index type", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Index option", Type.ordinal), 100);
   }
 
   /**
@@ -147,6 +148,7 @@ public class PrimaryKey extends JPanel {
     table.setValueAt(tmpPrimaryKey.getColumnsAndCollations(), 0, 1);
     table.setValueAt(tmpPrimaryKey.indexComment, 0, 2);
     table.setValueAt(tmpPrimaryKey.indexType, 0, 3);
+    table.setValueAt(tmpPrimaryKey.indexOption, 0, 4);
   }
 
   /**
@@ -162,6 +164,7 @@ public class PrimaryKey extends JPanel {
         Utils.getString(table.getValueAt(row, 1)));
     tmpPrimaryKey.indexComment = Utils.getString(table.getValueAt(row, 2));
     tmpPrimaryKey.indexType = Utils.getString(table.getValueAt(row, 3));
+    tmpPrimaryKey.indexOption = Utils.getString(table.getValueAt(row, 4));
     return tmpPrimaryKey;
   }
 

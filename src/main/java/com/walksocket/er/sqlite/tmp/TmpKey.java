@@ -38,6 +38,11 @@ public class TmpKey implements Tmp, Value {
   public String indexType;
 
   /**
+   * indexOption.
+   */
+  public String indexOption;
+
+  /**
    * get columns and collations.
    *
    * @return columns and collations

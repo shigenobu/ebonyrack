@@ -29,4 +29,9 @@ public abstract class EntityKey extends Entity {
    * indexType.
    */
   public String indexType = "";
+
+  /**
+   * indexOption.
+   */
+  public String indexOption = "";
 }

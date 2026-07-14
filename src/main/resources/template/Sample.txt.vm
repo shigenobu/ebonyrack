@@ -20,9 +20,10 @@ primary key \$tmpPrimaryKey
     columnKeyOptionList:
     #foreach($columnKeyOption in $tmpPrimaryKey.columnKeyOptionList)
         columnName: ${columnKeyOption.columnName}, length: ${columnKeyOption.length}, seqInIndex: ${columnKeyOption.seqInIndex}, collation: ${columnKeyOption.collation}
-    #end
+#end
     indexComment: ${tmpPrimaryKey.indexComment}
     indexType: ${tmpPrimaryKey.indexType}
+    indexOption: ${tmpPrimaryKey.indexOption}
 #end
 
 ====================
@@ -36,9 +37,10 @@ unique key \$tmpUniqueKeyList
     columnKeyOptionList:
     #foreach($columnKeyOption in $tmpUniqueKey.columnKeyOptionList)
         columnName: ${columnKeyOption.columnName}, length: ${columnKeyOption.length}, seqInIndex: ${columnKeyOption.seqInIndex}, collation: ${columnKeyOption.collation}
-    #end
+#end
     indexComment: ${tmpUniqueKey.indexComment}
     indexType: ${tmpUniqueKey.indexType}
+    indexOption: ${tmpUniqueKey.indexOption}
     #set($i = $i + 1)
 #end
 
@@ -53,9 +55,10 @@ key \$tmpKeyList
     columnKeyOptionList:
     #foreach($columnKeyOption in $tmpKeyList.columnKeyOptionList)
         columnName: ${columnKeyOption.columnName}, length: ${columnKeyOption.length}, seqInIndex: ${columnKeyOption.seqInIndex}, collation: ${columnKeyOption.collation}
-    #end
+#end
     indexComment: ${tmpKeyList.indexComment}
     indexType: ${tmpKeyList.indexType}
+    indexOption: ${tmpKeyList.indexOption}
     #set($i = $i + 1)
 #end
 
@@ -70,12 +73,12 @@ foreign key \$tmpForeignKeyList
     columnForeignKeyOptionList:
     #foreach($columnForeignKeyOption in $tmpForeignKey.columnForeignKeyOptionList)
         columnName: ${columnForeignKeyOption.columnName}, seqInIndex: ${columnForeignKeyOption.seqInIndex}
-    #end
+#end
     referenceTableName: ${tmpForeignKey.referenceTableName}
     referenceColumnForeignKeyOptionList:
     #foreach($referenceColumnForeignKeyOption in $tmpForeignKey.referenceColumnForeignKeyOptionList)
         columnName: ${referenceColumnForeignKeyOption.columnName}, seqInIndex: ${referenceColumnForeignKeyOption.seqInIndex}
-    #end
+#end
     onUpdate: ${tmpForeignKey.onUpdate}
     onDelete: ${tmpForeignKey.onDelete}
     relationship: ${tmpForeignKey.relationship}

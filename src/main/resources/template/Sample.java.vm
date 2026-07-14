@@ -5,9 +5,9 @@ package XXX;
 #set($className = $ErTemplateUtils.ucFirst($className))
 public class ${className}
 {
-    #foreach($tmpColumn in $tmpColumnList)
-        #set($fieldName = $ErTemplateUtils.toCamelCase($tmpColumn.columnName))
-        #set($fieldName = $ErTemplateUtils.lcFirst($fieldName))
-    public #getType($tmpColumn.columnType) ${fieldName};
-    #end
+#foreach($tmpColumn in $tmpColumnList)
+    #set($fieldName = $ErTemplateUtils.toCamelCase($tmpColumn.columnName))
+    #set($fieldName = $ErTemplateUtils.lcFirst($fieldName))
+public #getType($tmpColumn.columnType) ${fieldName};
+#end
 }

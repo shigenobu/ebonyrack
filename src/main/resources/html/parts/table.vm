@@ -77,11 +77,11 @@
                   #end
               </td>
               <td>
-                #foreach($ctxNote in $relatedCtxNoteList)
-                  #if($ctxNote.dbNote.subject == $tmpColumn.columnName && !$ctxNote.dbNote.asExpression)
-                    <div>${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}</div>
+                  #foreach($ctxNote in $relatedCtxNoteList)
+                      #if($ctxNote.dbNote.subject == $tmpColumn.columnName && !$ctxNote.dbNote.asExpression)
+                        <div>${ErTemplateUtils.nl2br($ctxNote.dbNote.body)}</div>
+                      #end
                   #end
-                #end
               </td>
             </tr>
             #end
@@ -97,6 +97,7 @@
           <th>Columns and collations</th>
           <th>Index comment</th>
           <th>Index type</th>
+          <th>Index option</th>
         </tr>
         </thead>
         <tbody>
@@ -106,6 +107,7 @@
               <td>${tmpPrimaryKey.getColumnsAndCollations()}</td>
               <td>${tmpPrimaryKey.indexComment}</td>
               <td>${tmpPrimaryKey.indexType}</td>
+              <td>${tmpPrimaryKey.indexOption}</td>
             </tr>
             #end
         </tbody>
@@ -120,6 +122,7 @@
           <th>Columns and collations</th>
           <th>Index comment</th>
           <th>Index type</th>
+          <th>Index option</th>
         </tr>
         </thead>
         <tbody>
@@ -129,6 +132,7 @@
               <td>${tmpUniqueKey.getColumnsAndCollations()}</td>
               <td>${tmpUniqueKey.indexComment}</td>
               <td>${tmpUniqueKey.indexType}</td>
+              <td>${tmpUniqueKey.indexOption}</td>
             </tr>
             #end
         </tbody>
@@ -143,6 +147,7 @@
           <th>Columns and collations</th>
           <th>Index comment</th>
           <th>Index type</th>
+          <th>Index option</th>
         </tr>
         </thead>
         <tbody>
@@ -152,6 +157,7 @@
               <td>${tmpKey.getColumnsAndCollations()}</td>
               <td>${tmpKey.indexComment}</td>
               <td>${tmpKey.indexType}</td>
+              <td>${tmpKey.indexOption}</td>
             </tr>
             #end
         </tbody>

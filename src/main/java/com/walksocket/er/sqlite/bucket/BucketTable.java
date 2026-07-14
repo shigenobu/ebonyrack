@@ -836,6 +836,7 @@ public class BucketTable {
       dbTablePrimaryKey.keyName = tmpPrimaryKey.keyName;
       dbTablePrimaryKey.indexComment = tmpPrimaryKey.indexComment;
       dbTablePrimaryKey.indexType = tmpPrimaryKey.indexType;
+      dbTablePrimaryKey.indexOption = tmpPrimaryKey.indexOption;
 
       con.executeInsert(dbTablePrimaryKey);
 
@@ -937,6 +938,7 @@ public class BucketTable {
       dbTableUniqueKey.keyName = tmpUniqueKey.keyName;
       dbTableUniqueKey.indexComment = tmpUniqueKey.indexComment;
       dbTableUniqueKey.indexType = tmpUniqueKey.indexType;
+      dbTableUniqueKey.indexOption = tmpUniqueKey.indexOption;
 
       con.executeInsert(dbTableUniqueKey);
       ctxInnerUniqueKey.dbTableUniqueKey = dbTableUniqueKey;
@@ -1036,6 +1038,7 @@ public class BucketTable {
       dbTableKey.keyName = tmpKey.keyName;
       dbTableKey.indexComment = tmpKey.indexComment;
       dbTableKey.indexType = tmpKey.indexType;
+      dbTableKey.indexOption = tmpKey.indexOption;
 
       con.executeInsert(dbTableKey);
       ctxInnerKey.dbTableKey = dbTableKey;

@@ -49,6 +49,7 @@ public class Key extends JPanel {
         ErHeaderFormatter.format("Columns and collations", Type.required, Type.openDialog), 400);
     columnNameWidthMaps.put(ErHeaderFormatter.format("Index comment", Type.ordinal), 200);
     columnNameWidthMaps.put(ErHeaderFormatter.format("Index type", Type.ordinal), 100);
+    columnNameWidthMaps.put(ErHeaderFormatter.format("Index option", Type.ordinal), 100);
   }
 
   /**
@@ -161,6 +162,7 @@ public class Key extends JPanel {
       table.setValueAt(tmpKey.getColumnsAndCollations(), i, 1);
       table.setValueAt(tmpKey.indexComment, i, 2);
       table.setValueAt(tmpKey.indexType, i, 3);
+      table.setValueAt(tmpKey.indexOption, i, 4);
     }
     if (tableModel.getRowCount() < 3) {
       tableModel.setRowCount(3);
@@ -180,6 +182,7 @@ public class Key extends JPanel {
         Utils.getString(table.getValueAt(row, 1)));
     tmpKey.indexComment = Utils.getString(table.getValueAt(row, 2));
     tmpKey.indexType = Utils.getString(table.getValueAt(row, 3));
+    tmpKey.indexOption = Utils.getString(table.getValueAt(row, 4));
     return tmpKey;
   }
 

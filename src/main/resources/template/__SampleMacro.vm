@@ -9,4 +9,4 @@
     #elseif($value.contains("binary") || $value.contains("blob"))
         #set($type = "byte[]")
     #end
-${type}#end
+    ${type}#end

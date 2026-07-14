@@ -24,21 +24,23 @@ public class DbTablePrimaryKey extends EntityKey {
     keyName = record.getOrEmpty("keyName");
     indexComment = record.getOrEmpty("indexComment");
     indexType = record.getOrEmpty("indexType");
+    indexOption = record.getOrEmpty("indexOption");
   }
 
   @Override
   public String createInsert() {
     return String.format(
         "INSERT INTO DbTablePrimaryKey "
-            + "(tableId, seq, constraintName, keyName, indexComment, indexType) "
+            + "(tableId, seq, constraintName, keyName, indexComment, indexType, indexOption) "
             + "VALUES "
-            + "('%s', %s, '%s', '%s', '%s', '%s')",
+            + "('%s', %s, '%s', '%s', '%s', '%s', '%s')",
         Utils.quote(tableId),
         seq,
         Utils.quote(constraintName),
         Utils.quote(keyName),
         Utils.quote(indexComment),
-        Utils.quote(indexType)
+        Utils.quote(indexType),
+        Utils.quote(indexOption)
     );
   }
 

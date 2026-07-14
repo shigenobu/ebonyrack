@@ -217,6 +217,7 @@ public interface Tmp {
       tmpKey.keyName = dbKey.keyName;
       tmpKey.indexComment = dbKey.indexComment;
       tmpKey.indexType = dbKey.indexType;
+      tmpKey.indexOption = dbKey.indexOption;
     }
     return tmpKey;
   }
