@@ -44,3 +44,4 @@ Entity relationship creation tool for MariaDB.
 
 * [ArmadaSuit](https://github.com/ArmadaSuit)
 * [Shinaco1992](https://github.com/Shinaco1992)
+* [yhrym](https://github.com/yhrym)
