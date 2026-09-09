@@ -101,9 +101,9 @@
     </dependency>
     <!-- webp-imageio -->
     <dependency>
-      <groupId>org.sejda.imageio</groupId>
+      <groupId>io.github.darkxanter</groupId>
       <artifactId>webp-imageio</artifactId>
-      <version>0.1.6</version>
+      <version>0.3.3</version>
     </dependency>
     <!-- junit-jupiter-api -->
     <dependency>
