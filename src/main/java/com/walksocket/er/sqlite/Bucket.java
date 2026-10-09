@@ -20,6 +20,7 @@ import com.walksocket.er.sqlite.entity.DbDictColumnType;
 import com.walksocket.er.sqlite.entity.DbTable;
 import com.walksocket.er.sqlite.entity.DbTableForeignKey;
 import com.walksocket.er.sqlite.tmp.TmpColumn;
+import com.walksocket.er.sqlite.tmp.TmpDictPartition;
 import com.walksocket.er.sqlite.tmp.TmpForeignKey;
 import com.walksocket.er.sqlite.tmp.TmpKey;
 import com.walksocket.er.template.ErTemplate;
@@ -802,6 +803,20 @@ public class Bucket {
       referencedDbTableList.add(referencedDbTable);
     }
     template.assign("referencedDbTableList", referencedDbTableList);
+
+    // partition
+    var tmpDictPartition = new TmpDictPartition();
+    if (ctxTable.dbTablePartition != null) {
+      for (var dbDictPartition : getBucketDict().dbDictPartitionList) {
+        if (dbDictPartition.dictPartitionId.equals(ctxTable.dbTablePartition.dictPartitionId)) {
+          tmpDictPartition.dictPartitionId = dbDictPartition.dictPartitionId;
+          tmpDictPartition.partitionName = dbDictPartition.partitionName;
+          tmpDictPartition.expression = dbDictPartition.expression;
+          break;
+        }
+      }
+    }
+    template.assign("tmpDictPartition", tmpDictPartition);
 
     // ddl
     var builder = new StringBuilder();

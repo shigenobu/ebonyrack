@@ -134,6 +134,13 @@ column \$tmpGroupColumnList
 #end
 
 ====================
+partition \$tmpDictPartition
+====================
+partitionName: ${tmpDictPartition.partitionName}
+expression:
+${tmpDictPartition.expression}
+
+====================
 ddl \$ddl
 ====================
 ${ddl}

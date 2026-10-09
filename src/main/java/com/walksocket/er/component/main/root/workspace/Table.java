@@ -145,6 +145,19 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
   }
 
   /**
+   * image has option.
+   */
+  private static BufferedImage imageHasOption;
+
+  static {
+    try (var stream = App.class.getClassLoader().getResourceAsStream("image/has_option.png")) {
+      imageHasOption = ImageIO.read(stream);
+    } catch (IOException e) {
+      Log.error(e);
+    }
+  }
+
+  /**
    * image type number.
    */
   private static BufferedImage imageTypeNumber;
@@ -477,8 +490,13 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
    */
   public void redraw() {
     var table = this;
+    var hasOption = "*";
 
-    labelTableName.setText("(T) " + ctxTable.dbTable.getShowTableName());
+    var showTableName = "(T) " + ctxTable.dbTable.getShowTableName();
+    if (!Utils.isNullOrEmpty(ctxTable.dbTable.option)) {
+      showTableName = "(T) " + hasOption + " " + ctxTable.dbTable.getShowTableName();
+    }
+    labelTableName.setText(showTableName);
     var w = labelTableName.getFontMetrics(labelTableName.getFont())
         .stringWidth(labelTableName.getText());
 
@@ -572,36 +590,49 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
           @Override
           protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            if (ctxTable.ctxInnerPrimaryKey.dbTablePrimaryKeyColumnList.stream()
+
+            var optPrimaryKey = ctxTable.ctxInnerPrimaryKey.dbTablePrimaryKeyColumnList.stream()
                 .filter(c -> c.dictColumnId.equals(dbDictColumn.dictColumnId))
-                .findFirst()
-                .isPresent()) {
+                .findFirst();
+            if (optPrimaryKey.isPresent()) {
               Graphics2D g2 = (Graphics2D) g;
               if (dbDictColumn.autoIncrementDefinition.equals(AutoIncrement.AUTO_INCREMENT_VALUE)) {
                 g2.drawImage(imageKeyPrimaryAi, 0, 4, 12, 12, null);
               } else {
                 g2.drawImage(imageKeyPrimary, 0, 4, 12, 12, null);
               }
+              var dbTablePrimaryKey = ctxTable.ctxInnerPrimaryKey.dbTablePrimaryKey;
+              if (!Utils.isNullOrEmpty(dbTablePrimaryKey.indexOption)) {
+                g2.drawImage(imageHasOption, 8, 10, 4, 4, null);
+              }
             }
-            if (ctxTable.ctxInnerUniqueKeyList.stream()
+
+            var optUniqueKey = ctxTable.ctxInnerUniqueKeyList.stream()
                 .filter(d -> d.dbTableUniqueKeyColumnList.stream()
                     .filter(c -> c.dictColumnId.equals(dbDictColumn.dictColumnId))
                     .findFirst()
                     .isPresent())
-                .findFirst()
-                .isPresent()) {
+                .findFirst();
+            if (optUniqueKey.isPresent()) {
               Graphics2D g2 = (Graphics2D) g;
               g2.drawImage(imageKeyUnique, 12, 4, 12, 12, null);
+              if (!Utils.isNullOrEmpty(optUniqueKey.get().dbTableUniqueKey.indexOption)) {
+                g2.drawImage(imageHasOption, 20, 10, 4, 4, null);
+              }
             }
-            if (ctxTable.ctxInnerKeyList.stream()
+
+            var optKey = ctxTable.ctxInnerKeyList.stream()
                 .filter(d -> d.dbTableKeyColumnList.stream()
                     .filter(c -> c.dictColumnId.equals(dbDictColumn.dictColumnId))
                     .findFirst()
                     .isPresent())
-                .findFirst()
-                .isPresent()) {
+                .findFirst();
+            if (optKey.isPresent()) {
               Graphics2D g2 = (Graphics2D) g;
               g2.drawImage(imageKey, 24, 4, 12, 12, null);
+              if (!Utils.isNullOrEmpty(optKey.get().dbTableKey.indexOption)) {
+                g2.drawImage(imageHasOption, 32, 10, 4, 4, null);
+              }
             }
           }
         };
@@ -728,7 +759,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
                 image = imageTypeDate;
                 break;
             }
-            g2.drawImage(image, 0, 3, 12, 12, null);
+            g2.drawImage(image, 0, 4, 12, 12, null);
           }
         };
         p3.setBackground(Color.WHITE);
@@ -736,7 +767,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
         p.add(p3);
 
         // not null
-        var p4 = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        var p4 = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 2));
         p4.setBackground(Color.WHITE);
         p4.setPreferredSize(new Dimension(20, ph));
         p.add(p4);
@@ -753,7 +784,7 @@ public class Table extends ErConnectorEndpoint implements ErConnectorEndpointRel
         p.add(p5);
         var option = "";
         if (!Utils.isNullOrEmpty(dbDictColumn.option)) {
-          option = "*";
+          option = hasOption;
         }
         p5.add(new JLabel(option));
 
