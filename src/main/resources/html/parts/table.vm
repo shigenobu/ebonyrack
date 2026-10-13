@@ -231,12 +231,14 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>${tmpDictPartition.partitionName}</td>
-          <td class="unwrap">
-            <pre>${tmpDictPartition.expression}</pre>
-          </td>
-        </tr>
+            #if($tmpDictPartition.partitionName)
+            <tr>
+              <td>${tmpDictPartition.partitionName}</td>
+              <td class="unwrap">
+                <pre>${tmpDictPartition.expression}</pre>
+              </td>
+            </tr>
+            #end
         </tbody>
       </table>
     </div>

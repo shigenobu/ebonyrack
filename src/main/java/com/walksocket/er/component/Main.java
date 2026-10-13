@@ -641,11 +641,21 @@ public class Main extends JFrame {
       fontData = Base64.getEncoder().encodeToString(fontBytes);
     }
 
+    // favicon
+    var faviconData = "";
+    try (var stream = App.class.getClassLoader()
+        .getResourceAsStream("image/favicon.ico")) {
+      var faviconBytes = stream.readAllBytes();
+      faviconData = Base64.getEncoder().encodeToString(faviconBytes);
+    }
+
     // main
     var mainTemplate = getTemplate("html/main.vm");
     mainTemplate.assign("title", Const.TITLE);
+    mainTemplate.assign("version", App.getVersion());
     mainTemplate.assign("name", cfgProject.name);
     mainTemplate.assign("fontData", fontData);
+    mainTemplate.assign("faviconData", faviconData);
     mainTemplate.assign("cssList", cssList);
     mainTemplate.assign("jsList", jsList);
     mainTemplate.assign("imageData", imageData);

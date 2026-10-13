@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>${title}</title>
+  <title>${title}#if($version) - ${version}#end</title>
   <style>
     @font-face {
       font-family: "ebonyrack";
@@ -12,6 +12,7 @@
             ${ErTemplateUtils.nonEscape($css)}
         #end
   </style>
+  <link rel="icon" type="image/vnd.microsoft.icon" href="data:image/x-icon;base64,${faviconData}">
 </head>
 <body>
 <main>
