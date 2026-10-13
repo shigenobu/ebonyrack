@@ -575,6 +575,7 @@ public class Main extends JFrame {
       // key
       // foreign key
       // referenced tables
+      // partition
       // ddl
       // notes
       Bucket.getInstance().assignTableVars(table.getCtxTable(), template);

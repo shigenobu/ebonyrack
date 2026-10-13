@@ -222,6 +222,25 @@
       </table>
     </div>
     <div class="detail">
+      <h3>Partition:</h3>
+      <table>
+        <thead>
+        <tr>
+          <th>Partition name</th>
+          <th>Expression</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>${tmpDictPartition.partitionName}</td>
+          <td class="unwrap">
+            <pre>${tmpDictPartition.expression}</pre>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="detail">
       <h3>Ddl:</h3>
       <pre>${ddl}</pre>
     </div>

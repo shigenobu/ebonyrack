@@ -1,5 +1,6 @@
 package com.walksocket.er.component.main.root.workspace;
 
+import com.walksocket.er.App;
 import com.walksocket.er.Const;
 import com.walksocket.er.Log;
 import com.walksocket.er.Utils;
@@ -24,6 +25,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -64,6 +69,19 @@ public class Sequence extends ErConnectorEndpoint {
   private static final int BORDER_SIZE = 2;
 
   /**
+   * image sequence.
+   */
+  private static BufferedImage imageSequence;
+
+  static {
+    try (var stream = App.class.getClassLoader().getResourceAsStream("image/sequence.png")) {
+      imageSequence = ImageIO.read(stream);
+    } catch (IOException e) {
+      Log.error(e);
+    }
+  }
+
+  /**
    * workspace.
    */
   private final Workspace workspace;
@@ -81,7 +99,14 @@ public class Sequence extends ErConnectorEndpoint {
   /**
    * label sequence name.
    */
-  private final JLabel labelSequenceName = new JLabel();
+  private final JLabel labelSequenceName = new JLabel() {
+    @Override
+    protected void paintComponent(Graphics g) {
+      super.paintComponent(g);
+
+      g.drawImage(imageSequence, 0, 3, null);
+    }
+  };
 
   /**
    * Constructor.
@@ -145,7 +170,7 @@ public class Sequence extends ErConnectorEndpoint {
         var metrics = labelSequenceName.getFontMetrics(labelSequenceName.getFont());
         String start = targetText.substring(0, startPos);
         String text = targetText.substring(startPos, endPos);
-        int startX = 5 + metrics.stringWidth(start);
+        int startX = 23 + metrics.stringWidth(start);
         int startY = 8;
         int width = metrics.stringWidth(text);
         int height = metrics.getHeight();
@@ -246,6 +271,7 @@ public class Sequence extends ErConnectorEndpoint {
       }
     });
     add(panelName);
+    labelSequenceName.setBorder(BorderFactory.createEmptyBorder(0, 18, 0, 0));
     panelName.add(labelSequenceName);
 
     // redraw
@@ -274,7 +300,7 @@ public class Sequence extends ErConnectorEndpoint {
    * redraw.
    */
   public void redraw() {
-    labelSequenceName.setText("(S) " + ctxSequence.dbSequence.sequenceName);
+    labelSequenceName.setText(ctxSequence.dbSequence.sequenceName);
     var w = labelSequenceName.getFontMetrics(labelSequenceName.getFont())
         .stringWidth(labelSequenceName.getText());
     if (w < MIN_WIDTH) {
