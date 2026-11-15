@@ -57,7 +57,7 @@ public class Log {
     if (writer != null) {
       try {
         writer.close();
-      } catch (IOException e) {
+      } catch (IOException ignored) {
       }
     }
     writer = null;
@@ -129,25 +129,25 @@ public class Log {
       }
 
       var msg =
-          "[" + Date.now() + "][" + String.format("%010d", Thread.currentThread().getId()) + "]["
+          "[" + Date.now() + "][" + String.format("%010d", Thread.currentThread().threadId()) + "]["
               + level + "]" + "[" + info + "]" + message.toString();
       writer.write(msg + "\n");
       writer.flush();
 
       if (message instanceof Throwable) {
         var stacks = ((Throwable) message).getStackTrace();
-        var buffer = new StringBuffer();
+        var builder = new StringBuilder();
         for (var stack : stacks) {
-          buffer.append("\n");
-          buffer.append("<" + stack.getClassName() + ">");
-          buffer.append("<" + stack.getFileName() + ">");
-          buffer.append("<" + stack.getLineNumber() + ">");
-          buffer.append("<" + stack.getMethodName() + ">");
+          builder.append("\n");
+          builder.append("<").append(stack.getClassName()).append(">");
+          builder.append("<").append(stack.getFileName()).append(">");
+          builder.append("<").append(stack.getLineNumber()).append(">");
+          builder.append("<").append(stack.getMethodName()).append(">");
         }
-        writer.write(buffer + "\n");
+        writer.write(builder + "\n");
         writer.flush();
       }
-    } catch (Exception e) {
+    } catch (Exception ignored) {
     }
   }
 }

@@ -152,7 +152,7 @@ public class Dump {
             .filter(c -> c.getSimpleName().equals(clsName))
             .findFirst()
             .get();
-        for (var tm : (List<LinkedTreeMap>) entry.getValue()) {
+        for (var tm : (List<LinkedHashMap>) entry.getValue()) {
           var entity = (Entity) cls.getDeclaredConstructor().newInstance();
           Map<String, String> r = new HashMap<>();
           for (var k : tm.keySet()) {

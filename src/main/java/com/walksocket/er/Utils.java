@@ -8,7 +8,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 /**
  * Utils.
@@ -156,7 +156,7 @@ public class Utils {
     if (src == null) {
       return "";
     }
-    return StringUtils.replace(src, "'", "''");
+    return Strings.CS.replace(src, "'", "''");
   }
 
   /**
@@ -169,7 +169,7 @@ public class Utils {
     if (src == null) {
       return "";
     }
-    return StringUtils.replace(src, "`", "");
+    return Strings.CS.replace(src, "`", "");
   }
 
   /**
@@ -182,7 +182,7 @@ public class Utils {
     if (src == null) {
       return "";
     }
-    return StringUtils.replace(src, "'", "");
+    return Strings.CS.replace(src, "'", "");
   }
 
   /**

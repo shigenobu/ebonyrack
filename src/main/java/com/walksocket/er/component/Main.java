@@ -5,6 +5,7 @@ import com.walksocket.er.App;
 import com.walksocket.er.Config;
 import com.walksocket.er.Const;
 import com.walksocket.er.Copiable;
+import com.walksocket.er.CopiedInfo;
 import com.walksocket.er.Date;
 import com.walksocket.er.FileUtils;
 import com.walksocket.er.Log;
@@ -637,6 +638,7 @@ public class Main extends JFrame {
     var fontData = "";
     try (var stream = App.class.getClassLoader()
         .getResourceAsStream("font/migu-1c-regular.woff2")) {
+      assert stream != null;
       var fontBytes = stream.readAllBytes();
       fontData = Base64.getEncoder().encodeToString(fontBytes);
     }
@@ -645,6 +647,7 @@ public class Main extends JFrame {
     var faviconData = "";
     try (var stream = App.class.getClassLoader()
         .getResourceAsStream("image/favicon.ico")) {
+      assert stream != null;
       var faviconBytes = stream.readAllBytes();
       faviconData = Base64.getEncoder().encodeToString(faviconBytes);
     }
@@ -702,7 +705,7 @@ public class Main extends JFrame {
    * @param cls  class
    * @param <T>  type
    */
-  public <T extends Copiable> void setCopied(Copiable copy, Class<T> cls) {
+  public <T extends Copiable<T>> void setCopied(Copiable<T> copy, Class<T> cls) {
     var info = new CopiedInfo<T>();
     info.copiedTimestampMills = Date.timestampMillis();
     info.data = copy;
@@ -716,7 +719,7 @@ public class Main extends JFrame {
    * @param <T> type
    * @return copy
    */
-  public <T extends Copiable> T getCopied(Class<T> cls) {
+  public <T extends Copiable<T>> T getCopied(Class<T> cls) {
     if (!copiedInfoMap.containsKey(cls)) {
       return null;
     }
@@ -730,7 +733,7 @@ public class Main extends JFrame {
    * @param <T> type
    * @return if exists, true
    */
-  public <T extends Copiable> boolean existCopied(Class<T> cls) {
+  public <T extends Copiable<T>> boolean existCopied(Class<T> cls) {
     return copiedInfoMap.containsKey(cls);
   }
 
@@ -740,7 +743,7 @@ public class Main extends JFrame {
    * @param <T> type
    * @return copy
    */
-  public <T extends Copiable> T getCopiedLatest() {
+  public <T extends Copiable<T>> T getCopiedLatest() {
     var opt = copiedInfoMap.values().stream()
         .max(Comparator.comparingLong(CopiedInfo::getCopiedTimestampMills));
     if (!opt.isPresent()) {
@@ -757,32 +760,5 @@ public class Main extends JFrame {
     root.getWorkspace().reorder();
     root.getWorkspace().requestFocusInWindow();
     root.getWorkspace().hideSearchSpace();
-  }
-
-  /**
-   * CopiedInfo.
-   *
-   * @param <T> type
-   */
-  public class CopiedInfo<T extends Copiable> {
-
-    /**
-     * copied timestamp mills.
-     */
-    public long copiedTimestampMills;
-
-    /**
-     * copied data.
-     */
-    public Copiable<T> data;
-
-    /**
-     * get copied timestamp mills.
-     *
-     * @return copied timestamp mills
-     */
-    public long getCopiedTimestampMills() {
-      return copiedTimestampMills;
-    }
   }
 }
